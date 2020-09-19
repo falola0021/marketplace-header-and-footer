@@ -99,14 +99,14 @@ function LandingPage({ onClick }) {
                   </div>
                 )}
                 {formInputs.loginInputs && (
-                  <Link className="link" to="user-dashboard">
+                  <Link className="link" to="requester">
                     <Button className={Styles.submit} type="submit">
                       Login
                     </Button>
                   </Link>
                 )}
                 {formInputs.registerInputs && (
-                  <Link className="link" to="user-dashboard">
+                  <Link className="link" to="requester">
                     <Button className={Styles.submit} type="submit">
                       Register
                     </Button>

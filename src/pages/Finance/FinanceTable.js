@@ -1,6 +1,6 @@
 import React from "react";
 import { Table } from "react-bootstrap";
-import Styles from "./Audit.module.css";
+import Styles from "./Finance.module.css";
 
 function AuditTable({ onClick }) {
   return (
@@ -37,6 +37,8 @@ function AuditTable({ onClick }) {
               <td className={Styles.members}>
                 <span>AK</span>
                 <span>VO</span>
+                <span>KN</span>
+                <span>AM</span>
                 <span>KN</span>
               </td>
               <td>Technology </td>
@@ -88,6 +90,8 @@ function AuditTable({ onClick }) {
                 <span>AK</span>
                 <span>VO</span>
                 <span>KN</span>
+                <span>MN</span>
+                <span>PN</span>
               </td>
               <td>Operartions </td>
               <td>
@@ -113,6 +117,8 @@ function AuditTable({ onClick }) {
                 <span>AK</span>
                 <span>VO</span>
                 <span>KN</span>
+                <span>MN</span>
+                <span>PN</span>
               </td>
               <td>Operation </td>
               <td>
@@ -163,6 +169,8 @@ function AuditTable({ onClick }) {
                 <span>AK</span>
                 <span>VO</span>
                 <span>KN</span>
+                <span>MN</span>
+                <span>PN</span>
               </td>
               <td>Human resource </td>
               <td>

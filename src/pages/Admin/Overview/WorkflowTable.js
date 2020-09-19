@@ -1,12 +1,14 @@
-import React from "react";
-import { Table } from "react-bootstrap";
-import Styles from "./Audit.module.css";
+import React, { useState } from "react";
+import { Modal } from "react-bootstrap";
+import { Table, Dropdown } from "react-bootstrap";
+import Styles from "./Overview.module.css";
 
-function AuditTable({ onClick }) {
+function UserTable({ onClick, handlePreviewShow }) {
   return (
     <>
+      <p className={Styles.title}>Active Workflow</p>
       <div className={Styles.tablebox}>
-        <Table className={Styles.table} responsive>
+        <Table responsive>
           <thead className={Styles.thead}>
             <tr>
               <th>
@@ -18,13 +20,14 @@ function AuditTable({ onClick }) {
               <th>Invoice N0.</th>
               <th>Due Date</th>
               <th>Members</th>
-              <th>Department</th>
+              <th>Progress</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
+
           <tbody className={Styles.tbody}>
-            <tr>
+            <tr onClick={onClick}>
               <td>
                 {" "}
                 <input className={Styles.checkbox} type="checkbox" />
@@ -39,13 +42,225 @@ function AuditTable({ onClick }) {
                 <span>VO</span>
                 <span>KN</span>
               </td>
-              <td>Technology </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
               <td>
                 <div className={Styles.statusbackground}>
                   <span className={Styles.dot}></span>Pending
                 </div>
               </td>
-              <td onClick={onClick}>
+              <td>
+                <span
+                  onClick={handlePreviewShow}
+                  className={Styles.previewbutton}
+                >
+                  Preview
+                </span>{" "}
+              </td>
+            </tr>
+            <tr onClick={onClick}>
+              <td>
+                {" "}
+                <input className={Styles.checkbox} type="checkbox" />
+              </td>
+              <td>Jumia</td>
+              <td>Laptop Charger</td>
+              <td>N 32,000</td>
+              <td>180213-001</td>
+              <td>15/10/2020</td>
+              <td className={Styles.members}>
+                <span>AK</span>
+                <span>VO</span>
+                <span>KN</span>
+              </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
+              <td>
+                <div className={Styles.statusbackground}>
+                  <span className={Styles.dot}></span>Pending
+                </div>
+              </td>
+              <td>
+                <span className={Styles.previewbutton}>Preview</span>{" "}
+              </td>
+            </tr>
+            <tr onClick={onClick}>
+              <td>
+                {" "}
+                <input className={Styles.checkbox} type="checkbox" />
+              </td>
+              <td>Jumia</td>
+              <td>Laptop Charger</td>
+              <td>N 32,000</td>
+              <td>180213-001</td>
+              <td>15/10/2020</td>
+              <td className={Styles.members}>
+                <span>AK</span>
+                <span>VO</span>
+                <span>KN</span>
+              </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
+              <td>
+                <div className={Styles.statusbackground}>
+                  <span className={Styles.dot}></span>Pending
+                </div>
+              </td>
+              <td>
+                <span className={Styles.previewbutton}>Preview</span>{" "}
+              </td>
+            </tr>
+            <tr onClick={onClick}>
+              <td>
+                {" "}
+                <input className={Styles.checkbox} type="checkbox" />
+              </td>
+              <td>Jumia</td>
+              <td>Laptop Charger</td>
+              <td>N 32,000</td>
+              <td>180213-001</td>
+              <td>15/10/2020</td>
+              <td className={Styles.members}>
+                <span>AK</span>
+                <span>VO</span>
+                <span>KN</span>
+              </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
+              <td>
+                <div className={Styles.statusbackground}>
+                  <span className={Styles.dot}></span>Pending
+                </div>
+              </td>
+              <td>
+                <span className={Styles.previewbutton}>Preview</span>{" "}
+              </td>
+            </tr>
+            <tr onClick={onClick}>
+              <td>
+                {" "}
+                <input className={Styles.checkbox} type="checkbox" />
+              </td>
+              <td>Jumia</td>
+              <td>Laptop Charger</td>
+              <td>N 32,000</td>
+              <td>180213-001</td>
+              <td>15/10/2020</td>
+              <td className={Styles.members}>
+                <span>AK</span>
+                <span>VO</span>
+                <span>KN</span>
+              </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
+              <td>
+                <div className={Styles.statusbackground}>
+                  <span className={Styles.dot}></span>Pending
+                </div>
+              </td>
+              <td>
+                <span className={Styles.previewbutton}>Preview</span>{" "}
+              </td>
+            </tr>
+            <tr onClick={onClick}>
+              <td>
+                {" "}
+                <input className={Styles.checkbox} type="checkbox" />
+              </td>
+              <td>Jumia</td>
+              <td>Laptop Charger</td>
+              <td>N 32,000</td>
+              <td>180213-001</td>
+              <td>15/10/2020</td>
+              <td className={Styles.members}>
+                <span>AK</span>
+                <span>VO</span>
+                <span>KN</span>
+              </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
+              <td>
+                <div className={Styles.statusbackground}>
+                  <span className={Styles.dot}></span>Pending
+                </div>
+              </td>
+              <td>
+                <span className={Styles.previewbutton}>Preview</span>{" "}
+              </td>
+            </tr>
+            <tr onClick={onClick}>
+              <td>
+                {" "}
+                <input className={Styles.checkbox} type="checkbox" />
+              </td>
+              <td>Jumia</td>
+              <td>Laptop Charger</td>
+              <td>N 32,000</td>
+              <td>180213-001</td>
+              <td>15/10/2020</td>
+              <td className={Styles.members}>
+                <span>AK</span>
+                <span>VO</span>
+                <span>KN</span>
+              </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
+              <td>
+                <div className={Styles.statusbackground}>
+                  <span className={Styles.dot}></span>Pending
+                </div>
+              </td>
+              <td>
+                <span className={Styles.previewbutton}>Preview</span>{" "}
+              </td>
+            </tr>
+            <tr onClick={onClick}>
+              <td>
+                {" "}
+                <input className={Styles.checkbox} type="checkbox" />
+              </td>
+              <td>Jumia</td>
+              <td>Laptop Charger</td>
+              <td>N 32,000</td>
+              <td>180213-001</td>
+              <td>15/10/2020</td>
+              <td className={Styles.members}>
+                <span>AK</span>
+                <span>VO</span>
+                <span>KN</span>
+              </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
+              <td>
+                <div className={Styles.statusbackground}>
+                  <span className={Styles.dot}></span>Pending
+                </div>
+              </td>
+              <td>
                 <span className={Styles.previewbutton}>Preview</span>{" "}
               </td>
             </tr>
@@ -64,7 +279,11 @@ function AuditTable({ onClick }) {
                 <span>VO</span>
                 <span>KN</span>
               </td>
-              <td>Technology </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
               <td>
                 <div className={Styles.statusbackground}>
                   <span className={Styles.dot}></span>Pending
@@ -89,7 +308,11 @@ function AuditTable({ onClick }) {
                 <span>VO</span>
                 <span>KN</span>
               </td>
-              <td>Operartions </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
               <td>
                 <div className={Styles.statusbackground}>
                   <span className={Styles.dot}></span>Pending
@@ -114,7 +337,11 @@ function AuditTable({ onClick }) {
                 <span>VO</span>
                 <span>KN</span>
               </td>
-              <td>Operation </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
               <td>
                 <div className={Styles.statusbackground}>
                   <span className={Styles.dot}></span>Pending
@@ -139,7 +366,11 @@ function AuditTable({ onClick }) {
                 <span>VO</span>
                 <span>KN</span>
               </td>
-              <td>Terminal </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
               <td>
                 <div className={Styles.statusbackground}>
                   <span className={Styles.dot}></span>Pending
@@ -164,7 +395,11 @@ function AuditTable({ onClick }) {
                 <span>VO</span>
                 <span>KN</span>
               </td>
-              <td>Human resource </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
               <td>
                 <div className={Styles.statusbackground}>
                   <span className={Styles.dot}></span>Pending
@@ -189,7 +424,11 @@ function AuditTable({ onClick }) {
                 <span>VO</span>
                 <span>KN</span>
               </td>
-              <td>Technology </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
               <td>
                 <div className={Styles.statusbackground}>
                   <span className={Styles.dot}></span>Pending
@@ -214,7 +453,11 @@ function AuditTable({ onClick }) {
                 <span>VO</span>
                 <span>KN</span>
               </td>
-              <td>Finance </td>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </td>
               <td>
                 <div className={Styles.statusbackground}>
                   <span className={Styles.dot}></span>Pending
@@ -239,34 +482,11 @@ function AuditTable({ onClick }) {
                 <span>VO</span>
                 <span>KN</span>
               </td>
-
-              <td>Finance </td>
-
-              <td>
-                <div className={Styles.statusbackground}>
-                  <span className={Styles.dot}></span>Pending
-                </div>
+              <td className={Styles.lines}>
+                <span></span>
+                <span></span>
+                <span></span>
               </td>
-              <td>
-                <span className={Styles.previewbutton}>Preview</span>{" "}
-              </td>
-            </tr>
-            <tr>
-              <td>
-                {" "}
-                <input className={Styles.checkbox} type="checkbox" />
-              </td>
-              <td>Jumia</td>
-              <td>Laptop Charger</td>
-              <td>N 32,000</td>
-              <td>180213-001</td>
-              <td>15/10/2020</td>
-              <td className={Styles.members}>
-                <span>AK</span>
-                <span>VO</span>
-                <span>KN</span>
-              </td>
-              <td>Finance </td>
               <td>
                 <div className={Styles.statusbackground}>
                   <span className={Styles.dot}></span>Pending
@@ -283,4 +503,4 @@ function AuditTable({ onClick }) {
   );
 }
 
-export default AuditTable;
+export default UserTable;

@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import Styles from "./Profile.module.css";
 
-function DepartmentHead() {
+function Profile() {
   const [preview, setPreview] = useState(false);
   const handlePreview = () => setPreview(!preview);
   return (
@@ -84,4 +84,4 @@ function DepartmentHead() {
   );
 }
 
-export default DepartmentHead;
+export default Profile;

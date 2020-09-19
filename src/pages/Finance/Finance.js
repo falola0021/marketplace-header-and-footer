@@ -12,8 +12,8 @@ import {
   InputGroup,
   FormControl,
 } from "react-bootstrap";
-import Styles from "./Audit.module.css";
-import AuditTable from "./AuditTable";
+import Styles from "./Finance.module.css";
+import FinanceTable from "./FinanceTable";
 function ImageView(props) {
   return (
     <Modal
@@ -138,7 +138,7 @@ function Preview(props) {
   );
 }
 
-function Audit(props) {
+function Finance(props) {
   const [searchForm, setSearchForm] = useState(false);
   const handleSearchForm = () => setSearchForm(!searchForm);
   const [modalShow, setModalShow] = React.useState(false);
@@ -320,17 +320,17 @@ function Audit(props) {
                     <div>TODAY</div>
                     <button className={Styles.button2}>Process</button>
                   </div>
-                  <AuditTable onClick={() => setModalShow(true)} />
+                  <FinanceTable onClick={() => setModalShow(true)} />
                   <div className={Styles.tabletitle}>
                     <div>THIS MONTH</div>
                     <button className={Styles.button2}>Process</button>
                   </div>
-                  <AuditTable />
+                  <FinanceTable />
                   <div className={Styles.tabletitle}>
                     <div>LAST MONTH</div>
                     <button className={Styles.button2}>Process</button>
                   </div>
-                  <AuditTable />
+                  <FinanceTable />
                 </div>
               </div>
             )}
@@ -341,4 +341,4 @@ function Audit(props) {
   );
 }
 
-export default Audit;
+export default Finance;

@@ -312,6 +312,45 @@ body::-webkit-scrollbar {
   padding: 5px;
   margin-left: -5px !important;
 }
+.members span:nth-child(4) {
+  background: rgb(50, 106, 170);
+  border: 1px solid #ffffff;
+  box-sizing: border-box;
+  color: #ffffff;
+  font-size: 13px;
+  text-transform: uppercase;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  padding: 5px;
+  margin-left: -5px !important;
+}
+.members span:nth-child(5) {
+  background: #8620187e;
+  border: 1px solid #ffffff;
+  box-sizing: border-box;
+  color: #ffffff;
+  font-size: 13px;
+  text-transform: uppercase;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  padding: 5px;
+  margin-left: -5px !important;
+}
+.members span:nth-child(6) {
+  background: #3a3939;
+  border: 1px solid #ffffff;
+  box-sizing: border-box;
+  color: #ffffff;
+  font-size: 13px;
+  text-transform: uppercase;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  padding: 5px;
+  margin-left: -5px !important;
+}
 
 .lines {
   display: flex;
