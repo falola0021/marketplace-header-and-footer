@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Card } from "react-bootstrap";
 import Styles from "./Overview.module.css";
 import { Row, Col } from "react-bootstrap";
-import WorkflowTable from "./WorkflowTable";
+import Table from "../../../components/Table/Table";
+// import WorkflowTable from "./WorkflowTable";
 function Overview() {
   return (
     <>
@@ -79,8 +80,8 @@ function Overview() {
             </Row>
           </Card>
         </div>
-
-        <WorkflowTable />
+        <Table />
+        {/* <WorkflowTable /> */}
       </div>
     </>
   );

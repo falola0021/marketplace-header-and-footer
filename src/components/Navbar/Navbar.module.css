@@ -1,0 +1,46 @@
+.navbackground {
+  background-color: #4f26aa;
+  margin: 0 !important;
+}
+.avatar {
+  background-color: #eb14c4 !important;
+  color: #ffff !important;
+}
+.chevron {
+  background-color: transparent !important;
+  outline: none !important;
+  border: none !important;
+  color: #ffff;
+  font-size: 25px !important;
+  font-weight: bold !important;
+}
+.menulist {
+  background: #ffffff !important;
+  outline: none !important;
+  border: none !important;
+  color: #4f26aa !important;
+  font-size: 15px !important;
+}
+.menulist:hover {
+  color: #ffffff !important;
+  outline: none !important;
+  border: none !important;
+}
+.mobilemenu {
+  display: none !important;
+}
+
+@media screen and (max-width: 480px) {
+  .desktopmenu {
+    display: none !important;
+  }
+  .mobilemenu {
+    display: inherit !important;
+  }
+  .mobilemenu .link {
+    display: inherit !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    color: #ffffff;
+  }
+}

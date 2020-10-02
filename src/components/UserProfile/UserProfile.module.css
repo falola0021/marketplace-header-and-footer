@@ -1,0 +1,61 @@
+.container {
+  width: 50%;
+  margin: 40px auto;
+  border-radius: 6px;
+}
+.profileheader {
+  text-align: center;
+  color: #666565;
+  font-size: 28px;
+  font-weight: bold;
+}
+.content {
+  box-shadow: 0px 2px 28px rgba(0, 0, 0, 0.1);
+  padding-top: 40px;
+  padding-bottom: 40px;
+  margin: 0 auto;
+}
+.avatarcontainer {
+  text-align: center !important;
+
+  /* display: flex; */
+}
+.fullname {
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.avatar {
+  margin: 0 auto !important;
+  background-color: #eb14c4 !important;
+  color: #ffff !important;
+  text-align: center !important;
+  width: 80px !important;
+  height: 80px !important;
+}
+.title {
+  padding: 20px 20px 0 50px;
+  font-size: 20px;
+}
+.label {
+  color: rgb(165, 164, 164);
+  font-size: 14px !important;
+}
+.input {
+  outline: none;
+  border: 1px solid rgb(196, 194, 194) !important;
+  margin-bottom: 30px;
+  font-size: 16px !important;
+}
+.submitdiv {
+  text-align: center !important;
+}
+.submit {
+  padding: 4px 50px !important;
+  border-radius: 6px;
+  background-color: #4f26aa;
+  color: #ffffff;
+  font-size: 18px;
+  outline: none !important;
+  box-shadow: none !important;
+}

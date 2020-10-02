@@ -24,7 +24,6 @@
   margin-bottom: 12px;
   padding: 12px 20px;
   font-size: 14px;
-  color: #666565;
   font-weight: 500;
   background: rgba(132, 115, 207, 0.05);
   box-shadow: inset 5px 0px 0px #8473cf;
@@ -37,6 +36,7 @@
 .sidebaractive span {
   padding-left: 10px;
   vertical-align: middle;
+  color: #8473cf;
 }
 .sidebarinactive div {
   font-size: 23px;
@@ -45,7 +45,7 @@
 .sidebaractive div {
   font-size: 23px;
   vertical-align: middle;
-  color: #8473cf;
+  /* color: #8473cf; */
 }
 
 ::placeholder {

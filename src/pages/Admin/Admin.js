@@ -1,18 +1,22 @@
 import React, { useState } from "react";
 import Overview from "./Overview/Overview";
-import UserManangement from "./UserManagement/UserManagement";
+import UserManangement from "./Vendor/UserManagement/UserManagement";
+import Vendor from "./Vendor/Vendor";
+import Workflow from "./Workflow/Workflow";
+import Category from "./Category/Category";
+import Footer from "../../components/Footer/Footer";
+import AminNav from "../../components/AdminNav/AdminNav";
+import Profile from "../../components/UserProfile/UserProfile";
 
 import {
   Row,
   Col,
-  Form,
-  InputGroup,
-  FormControl,
-  NavDropdown,
-  Navbar,
-  Nav,
-  Button,
-  Dropdown,
+  // Form,
+  // InputGroup,
+  // FormControl,
+  // NavDropdown,
+  // Button,
+  // Dropdown,
 } from "react-bootstrap";
 import Styles from "./Admin.module.css";
 
@@ -20,71 +24,20 @@ function Admin() {
   const [changeView, setChangeView] = useState({
     overview: true,
     usermanagement: false,
-    requestflow: false,
-    request: false,
-    settings: false,
+    profile: false,
+    vendor: false,
+    category: false,
+    requestphase: false,
+    workflow: false,
   });
 
-  const active = `${Styles.sidebaractive}`;
-  const inactive = `${Styles.sidebarinactive}`;
+  const active = `${Styles.sidebaractive} `;
+  const inactive = `${Styles.sidebarinactive}  `;
 
   return (
     <>
       <div className={Styles.body}>
-        <div className={Styles.sec1}>
-          <div className={Styles.layout1}>
-            <Row className={Styles.desktopnav}>
-              <Col sm="2">
-                <div className={Styles.title}>KASSANDAH</div>
-              </Col>
-              <Col sm="7">
-                <Form className={Styles.searchform}>
-                  <InputGroup inline>
-                    <FormControl
-                      className={Styles.formcontrol}
-                      size="lg"
-                      inline
-                      type="text"
-                      placeholder="Search By Item name"
-                    />
-                    <InputGroup.Prepend className={Styles.searchicon}>
-                      <Button
-                        size="lg"
-                        type="submit"
-                        className="fa fa-search"
-                      ></Button>
-                    </InputGroup.Prepend>
-                  </InputGroup>
-                </Form>
-              </Col>
-
-              <Col className={Styles.col2} sm="3">
-                <i className="far fa-bell headingicon"></i>
-                <i className="fa fa-sign-out-alt headingicon"></i>
-                <i className={Styles.initials}>IA</i>
-                <i className={Styles.name}>Anayo Adeolu</i>
-                <Dropdown>
-                  <Dropdown.Toggle
-                    className={Styles.toggle}
-                    variant="none"
-                  ></Dropdown.Toggle>
-
-                  <Dropdown.Menu className={Styles.menu}>
-                    <Dropdown.Item className={Styles.menu} href="#/action-1">
-                      Action
-                    </Dropdown.Item>
-                    <Dropdown.Item className={Styles.menu} href="#/action-2">
-                      Another action
-                    </Dropdown.Item>
-                    <Dropdown.Item className={Styles.menu} href="#/action-3">
-                      Something else
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </Col>
-            </Row>
-          </div>
-        </div>
+        <AminNav />
 
         <Row>
           <Col sm="2" className="p-0">
@@ -96,13 +49,17 @@ function Admin() {
                       overview: true,
                       usermanagement: false,
                       requestflow: false,
-                      request: false,
-                      settings: false,
+                      vendor: false,
+                      category: false,
+                      requestphase: false,
+                      workflow: false,
                     });
                   }}
                   className={changeView.overview ? active : inactive}
                 >
-                  <div className="fa fa-qrcode"> </div>
+                  <div style={{ color: "#ffd500" }} className="fa fa-qrcode">
+                    {" "}
+                  </div>
                   <span>Overview</span>
                 </div>
                 <div
@@ -111,24 +68,129 @@ function Admin() {
                       overview: false,
                       usermanagement: true,
                       requestflow: false,
-                      request: false,
-                      settings: false,
+                      vendor: false,
+                      category: false,
+                      requestphase: false,
+                      workflow: false,
                     });
                   }}
                   className={changeView.usermanagement ? active : inactive}
                 >
-                  <div className="fa fa-user"> </div>{" "}
+                  <div style={{ color: "#90e0ef" }} className="fa fa-user">
+                    {" "}
+                  </div>{" "}
                   <span>User Management</span>
                 </div>{" "}
-                <div className={changeView.requestflow ? active : inactive}>
-                  <div className="fas fa-sync-alt"> </div>{" "}
-                  <span>Request Flow</span>
+                <div
+                  onClick={() => {
+                    setChangeView({
+                      vendor: true,
+                      overview: false,
+                      usermanagement: false,
+                      requestflow: false,
+                      category: false,
+                      requestphase: false,
+                      workflow: false,
+                    });
+                  }}
+                  className={changeView.vendor ? active : inactive}
+                >
+                  <div style={{ color: "#ee2677" }} className=" fa fa-user-md">
+                    {" "}
+                  </div>{" "}
+                  <span>Vendor</span>
+                </div>{" "}
+                <div
+                  onClick={() => {
+                    setChangeView({
+                      overview: false,
+                      usermanagement: false,
+                      requestflow: false,
+                      vendor: false,
+                      category: true,
+                      requestphase: false,
+                      workflow: false,
+                    });
+                  }}
+                  className={changeView.category ? active : inactive}
+                >
+                  <div style={{ color: "#88d498" }} className="fa fa-list-alt">
+                    {" "}
+                  </div>{" "}
+                  <span>Category</span>
+                </div>{" "}
+                <div
+                  onClick={() => {
+                    setChangeView({
+                      vendor: false,
+                      overview: false,
+                      usermanagement: false,
+                      requestflow: false,
+                      category: false,
+                      requestphase: true,
+                      workflow: false,
+                    });
+                  }}
+                  className={changeView.requestphase ? active : inactive}
+                >
+                  <div
+                    onClick={() => {
+                      setChangeView({
+                        vendor: false,
+                        overview: false,
+                        usermanagement: false,
+                        requestflow: false,
+                        category: false,
+                        requestphase: false,
+                        workflow: true,
+                      });
+                    }}
+                    style={{ color: "#7161ef" }}
+                    className="fa fa-spinner"
+                  >
+                    {" "}
+                  </div>{" "}
+                  <span>Request Phase</span>
+                </div>{" "}
+                <div
+                  onClick={() => {
+                    setChangeView({
+                      vendor: false,
+                      overview: false,
+                      usermanagement: false,
+                      requestflow: false,
+                      category: false,
+                      requestphase: false,
+                      workflow: true,
+                    });
+                  }}
+                  className={changeView.workflow ? active : inactive}
+                >
+                  <div style={{ color: "#f4acb7" }} className="fas fa-sync-alt">
+                    {" "}
+                  </div>{" "}
+                  <span>Work Flow</span>
                 </div>
-                <div className={changeView.request ? active : inactive}>
-                  <div className="fa fa-table"></div> <span>Request</span>
-                </div>
-                <div className={changeView.settings ? active : inactive}>
-                  <div className="fa fa-cog"> </div> <span>Settings</span>
+                <div
+                  onClick={() => {
+                    setChangeView({
+                      vendor: false,
+                      overview: false,
+                      usermanagement: false,
+                      requestflow: false,
+                      category: false,
+                      requestphase: false,
+                      workflow: false,
+                      profile: true,
+                    });
+                  }}
+                  className={changeView.profile ? active : inactive}
+                >
+                  <div
+                    style={{ color: "#3b28cc" }}
+                    className="fa fa-user-circle"
+                  ></div>{" "}
+                  <span>Profile</span>
                 </div>
               </div>
             </div>
@@ -144,9 +206,30 @@ function Admin() {
                 <UserManangement />
               </div>
             )}
+            {changeView.vendor && (
+              <div className={Styles.overviewbody}>
+                <Vendor />
+              </div>
+            )}
+            {changeView.category && (
+              <div className={Styles.overviewbody}>
+                <Category />
+              </div>
+            )}
+            {changeView.workflow && (
+              <div className={Styles.overviewbody}>
+                <Workflow />
+              </div>
+            )}
+            {changeView.profile && (
+              <div className={Styles.overviewbody}>
+                <Profile />
+              </div>
+            )}
           </Col>
         </Row>
       </div>
+      <Footer />
     </>
   );
 }

@@ -1,0 +1,40 @@
+.searchfilterbox {
+  display: flex;
+}
+
+.search {
+  border: 1px solid rgb(202, 200, 200) !important;
+  outline: none;
+  font-size: 14px !important;
+  box-shadow: none !important;
+  width: 450px !important;
+}
+.button {
+  border: 1px solid rgb(202, 200, 200) !important;
+  outline: none !important;
+  font-size: 14px !important;
+  background-color: #4f26aa !important;
+  box-shadow: none !important;
+  width: 150px;
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+/* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .search {
+    width: 220px !important;
+  }
+  .button {
+    width: 70px;
+    margin-left: 5px;
+    margin-right: 10px;
+  }
+  .searchfilterbox {
+    margin-top: 20px;
+  }
+}

@@ -14,7 +14,7 @@
   font-weight: 600;
   font-size: 34px;
   line-height: 43px;
-  color: #8473cf;
+  color: #4f26aa;
   margin: 20px 40px;
 }
 
@@ -23,7 +23,7 @@
   font-weight: 600;
   font-size: 24px;
   display: none;
-  color: #8473cf;
+  color: #4f26aa;
   margin: 20px 40px;
 }
 .form {
@@ -36,7 +36,7 @@
 .loginregister Button {
   width: 70%;
   text-align: center;
-  border: 1px solid #8473cf;
+  border: 1px solid #4f26aa;
   border-radius: 0;
   background: transparent;
   color: grey;
@@ -49,19 +49,20 @@ Button:focus {
   box-shadow: none !important;
 }
 Button:hover {
-  background: #8473cf !important;
+  background: #4f26aa !important;
 }
 
 .active {
-  background: #8473cf !important;
+  background: #4f26aa !important;
   color: #ffff !important;
+  font-weight: bold;
 }
 
 .submit {
   width: 100%;
-  border: 1px solid #8473cf;
+  border: 1px solid #4f26aa;
   border-radius: 0;
-  background: #8473cf;
+  background: #4f26aa;
   margin-top: 15px;
   border-radius: 5px;
 }
@@ -70,7 +71,7 @@ Button:hover {
 }
 .formcontrol {
   background: rgba(59, 122, 254, 0.02);
-  border: 1px solid rgba(59, 122, 254, 0.2);
+  border: 1px solid #4f26aa;
   border-radius: 5px;
 }
 .formcontrol:focus {
@@ -99,7 +100,7 @@ Button:hover {
   display: inline-block;
   white-space: nowrap;
   font-size: 13px;
-  color: #666565;
+  color: #4f26aa;
 }
 .checkboxes input {
   vertical-align: middle;
@@ -112,7 +113,7 @@ Button:hover {
 }
 .forgotpas {
   font-size: 13px;
-  color: #8473cf;
+  color: #4f26aa;
   margin-top: 10px;
   cursor: pointer;
 }
@@ -138,7 +139,7 @@ Button:hover {
     display: none;
   }
   .form {
-    margin: 20% 5% 30% 5%;
+    margin: 10% 5% 30% 5%;
     background: rgba(255, 255, 255, 0.9) !important;
     padding: 40px 20px;
     border-radius: 5px;

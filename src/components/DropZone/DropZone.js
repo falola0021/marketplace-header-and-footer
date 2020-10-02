@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
-
+import { Row, Col } from "react-bootstrap";
 import "./DropZone.css";
 
 const Dropzone = () => {
@@ -174,92 +174,100 @@ const Dropzone = () => {
 
   return (
     <>
-      <div className="dropcontainer">
-        {/* {unsupportedFiles.length === 0 && validFiles.length ? (
+      <Row>
+        <Col>
+          <div className="dropcontainer">
+            {/* {unsupportedFiles.length === 0 && validFiles.length ? (
           <button className="file-upload-btn" onClick={() => uploadFiles()}>
             Upload Files
           </button>
         ) : (
           ""
         )} */}
-        {unsupportedFiles.length ? (
-          <p>Please remove all unsupported files.</p>
-        ) : (
-          ""
-        )}
-        <div
-          className="drop-container"
-          onDragOver={dragOver}
-          onDragEnter={dragEnter}
-          onDragLeave={dragLeave}
-          onDrop={fileDrop}
-          onClick={fileInputClicked}
-        >
-          <div className="drop-message">
-            <div className="upload-icon fas fa-cloud-upload-alt"></div>
-            <div className="drop-text">Drag file(s) to upload</div>
-            <div className="choose-file">Choose File(s)</div>
-          </div>
-          <input
-            ref={fileInputRef}
-            className="file-input"
-            type="file"
-            multiple
-            onChange={filesSelected}
-          />
-        </div>
-        <div className="file-display-container">
-          {validFiles.map((data, i) => (
-            <div className="file-status-bar" key={i}>
-              <div
-                onClick={
-                  !data.invalid
-                    ? () => openImageModal(data)
-                    : () => removeFile(data.name)
-                }
-              >
-                <div className="file-type-logo fa fa-file-image"></div>
-                <div className="file-type">{fileType(data.name)}</div>
-                <span
-                  className={`file-name ${data.invalid ? "file-error" : ""}`}
-                >
-                  {data.name}
-                </span>
-                <span className="file-size">({fileSize(data.size)})</span>{" "}
-                {data.invalid && (
-                  <span className="file-error-message">({errorMessage})</span>
-                )}
+            {unsupportedFiles.length ? (
+              <p>Please remove all unsupported files.</p>
+            ) : (
+              ""
+            )}
+
+            <div
+              className="drop-container"
+              onDragOver={dragOver}
+              onDragEnter={dragEnter}
+              onDragLeave={dragLeave}
+              onDrop={fileDrop}
+              onClick={fileInputClicked}
+            >
+              <div className="drop-message">
+                <div className="upload-icon fas fa-cloud-upload-alt"></div>
+                <div className="drop-text">Drag in file(s) to upload</div>
+                <div className="choose-file">Choose File(s)</div>
               </div>
-              <div
-                className="file-remove"
-                onClick={() => removeFile(data.name)}
-              >
-                X
+              <input
+                ref={fileInputRef}
+                className="file-input"
+                type="file"
+                multiple
+                onChange={filesSelected}
+              />
+            </div>
+          </div>
+        </Col>
+        <Col>
+          {" "}
+          <div className="drop-container-view">
+            <p className="preview-document">Preview Document</p>
+            {validFiles.map((data, i) => (
+              <div className="file-status-bar" key={i}>
+                <div
+                  onClick={
+                    !data.invalid
+                      ? () => openImageModal(data)
+                      : () => removeFile(data.name)
+                  }
+                >
+                  <div className="file-type-logo fa fa-file-image"></div>
+                  <div className="file-type">{fileType(data.name)}</div>
+                  <span
+                    className={`file-name ${data.invalid ? "file-error" : ""}`}
+                  >
+                    {data.name}
+                  </span>
+                  <span className="file-size">({fileSize(data.size)})</span>{" "}
+                  {data.invalid && (
+                    <span className="file-error-message">({errorMessage})</span>
+                  )}
+                </div>
+                <div
+                  className="file-remove"
+                  onClick={() => removeFile(data.name)}
+                >
+                  X
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="dropmodal" ref={modalRef}>
+            <div className="dropoverlay"></div>
+            <span className="dropclose" onClick={() => closeModal()}>
+              X
+            </span>
+            <div className="dropmodal-image" ref={modalImageRef}></div>
+          </div>
+          <div className="dropupload-modal" ref={uploadModalRef}>
+            <div className="dropoverlay"></div>
+            <div className="dropclose" onClick={() => closeUploadModal()}>
+              X
+            </div>
+            <div className="progress-container">
+              <span ref={uploadRef}></span>
+              <div className="progress">
+                <div className="progress-bar" ref={progressRef}></div>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
-      <div className="dropmodal" ref={modalRef}>
-        <div className="dropoverlay"></div>
-        <span className="dropclose" onClick={() => closeModal()}>
-          X
-        </span>
-        <div className="dropmodal-image" ref={modalImageRef}></div>
-      </div>
-
-      <div className="dropupload-modal" ref={uploadModalRef}>
-        <div className="dropoverlay"></div>
-        <div className="dropclose" onClick={() => closeUploadModal()}>
-          X
-        </div>
-        <div className="progress-container">
-          <span ref={uploadRef}></span>
-          <div className="progress">
-            <div className="progress-bar" ref={progressRef}></div>
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </>
   );
 };

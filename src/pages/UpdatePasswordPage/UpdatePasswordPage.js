@@ -3,6 +3,8 @@ import { Form, Button, Row, Col } from "react-bootstrap";
 import Styles from "./UpdatePasswordPage.module.css";
 import forgotPasswordPageImage from "../assets/forgotPasswordImage.png";
 import { Link } from "react-router-dom";
+import kassandah from "../assets/kassandah.PNG";
+import kassandahmobile from "../assets/kassandahmobilepurple.png";
 
 function UpdatePasswordPage() {
   return (
@@ -11,7 +13,11 @@ function UpdatePasswordPage() {
         <Col sm="7">
           <div className={Styles.layout1}>
             <Link className="link" to="/">
-              <div className={Styles.title}>GIG Payflow</div>
+              <img
+                src={kassandah}
+                alt="logo"
+                style={{ width: "200px", height: "50px" }}
+              />
             </Link>
             <img src={forgotPasswordPageImage} alt="logo" />
           </div>
@@ -19,7 +25,14 @@ function UpdatePasswordPage() {
         <Col sm="5">
           <div className={Styles.mobileimage}>
             <Link className="link" to="/">
-              <div className={Styles.mobiletitle}>GIG Payflow</div>
+              <div className={Styles.mobiletitle}>
+                {" "}
+                <img
+                  src={kassandahmobile}
+                  alt="logo"
+                  style={{ width: "50px", height: "70px" }}
+                />
+              </div>
             </Link>
             <div className={Styles.layout2}>
               <Form className={Styles.form}>
@@ -35,9 +48,7 @@ function UpdatePasswordPage() {
                 </div>
 
                 <Form.Group>
-                  <Form.Label className={Styles.label}>
-                    Email address
-                  </Form.Label>
+                  <Form.Label className={Styles.label}>New Password</Form.Label>
                   <Form.Control
                     className={Styles.formcontrol}
                     type="password"
