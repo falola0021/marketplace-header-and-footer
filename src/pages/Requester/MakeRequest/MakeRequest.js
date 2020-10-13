@@ -1,14 +1,7 @@
-import React, { useState } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import React from "react";
+import { Form, Row, Col } from "react-bootstrap";
 import Styles from "./MakeRequest.module.css";
-import {
-  Avatar,
-  Stack,
-  ThemeProvider,
-  FormControl,
-  FormLabel,
-  Input,
-} from "@chakra-ui/core";
+import { ThemeProvider, FormControl, FormLabel, Input } from "@chakra-ui/core";
 import DropZone from "../../../components/DropZone/DropZone";
 
 function MakeRequest() {

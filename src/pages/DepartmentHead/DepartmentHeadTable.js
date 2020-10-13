@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Modal } from "react-bootstrap";
-import { Table, Dropdown } from "react-bootstrap";
+import React from "react";
+
+import { Table } from "react-bootstrap";
 import Styles from "./DepartmentHead.module.css";
-import PreviewRequest from "./PreviewRequest/PreviewRequest";
+// import PreviewRequest from "./PreviewRequest/PreviewRequest";
 
 function UserTable({ onClick, handlePreviewShow }) {
   return (

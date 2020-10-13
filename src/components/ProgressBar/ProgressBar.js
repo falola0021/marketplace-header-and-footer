@@ -1,5 +1,5 @@
 import React from "react";
-import Styles from "./ProgressBar.module.css";
+// import Styles from "./ProgressBar.module.css";
 import { Progress, ThemeProvider } from "@chakra-ui/core";
 
 function ProgressBar() {

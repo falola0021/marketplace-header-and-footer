@@ -1,20 +1,8 @@
-import React, { useState } from "react";
-import {
-  Row,
-  Col,
-  Form,
-  InputGroup,
-  FormControl,
-  NavDropdown,
-  Navbar,
-  Nav,
-  Button,
-} from "react-bootstrap";
+import React from "react";
+import { Row, Col, NavDropdown, Navbar, Nav } from "react-bootstrap";
 import Styles from "./Profile.module.css";
 
 function Profile() {
-  const [preview, setPreview] = useState(false);
-  const handlePreview = () => setPreview(!preview);
   return (
     <>
       <div className={Styles.body}>

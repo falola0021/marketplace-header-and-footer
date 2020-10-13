@@ -1,12 +1,6 @@
 import React from "react";
 import Styles from "./SearchFilter.module.css";
-import {
-  FormControl,
-  Select,
-  ThemeProvider,
-  Input,
-  Button,
-} from "@chakra-ui/core";
+import { FormControl, ThemeProvider, Input, Button } from "@chakra-ui/core";
 
 function Addrequest({ request }) {
   return (

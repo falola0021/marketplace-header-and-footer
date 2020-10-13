@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Card } from "react-bootstrap";
+import React from "react";
 import Styles from "./Category.module.css";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import CategoryTable from "./CategoryTable";

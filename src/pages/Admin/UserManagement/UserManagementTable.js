@@ -1,49 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import { Modal } from "react-bootstrap";
 import { Table } from "react-bootstrap";
 import Styles from "./UserManagement.module.css";
-import {
-  Row,
-  Col,
-  Form,
-  InputGroup,
-  FormControl,
-  Button,
-} from "react-bootstrap";
+import SearchFilter from "../../../components/SearchFilter/SearchFilter";
+import { Row, Col } from "react-bootstrap";
 
 function UserManagementTable() {
   const [modalShow, setModalShow] = React.useState(false);
   return (
     <>
-      <p className={Styles.title}>Users</p>
+      <p className={Styles.title}>List of Users</p>
 
       <Row className={Styles.tabrow}>
-        <Col className={Styles.headtabs} sm="4">
-          <div>All</div>
-          <div>Admin</div>
-          <div>HOD</div>
-          <div>Normal User</div>
-        </Col>
-        <Col sm="4"></Col>
-        <Col>
-          <Form className={Styles.searchform}>
-            <InputGroup inline>
-              <FormControl
-                className={Styles.formcontrol}
-                size="lg"
-                inline
-                type="text"
-                placeholder="Search by user name"
-              />
-              <InputGroup.Prepend className={Styles.searchicon}>
-                <Button
-                  size="lg"
-                  type="submit"
-                  className="fa fa-search"
-                ></Button>
-              </InputGroup.Prepend>
-            </InputGroup>
-          </Form>
+        <Col sm="6"></Col>
+
+        <Col className="pt-4 pb-4">
+          {" "}
+          <SearchFilter />
         </Col>
       </Row>
 

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Button, Row, Col } from "react-bootstrap";
 import Styles from "./LandingPage.module.css";
 import landingPageImage from "../assets/landingPageImage.png";
 import kassandah from "../assets/kassandah.PNG";
 import kassandahmobile from "../assets/kassandahmobilepurple.png";
 import { Link } from "react-router-dom";
+import LoginForm from "../../components/Forms/LoginForm/LoginForm";
+import RegistrationForm from "../../components/Forms/RegistrationForm/RegistrationForm";
 
 function LandingPage({ onClick }) {
   const [formInputs, setFormInputs] = useState({
@@ -56,78 +58,24 @@ function LandingPage({ onClick }) {
               </div>
             </Link>
             <div className={Styles.layout2}>
-              <Form className={Styles.form}>
-                <div className={Styles.loginregister}>
-                  <Button
-                    className={formInputs.loginInputs ? active : ""}
-                    onClick={loginSwitch}
-                  >
-                    Login
-                  </Button>
+              <div className={Styles.loginregister}>
+                <Button
+                  className={formInputs.loginInputs ? active : ""}
+                  onClick={loginSwitch}
+                >
+                  Login
+                </Button>
 
-                  <Button
-                    className={formInputs.registerInputs ? active : ""}
-                    onClick={registerSwitch}
-                  >
-                    Register
-                  </Button>
-                </div>
-                {formInputs.registerInputs && (
-                  <Form.Group>
-                    <Form.Label className={Styles.label}>Full Name</Form.Label>
-                    <Form.Control
-                      className={Styles.formcontrol}
-                      type="text"
-                      placeholder="Enter Full Name"
-                    />
-                  </Form.Group>
-                )}
-                <Form.Group>
-                  <Form.Label className={Styles.label}>
-                    Email address
-                  </Form.Label>
-                  <Form.Control
-                    className={Styles.formcontrol}
-                    type="email"
-                    placeholder="Enter email"
-                  />
-                </Form.Group>
-                <Form.Group controlId="formBasicPassword">
-                  <Form.Label className={Styles.label}>Password</Form.Label>
-                  <Form.Control
-                    className={Styles.formcontrol}
-                    type="password"
-                    placeholder="Password"
-                  />
-                </Form.Group>
-                {formInputs.loginInputs && (
-                  <div className={Styles.belowinput}>
-                    <div className={Styles.checkboxes}>
-                      <label for="check">
-                        <input type="checkbox" id="check" />{" "}
-                        <span>Remrmber me</span>
-                      </label>
-                    </div>
-                    <Link className="link" to="/change-password">
-                      <div className={Styles.forgotpas}>Forgot password ?</div>
-                    </Link>
-                  </div>
-                )}
-                {formInputs.loginInputs && (
-                  <Link className="link" to="requester">
-                    <Button className={Styles.submit} type="submit">
-                      Login
-                    </Button>
-                  </Link>
-                )}
-                {formInputs.registerInputs && (
-                  <Link className="link" to="requester">
-                    <Button className={Styles.submit} type="submit">
-                      Register
-                    </Button>
-                  </Link>
-                )}
-              </Form>
+                <Button
+                  className={formInputs.registerInputs ? active : ""}
+                  onClick={registerSwitch}
+                >
+                  Register
+                </Button>
+              </div>
+
+              {formInputs.registerInputs && <RegistrationForm />}
+              {formInputs.loginInputs && <LoginForm />}
             </div>
           </div>
         </Col>

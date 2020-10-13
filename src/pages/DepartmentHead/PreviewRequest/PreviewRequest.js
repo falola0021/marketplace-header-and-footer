@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Form, Button, Row, Col, Modal } from "react-bootstrap";
+import React from "react";
+import { Row, Col, Modal } from "react-bootstrap";
 import Styles from "./PreviewRequest.module.css";
 
 function ImageView(props) {
@@ -14,6 +14,7 @@ function ImageView(props) {
       <Modal.Body>
         <div className={Styles.imgrowdiv}>
           <img
+            alt="logo"
             className={Styles.imgpreview}
             src="https://dwdqz3611m4qq.cloudfront.net/templates/Freelance-Writing-Invoice-Template2-G.jpg?mtime=20191122132723&focal=none"
           />
@@ -63,6 +64,7 @@ function PreviewRequest(props) {
               className={Styles.imgrowdiv}
             >
               <img
+                alt="logo"
                 className={Styles.imgrowimg}
                 src="https://dwdqz3611m4qq.cloudfront.net/templates/Freelance-Writing-Invoice-Template2-G.jpg?mtime=20191122132723&focal=none"
               />

@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import Styles from "./Footer.module.css";
 
-import kassandah from "../../pages/assets/kassandahwhite.png";
+// import kassandah from "../../pages/assets/kassandahwhite.png";
 import kassandahmobile from "../../pages/assets/kassandahwhite.png";
 
 function Footer() {

@@ -26,6 +26,7 @@ function ImageView(props) {
       <Modal.Body>
         <div className={Styles.imgrowdiv}>
           <img
+            alt="logo"
             className={Styles.imgpreview}
             src="https://dwdqz3611m4qq.cloudfront.net/templates/Freelance-Writing-Invoice-Template2-G.jpg?mtime=20191122132723&focal=none"
           />
@@ -87,6 +88,7 @@ function Preview(props) {
               className={Styles.imgrowdiv}
             >
               <img
+                alt="logo"
                 className={Styles.imgrowimg}
                 src="https://dwdqz3611m4qq.cloudfront.net/templates/Freelance-Writing-Invoice-Template2-G.jpg?mtime=20191122132723&focal=none"
               />

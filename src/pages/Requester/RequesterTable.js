@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { Modal } from "react-bootstrap";
-import { Table, Row, Col, InputGroup, Form } from "react-bootstrap";
+import React from "react";
+import { Table } from "react-bootstrap";
 import Styles from "./Requester.module.css";
-import PreviewRequest from "./PreviewRequest/PreviewRequest";
+// import PreviewRequest from "./PreviewRequest/PreviewRequest";
 import {
   ThemeProvider,
   AvatarGroup,
@@ -12,7 +11,6 @@ import {
   Select,
   FormControl,
   Input,
-  FormLabel,
   Button,
 } from "@chakra-ui/core";
 

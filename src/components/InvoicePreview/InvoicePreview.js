@@ -18,7 +18,7 @@ function InvoicePreview({ preview }) {
               alt="invoice"
             />
             <div className={Styles.download}>
-              <i class="fa fa-download" aria-hidden="true">
+              <i className="fa fa-download" aria-hidden="true">
                 <span>Download</span>
               </i>
             </div>

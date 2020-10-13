@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import Styles from "./Workflow.module.css";
-import { Row, Col, Form, Button, Card } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import WorkflowTable from "./WorkflowTable";
 
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
@@ -26,16 +26,16 @@ const columnsFromBackend = {
   // },
 };
 
-const columnsFromBackend2 = {
-  // [uuidv4()]: {
-  //   name: "Requested",
-  //   items: itemsFromBackend,
-  // },
-  [uuidv4()]: {
-    name: "To do",
-    items: [],
-  },
-};
+// const columnsFromBackend2 = {
+// [uuidv4()]: {
+//   name: "Requested",
+//   items: itemsFromBackend,
+// },
+//   [uuidv4()]: {
+//     name: "To do",
+//     items: [],
+//   },
+// };
 
 const onDragEnd = (result, columns, setColumns) => {
   if (!result.destination) return;

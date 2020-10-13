@@ -1,6 +1,7 @@
 import React from "react";
-import { NavDropdown, Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 import Styles from "./Navbar.module.css";
+
 import {
   Avatar,
   Stack,
@@ -12,19 +13,26 @@ import {
   Button,
 } from "@chakra-ui/core";
 import kassandah from "../../pages/assets/kassandahwhite.png";
-import kassandahmobile from "../../pages/assets/kassandah.svg";
+// import kassandahmobile from "../../pages/assets/kassandah.svg";
+import AuthService from "../../services/auth.service";
 
-function Navigation({ handleprofileclick }) {
+function Navigation({ handleprofileclick, handledashboardclick }) {
+  const currentUser = AuthService.getCurrentUser();
+  const initialName = `${currentUser.details.firstName} ${currentUser.details.lastName}`;
+  const logOut = () => {
+    AuthService.logout();
+  };
   return (
     <>
       <Navbar className={Styles.navbackground} expand="lg">
-        <Navbar.Brand href="#home">
+        <Navbar.Brand href="#home" onClick={handledashboardclick}>
           <img
             src={kassandah}
             alt="logo"
             style={{ width: "200px", height: "40px" }}
           />
         </Navbar.Brand>
+
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto"></Nav>
@@ -37,7 +45,7 @@ function Navigation({ handleprofileclick }) {
               <Avatar
                 size="sm"
                 className={Styles.avatar}
-                name="Kola Tioluwani"
+                name={initialName}
                 src="https://bit.ly/tioluwani-kolawole"
               />
             </Stack>
@@ -55,7 +63,9 @@ function Navigation({ handleprofileclick }) {
                   >
                     Profile
                   </MenuItem>
-                  <MenuItem className={Styles.menulist}>Log-out</MenuItem>
+                  <a href="/" onClick={logOut}>
+                    <MenuItem className={Styles.menulist}>Log-out</MenuItem>
+                  </a>
                 </MenuList>
               </Menu>
             </div>

@@ -3,7 +3,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import Styles from "./AdminNav.module.css";
 import { Avatar, Stack, ThemeProvider } from "@chakra-ui/core";
 import kassandah from "../../pages/assets/kassandahwhite.png";
-import kassandahmobile from "../../pages/assets/kassandah.svg";
+// import kassandahmobile from "../../pages/assets/kassandah.svg";
 
 function Navigation({ handleprofileclick }) {
   return (

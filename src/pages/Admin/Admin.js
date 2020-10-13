@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Overview from "./Overview/Overview";
-import UserManangement from "./Vendor/UserManagement/UserManagement";
+import UserManangement from "./UserManagement/UserManagement";
 import Vendor from "./Vendor/Vendor";
 import Workflow from "./Workflow/Workflow";
 import Category from "./Category/Category";

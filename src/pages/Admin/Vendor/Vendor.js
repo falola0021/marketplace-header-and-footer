@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Card } from "react-bootstrap";
+import React from "react";
 import Styles from "./Vendor.module.css";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import VendorTable from "./VendorTable";

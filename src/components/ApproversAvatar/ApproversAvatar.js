@@ -6,10 +6,9 @@ import {
   Avatar,
   AvatarBadge,
 } from "@chakra-ui/core";
-import { yellow } from "@material-ui/core/colors";
 
 function ApproversAvatar() {
-  const [request, setRequest] = useState([
+  const [request] = useState([
     {
       name: "First idea",
       approvers: [

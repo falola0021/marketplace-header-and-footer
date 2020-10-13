@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Row, Col, Modal } from "react-bootstrap";
 import Styles from "./Requester.module.css";
-import RequesterTable from "./RequesterTable";
+// import RequesterTable from "./RequesterTable";
 import MakeRequest from "./MakeRequest/MakeRequest";
-import { Spring, Transition, animated } from "react-spring/renderprops";
+// import { Spring, Transition, animated } from "react-spring/renderprops";
 import PreviewRequest from "./PreviewRequest/PreviewRequest";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -14,7 +14,6 @@ import Table from "../../components/Table/Table";
 import InvoicePreview from "../../components/InvoicePreview/InvoicePreview";
 import Profile from "../../components/UserProfile/UserProfile";
 import {
-  Button,
   ThemeProvider,
   Drawer,
   DrawerBody,
@@ -23,7 +22,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/core";
 
+// import AuthService from "../../services/auth.service";
+
 function Requester() {
+  //const currentUser = AuthService.getCurrentUser();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   // const btnRef = React.useRef();
@@ -35,6 +37,7 @@ function Requester() {
   const sizes = ["xl"];
   const [modalShow, setModalShow] = useState(false);
   const handleRequest = () => setModalShow(true);
+  //{currentUser.details.firstName}
 
   // const [preview, setPreview] = useState(true);
   // const handlePreview = () => setPreview(!preview);
@@ -46,8 +49,8 @@ function Requester() {
   const [switchView, setSwitchView] = useState({
     overview: true,
     profile: false,
-    settings: false,
-    page2: false,
+    // settings: false,
+    // page2: false,
   });
 
   // const handleOverviewClick = () => {
@@ -56,11 +59,17 @@ function Requester() {
   const handleProfileClick = () => {
     setSwitchView({ overview: false, profile: true });
   };
+  const handleDashboardClick = () => {
+    setSwitchView({ overview: true, profile: false });
+  };
 
   return (
     <>
       <div className={Styles.body}>
-        <Navbar handleprofileclick={handleProfileClick} />
+        <Navbar
+          handledashboardclick={handleDashboardClick}
+          handleprofileclick={handleProfileClick}
+        />
         <Row className="mr-0 pr-0 ml-0 pl-0">
           {switchView.overview && (
             <Col>
