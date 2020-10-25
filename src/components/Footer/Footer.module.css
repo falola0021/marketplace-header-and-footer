@@ -1,10 +1,11 @@
 .footer {
   padding: 30px 60px;
-  width: 100%;
+  width: 100% !important;
   min-height: 10rem;
   background-color: #000000;
   margin-bottom: 0 !important;
   color: white;
+  position: absolute;
 }
 .footer div {
   font-size: 14px;

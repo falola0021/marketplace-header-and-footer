@@ -5,131 +5,16 @@
   margin-top: 25px;
 }
 
-.usercontainer {
-  margin-bottom: 70px;
-}
-.userbox {
-  background: #ffffff;
-  padding: 20px 30px;
-  box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-.card {
-  background: #fcfdff;
-  width: 100%;
-  height: 100px;
-  margin-bottom: 20px;
-}
-.cardbody {
-  overflow-x: auto;
-  overflow-y: auto;
-  text-align: center;
-  padding: 10px 5px;
-  cursor: pointer;
-}
-/* width */
-.cardbody::-webkit-scrollbar {
-  width: 5px;
-}
-/* width */
-.cardbody::-webkit-scrollbar {
-  display: none;
-}
-
-/* Track */
-.cardbody::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px #8473cf;
-  border-radius: 10px;
-}
-
-/* Handle */
-.cardbody::-webkit-scrollbar-thumb {
-  background: #a8a9b2;
-  border-radius: 10px;
-}
-.cardtitle {
-  margin: 0 !important;
-  text-align: center;
-  font-size: 15px;
-  font-weight: bold;
-}
-.carddesc {
-  font-size: 12px;
-  margin-bottom: 0 !important;
-}
-.cardbottom {
-  padding-top: 5px;
-  font-size: 10px;
-  text-align: center;
-}
-.heading {
-  font-weight: bold;
-  font-size: 20px;
-  color: #252323;
-  margin-bottom: 20px;
-}
-.form label {
-  font-size: 14px;
-}
-.formcontrol {
-  background: #fcfdff;
-  font-size: 18px;
-}
-.textarea {
-  background: #fcfdff;
-  font-size: 18px;
-  width: 100%;
-  height: 100px;
-
-  outline: none;
-  border: 1px solid rgb(240, 237, 237);
-  padding: 10px;
-  border-radius: 5px;
-}
-.formcontrol:focus {
-  box-shadow: inherit;
-}
-.formcontrol option {
-  font-size: 16px;
-}
-.submitbutton {
-  display: flex;
-  background-color: #8473cf;
-  margin: 30px auto !important;
-  padding-left: 70px;
-  padding-right: 70px;
-  font-size: 15px;
-  font-weight: bold;
-}
-.radiobutton [type="radio"] {
-  -ms-transform: scale(1.5);
-  -webkit-transform: scale(1.5);
-  transform: scale(1.5);
-}
-.radiobuttonrow {
-  margin-top: 10px;
-  margin-bottom: 50px;
-}
-.droparea {
-  padding-top: 20px;
-  padding-top: 50px;
-  padding-bottom: 50px;
-  background-color: #575c96;
-  color: #5d6387;
-  color: #454662;
-  color: #2b2c5d;
-}
 /*/table/*/
 
 .tablebox {
   border: 1px solid rgb(243, 238, 238);
   margin-bottom: 50px;
-  height: 360px;
+
   overflow-y: auto;
+  margin-top: 70px;
   background: #ffffff;
+  min-height: 500px;
 }
 /* width */
 .tablebox::-webkit-scrollbar {

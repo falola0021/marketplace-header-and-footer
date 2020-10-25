@@ -7,20 +7,16 @@ import Category from "./Category/Category";
 import Footer from "../../components/Footer/Footer";
 import AminNav from "../../components/AdminNav/AdminNav";
 import Profile from "../../components/UserProfile/UserProfile";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/actions/authActions/auth";
+// import { Redirect } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import {
-  Row,
-  Col,
-  // Form,
-  // InputGroup,
-  // FormControl,
-  // NavDropdown,
-  // Button,
-  // Dropdown,
-} from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import Styles from "./Admin.module.css";
 
 function Admin() {
+  const dispatch = useDispatch();
   const [changeView, setChangeView] = useState({
     overview: true,
     usermanagement: false,
@@ -30,9 +26,17 @@ function Admin() {
     requestphase: false,
     workflow: false,
   });
+  // const { user: currentUser } = useSelector((state) => state.auth);
+  // if (!currentUser) {
+  //   return <Redirect to="/" />;
+  // }
 
   const active = `${Styles.sidebaractive} `;
   const inactive = `${Styles.sidebarinactive}  `;
+
+  const logOut = () => {
+    dispatch(logout());
+  };
 
   return (
     <>
@@ -192,6 +196,18 @@ function Admin() {
                   ></div>{" "}
                   <span>Profile</span>
                 </div>
+                <a href="/" className="nav-link" onClick={logOut}>
+                  <div
+                    style={{ marginTop: "50px", cursor: "pointer" }}
+                    className={inactive}
+                  >
+                    <div
+                      style={{ color: "#eb14c4" }}
+                      className="fa fa-sign-out-alt"
+                    ></div>{" "}
+                    <span>Logout</span>
+                  </div>
+                </a>
               </div>
             </div>
           </Col>

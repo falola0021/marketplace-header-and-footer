@@ -1,8 +1,13 @@
 import React, { useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
+
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import AuthService from "../../../services/auth.service";
+import { isEmail } from "validator";
+import { login } from "../../../redux/actions/authActions/auth";
+
 import Styles from "./LoginForm.module.css";
 import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
@@ -16,6 +21,15 @@ const required = (value) => {
     );
   }
 };
+const validEmail = (value) => {
+  if (!isEmail(value)) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        This is not a valid email.
+      </div>
+    );
+  }
+};
 
 const Login = (props) => {
   const form = useRef();
@@ -24,7 +38,10 @@ const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [successful, setSuccessful] = useState(false);
+  const dispatch = useDispatch();
+  const { isLoggedIn } = useSelector((state) => state.authReducer);
+  const { message } = useSelector((state) => state.messageReducer);
 
   const onChangeEmail = (e) => {
     const email = e.target.value;
@@ -39,34 +56,27 @@ const Login = (props) => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    setMessage("");
-    setLoading(true);
-
     form.current.validateAll();
-
+    setLoading(true);
     if (checkBtn.current.context._errors.length === 0) {
-      AuthService.login(email, password).then(
-        () => {
-          console.log(AuthService.login);
-          props.history.push("/user");
-          // window.location.reload();
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
+      dispatch(login(email, password))
+        .then((response) => {
           setLoading(false);
-          setMessage(resMessage);
-        }
-      );
+          setSuccessful(true);
+        })
+        .catch((error) => {
+          setLoading(false);
+
+          setSuccessful(false);
+        });
     } else {
       setLoading(false);
     }
   };
+
+  if (isLoggedIn) {
+    return <Redirect to="/user" />;
+  }
 
   return (
     <Form onSubmit={handleLogin} ref={form} className={Styles.form}>
@@ -80,12 +90,12 @@ const Login = (props) => {
             backgroundColor: "rgba(59, 122, 254, 0.02)",
           }}
           placeholder="Enter Email"
-          type="email"
+          type="text"
           className="form-control"
           name="email"
           value={email}
           onChange={onChangeEmail}
-          validations={[required]}
+          validations={[required, validEmail]}
         />
       </div>
 
@@ -120,7 +130,7 @@ const Login = (props) => {
           <span>Login</span>
         </button>
         <Link className="link" to="/change-password">
-        <div className={Styles.forgotpas}>Forgot Password ?</div>
+          <div className={Styles.forgotpas}>Forgot Password ?</div>
         </Link>
       </div>
 

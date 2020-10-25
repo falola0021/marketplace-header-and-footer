@@ -4,8 +4,12 @@ import Styles from "./AdminNav.module.css";
 import { Avatar, Stack, ThemeProvider } from "@chakra-ui/core";
 import kassandah from "../../pages/assets/kassandahwhite.png";
 // import kassandahmobile from "../../pages/assets/kassandah.svg";
+import AuthService from "../../services/auth.service";
 
-function Navigation({ handleprofileclick }) {
+function Navigation() {
+  const currentUser = AuthService.getCurrentUser();
+
+  const initialName = `${currentUser.firstName} ${currentUser.lastName}`;
   return (
     <>
       <Navbar className={Styles.navbackground} expand="lg">
@@ -21,6 +25,9 @@ function Navigation({ handleprofileclick }) {
           <Nav className="mr-auto"></Nav>
           <Nav.Link href="#link">
             <i className="fa fa-bell "></i>
+            <span style={{ color: "#ffffff", padding: "0 10px" }}>
+              Hi {currentUser.roles}{" "}
+            </span>
           </Nav.Link>
 
           <ThemeProvider>
@@ -28,7 +35,7 @@ function Navigation({ handleprofileclick }) {
               <Avatar
                 size="sm"
                 className={Styles.avatar}
-                name="Kola Tioluwani"
+                name={initialName}
                 src="https://bit.ly/tioluwani-kolawole"
               />
             </Stack>

@@ -1,24 +1,27 @@
 import http from "./http-common";
 
 const getAll = () => {
-  return http.get("/api/role");
+  return http.get(
+    "/api/user?limit&offset&email&mobile&status&fullName&startDate&endDate"
+  );
 };
 
 const get = (id) => {
   return http.get(`/roles/${id}`);
 };
 
-const create = (firstName, lastName, email, password,role) => {
-  return http
-    .post("/api/admin/user/create",
-       
-     {
-      
-      firstName, lastName, email, password,role
+const create = (firstName, lastName, email, password, role) => {
+  return http.post(
+    "/api/admin/user",
+
+    {
+      firstName,
+      lastName,
+      email,
+      password,
+      role,
     }
-    
-    )
-   
+  );
 };
 
 const update = (id, data) => {

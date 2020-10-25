@@ -18,7 +18,8 @@ import AuthService from "../../services/auth.service";
 
 function Navigation({ handleprofileclick, handledashboardclick }) {
   const currentUser = AuthService.getCurrentUser();
-  const initialName = `${currentUser.details.firstName} ${currentUser.details.lastName}`;
+  const initialName = `${currentUser.firstName} ${currentUser.lastName}`;
+  console.log(currentUser);
   const logOut = () => {
     AuthService.logout();
   };
@@ -36,8 +37,13 @@ function Navigation({ handleprofileclick, handledashboardclick }) {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto"></Nav>
+
           <Nav.Link href="#link">
-            <i className="fa fa-bell "></i>
+            <i className="fa fa-bell "> </i>
+            <span style={{ color: "#ffffff", padding: "0 10px" }}>
+              Hi {currentUser.firstName}{" "}
+            </span>
+            {/* <span style={{ color: "#ffffff" }}>Role : {currentUser.roles}</span> */}
           </Nav.Link>
 
           <ThemeProvider>
@@ -49,6 +55,7 @@ function Navigation({ handleprofileclick, handledashboardclick }) {
                 src="https://bit.ly/tioluwani-kolawole"
               />
             </Stack>
+
             <div className={Styles.desktopmenu}>
               <Menu>
                 <MenuButton

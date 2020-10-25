@@ -6,7 +6,6 @@ import AuthService from "../../services/auth.service";
 function Users() {
   const currentUser = AuthService.getCurrentUser();
   const userRole = currentUser.roles[0];
-  console.log(typeof userRole);
 
   if (userRole === "admin") {
     return <Admin />;

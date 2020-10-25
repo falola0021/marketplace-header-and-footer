@@ -21,9 +21,10 @@ const login = (email, password) => {
       if (response.data) {
         //localStorage.setItem("user", JSON.stringify(response.data.data));
         const res = response.data.data;
-setToken(res);
-setUser(res)
+        setToken(res);
+        setUser(res);
       }
+
       return response.data.data;
     });
 };
@@ -44,14 +45,14 @@ export default {
 };
 
 const setToken = (data) => {
-localStorage.setItem("token",data.token)
-localStorage.setItem("refreshToken",data.refreshToken)
-}
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("refreshToken", data.refreshToken);
+};
 
 const setUser = (data) => {
   const userObject = {
     ...data.details,
-    roles: data.roles
-  }
-  localStorage.setItem("user",JSON.stringify(userObject))
-}
+    roles: data.roles,
+  };
+  localStorage.setItem("user", JSON.stringify(userObject));
+};

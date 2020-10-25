@@ -9,7 +9,7 @@ function Footer() {
   return (
     <>
       <footer className={Styles.footer}>
-        <Row>
+        <Row className="mb-0 pb-0">
           <Col sm="3">
             <img
               className={Styles.footerimage}

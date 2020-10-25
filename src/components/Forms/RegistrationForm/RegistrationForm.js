@@ -1,10 +1,11 @@
 import React, { useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../../../redux/actions/authActions/auth";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import { Row, Col } from "react-bootstrap";
 import { isEmail } from "validator";
-import AuthService from "../../../services/auth.service";
+import { Row, Col } from "react-bootstrap";
 import Styles from "./RegistrationForm.module.css";
 
 const required = (value) => {
@@ -66,7 +67,9 @@ const Register = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [successful, setSuccessful] = useState(false);
-  const [message, setMessage] = useState("");
+  const { message } = useSelector((state) => state.messageReducer);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const onChangeFirstName = (e) => {
     const firstName = e.target.value;
@@ -89,30 +92,21 @@ const Register = (props) => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-
-    setMessage("");
     setSuccessful(false);
-
+    setLoading(true);
     form.current.validateAll();
 
     if (checkBtn.current.context._errors.length === 0) {
-      AuthService.register(firstName, lastName, email, password).then(
-        (response) => {
-          setMessage(response.data.message);
+      dispatch(register(firstName, lastName, email, password))
+        .then((response) => {
+          setLoading(false);
+          // setMessage(response.data.messageReducer);
           setSuccessful(true);
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
-          setMessage(resMessage);
+        })
+        .catch(() => {
           setSuccessful(false);
-        }
-      );
+          setLoading(false);
+        });
     }
   };
 
@@ -134,7 +128,7 @@ const Register = (props) => {
                   placeholder="Enter Firstname"
                   type="text"
                   className="form-control"
-                  name="firstNmae"
+                  name="firstName"
                   value={firstName}
                   onChange={onChangeFirstName}
                   validations={[required, vfirstname]}
@@ -206,6 +200,9 @@ const Register = (props) => {
               style={{ backgroundColor: "#4f26aa", color: "#ffffff" }}
               className="btn  btn-block"
             >
+              {loading && (
+                <span className="spinner-border spinner-border-sm"></span>
+              )}
               Sign Up
             </button>
           </div>

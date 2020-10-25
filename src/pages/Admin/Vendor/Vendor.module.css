@@ -18,12 +18,13 @@
 }
 .heading {
   font-weight: bold;
-  font-size: 20px;
+  font-size: 24px;
   color: #252323;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  text-align: center;
 }
 .form label {
-  font-size: 14px;
+  font-size: 13px;
 }
 .formcontrol {
   background: #fcfdff;
@@ -52,6 +53,7 @@
   margin-bottom: 50px;
   height: 360px;
   overflow-y: auto;
+
   background: #ffffff;
 }
 /* width */

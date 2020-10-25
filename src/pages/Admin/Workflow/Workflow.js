@@ -1,41 +1,25 @@
 import React, { useState } from "react";
-
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { v4 as uuid } from "uuid";
 import Styles from "./Workflow.module.css";
-import { Row, Col } from "react-bootstrap";
 import WorkflowTable from "./WorkflowTable";
 
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { v4 as uuidv4 } from "uuid";
-
 const itemsFromBackend = [
-  { id: uuidv4(), content: "First phase" },
-  { id: uuidv4(), content: "Second phase" },
-  { id: uuidv4(), content: "Third phase" },
-  { id: uuidv4(), content: "Fourth phase" },
-  { id: uuidv4(), content: "Fifth phase" },
+  { id: uuid(), content: "First task" },
+  { id: uuid(), content: "Second task" },
+  { id: uuid(), content: "Third task" },
 ];
 
 const columnsFromBackend = {
-  [uuidv4()]: {
-    name: "Requested",
+  [uuid()]: {
+    name: "Phases",
     items: itemsFromBackend,
   },
-  // [uuidv4()]: {
-  //   name: "To do",
-  //   items: [],
-  // },
+  [uuid()]: {
+    name: "Workflow",
+    items: [],
+  },
 };
-
-// const columnsFromBackend2 = {
-// [uuidv4()]: {
-//   name: "Requested",
-//   items: itemsFromBackend,
-// },
-//   [uuidv4()]: {
-//     name: "To do",
-//     items: [],
-//   },
-// };
 
 const onDragEnd = (result, columns, setColumns) => {
   if (!result.destination) return;
@@ -74,11 +58,10 @@ const onDragEnd = (result, columns, setColumns) => {
   }
 };
 
-function Appp() {
+function DND() {
   const [columns, setColumns] = useState(columnsFromBackend);
-
   return (
-    <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+    <div style={{ display: "flex", height: "100%" }}>
       <DragDropContext
         onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
       >
@@ -92,7 +75,7 @@ function Appp() {
               }}
               key={columnId}
             >
-              <h2>{column.name}</h2>
+              <div className={Styles.title}>{column.name}</div>
               <div style={{ margin: 8 }}>
                 <Droppable droppableId={columnId} key={columnId}>
                   {(provided, snapshot) => {
@@ -102,46 +85,142 @@ function Appp() {
                         ref={provided.innerRef}
                         style={{
                           background: snapshot.isDraggingOver
-                            ? "lightblue"
-                            : "lightgrey",
+                            ? "#ffeaed"
+                            : "#ffffff",
                           padding: 4,
                           width: 250,
                           minHeight: 500,
                         }}
                       >
-                        {column.items.map((item, index) => {
-                          return (
-                            <Draggable
-                              key={item.id}
-                              draggableId={item.id}
-                              index={index}
-                            >
-                              {(provided, snapshot) => {
+                        {index === 1 ? (
+                          <form>
+                            <div style={{ marginBottom: "0px" }}>
+                              <label>Name:</label>
+                              <input
+                                style={{
+                                  width: "100%",
+                                  height: "40px",
+                                  outline: "none",
+                                  border: "1px solid #4f26aa",
+                                }}
+                                placeholder="Enter Workflow Name"
+                              ></input>
+                              <label
+                                style={{
+                                  textAlign: "center",
+                                  marginTop: "5px",
+                                  width: "100%",
+                                }}
+                              >
+                                Drop and arrange Phases
+                              </label>
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                  marginBottom: "5px",
+                                  width: "100%",
+                                }}
+                                className="fa fa-arrow-down"
+                              ></div>
+                            </div>
+
+                            <div style={{ minHeight: "250px" }}>
+                              {column.items.map((item, index) => {
                                 return (
-                                  <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    style={{
-                                      userSelect: "none",
-                                      padding: 16,
-                                      margin: "0 0 8px 0",
-                                      minHeight: "50px",
-                                      backgroundColor: snapshot.isDragging
-                                        ? "#263B4A"
-                                        : "#456C86",
-                                      color: "white",
-                                      ...provided.draggableProps.style,
-                                    }}
+                                  <Draggable
+                                    key={item.id}
+                                    draggableId={item.id}
+                                    index={index}
                                   >
-                                    {item.content}
-                                  </div>
+                                    {(provided, snapshot) => {
+                                      return (
+                                        <div
+                                          ref={provided.innerRef}
+                                          {...provided.draggableProps}
+                                          {...provided.dragHandleProps}
+                                          style={{
+                                            userSelect: "none",
+                                            padding: 10,
+                                            margin: "0 0 8px 0",
+                                            minHeight: "0px",
+                                            backgroundColor: snapshot.isDragging
+                                              ? "#4f26aa"
+                                              : "#f9f9f9",
+                                            color: snapshot.isDragging
+                                              ? "#ffffff"
+                                              : "#4f26aa",
+                                            border: "1px solid #4f26aa",
+
+                                            ...provided.draggableProps.style,
+                                          }}
+                                        >
+                                          {item.content}
+                                        </div>
+                                      );
+                                    }}
+                                  </Draggable>
                                 );
+                              })}
+                            </div>
+                            {provided.placeholder}
+
+                            <button
+                              style={{
+                                width: "100%",
+                                height: "40px",
+                                outline: "none",
+                                backgroundColor: "#4f26aa",
+                                color: "#ffffff",
+                                border: "none",
+                                fontWeight: "bold",
                               }}
-                            </Draggable>
-                          );
-                        })}
-                        {provided.placeholder}
+                            >
+                              Create Workflow
+                            </button>
+                          </form>
+                        ) : (
+                          <div>
+                            <div style={{ minHeight: "250px" }}>
+                              {column.items.map((item, index) => {
+                                return (
+                                  <Draggable
+                                    key={item.id}
+                                    draggableId={item.id}
+                                    index={index}
+                                  >
+                                    {(provided, snapshot) => {
+                                      return (
+                                        <div
+                                          ref={provided.innerRef}
+                                          {...provided.draggableProps}
+                                          {...provided.dragHandleProps}
+                                          style={{
+                                            userSelect: "none",
+                                            padding: 10,
+                                            margin: "0 0 8px 0",
+                                            minHeight: "0px",
+                                            backgroundColor: snapshot.isDragging
+                                              ? "#4f26aa"
+                                              : "#f9f9f9",
+                                            color: snapshot.isDragging
+                                              ? "#ffffff"
+                                              : "#4f26aa",
+                                            border: "1px solid #4f26aa",
+
+                                            ...provided.draggableProps.style,
+                                          }}
+                                        >
+                                          {item.content}
+                                        </div>
+                                      );
+                                    }}
+                                  </Draggable>
+                                );
+                              })}
+                            </div>
+                            {provided.placeholder}
+                          </div>
+                        )}
                       </div>
                     );
                   }}
@@ -151,31 +230,11 @@ function Appp() {
           );
         })}
       </DragDropContext>
+      <div>
+        <WorkflowTable />
+      </div>
     </div>
   );
 }
 
-function Workflow() {
-  return (
-    <>
-      <div className={Styles.body}>
-        <p className={Styles.title}>Workflow</p>
-        <Appp />
-
-        <Row className={Styles.usercontainer}>
-          <Col sm="8" className={Styles.userbox}>
-            <div className={Styles.heading}>Available Phases</div>
-          </Col>
-          <Col className={Styles.userbox}>
-            <div className={Styles.heading}>Create Workflow</div>
-            <form></form>
-          </Col>{" "}
-        </Row>
-
-        <WorkflowTable />
-      </div>
-    </>
-  );
-}
-
-export default Workflow;
+export default DND;
