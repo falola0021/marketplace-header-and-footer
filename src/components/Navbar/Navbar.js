@@ -11,12 +11,17 @@ import {
   MenuList,
   MenuButton,
   Button,
+  Switch,
 } from "@chakra-ui/core";
 import kassandah from "../../pages/assets/kassandahwhite.png";
 // import kassandahmobile from "../../pages/assets/kassandah.svg";
 import AuthService from "../../services/auth.service";
 
-function Navigation({ handleprofileclick, handledashboardclick }) {
+function Navigation({
+  handleprofileclick,
+  handledashboardclick,
+  handleSwitchUser,
+}) {
   const currentUser = AuthService.getCurrentUser();
   const initialName = `${currentUser.firstName} ${currentUser.lastName}`;
   console.log(currentUser);
@@ -36,7 +41,15 @@ function Navigation({ handleprofileclick, handledashboardclick }) {
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto"></Nav>
+          <Nav className="mr-auto"> </Nav>
+          <div>
+            <ThemeProvider>
+              <div className={Styles.switch}>
+                <div>Switch Role</div>{" "}
+                <Switch onChange={handleSwitchUser} size="sm" />
+              </div>
+            </ThemeProvider>
+          </div>
 
           <Nav.Link href="#link">
             <i className="fa fa-bell "> </i>

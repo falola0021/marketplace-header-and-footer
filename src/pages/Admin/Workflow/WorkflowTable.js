@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { Table } from "react-bootstrap";
 import Styles from "./Workflow.module.css";
@@ -10,9 +10,50 @@ import {
   FormControl,
   Button,
 } from "react-bootstrap";
+import WorkflowDataService from "../../../services/workflow.service";
 
 function WorkflowTable() {
-  const [modalShow, setModalShow] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const [successful, setSuccessful] = useState(false);
+  const [message, setMessage] = useState("");
+  const [workflows, setWorkflows] = useState([]);
+
+  const retrieveWorkflow = async () => {
+    await WorkflowDataService.getAll()
+      .then((response) => {
+        setWorkflows(response.data.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  useEffect(() => {
+    retrieveWorkflow();
+  }, []);
+
+  const deleteWorkflow = (workflow) => {
+    WorkflowDataService.remove(workflow._id).then(
+      (response) => {
+        setMessage(response.data.message);
+        retrieveWorkflow();
+        setLoading(false);
+        setSuccessful(true);
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.error) ||
+          error.message ||
+          error.toString();
+        setSuccessful(false);
+        setLoading(false);
+        setMessage(resMessage);
+        console.log(error.response);
+      }
+    );
+  };
   return (
     <>
       {/* <div className={Styles.title}>Available Workflow</div> */}
@@ -22,6 +63,7 @@ function WorkflowTable() {
           <thead className={Styles.thead}>
             <tr>
               <th>Name</th>
+              <th>Description</th>
               <th>Phases</th>
 
               <th></th>
@@ -29,28 +71,23 @@ function WorkflowTable() {
           </thead>
 
           <tbody className={Styles.tbody}>
-            <tr>
-              <td>Anayo Kamali</td>
-              <td>anayo.kamali@thegiggroupng.com</td>
+            {workflows.map((workflow) => (
+              <tr key={workflow._id}>
+                <td>{workflow.name}</td>
+                <td>{workflow.description}</td>
+                {/* <td>{workflow.phases}</td> */}
+                <td>put the phases here</td>
 
-              <td className={Styles.action}>
-                <div className={Styles.delete}>
-                  <i className="fa fa-trash"></i>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Anayo Kamali</td>
-              <td>
-                anayo.kamali@thegiggroupng.com F DFFFFFFFFV DDDDDDDDD FFFFFFFF
-              </td>
-
-              <td className={Styles.action}>
-                <div className={Styles.delete}>
-                  <i className="fa fa-trash"></i>
-                </div>
-              </td>
-            </tr>
+                <td className={Styles.action}>
+                  <div
+                    onClick={() => deleteWorkflow(workflow)}
+                    className={Styles.delete}
+                  >
+                    <i className="fa fa-trash"></i>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>

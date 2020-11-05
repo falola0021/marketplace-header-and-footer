@@ -1,24 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
 import Styles from "./Workflow.module.css";
 import WorkflowTable from "./WorkflowTable";
+import Form1 from "react-validation/build/form";
+import Input from "react-validation/build/input";
+import PhaseDataService from "../../../services/phase.service";
+import WorkflowDataService from "../../../services/workflow.service";
+import CheckButton from "react-validation/build/button";
 
-const itemsFromBackend = [
-  { id: uuid(), content: "First task" },
-  { id: uuid(), content: "Second task" },
-  { id: uuid(), content: "Third task" },
-];
-
-const columnsFromBackend = {
-  [uuid()]: {
-    name: "Phases",
-    items: itemsFromBackend,
-  },
-  [uuid()]: {
-    name: "Workflow",
-    items: [],
-  },
+const required = (value) => {
+  if (!value) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        This field is required!
+      </div>
+    );
+  }
 };
 
 const onDragEnd = (result, columns, setColumns) => {
@@ -59,7 +57,98 @@ const onDragEnd = (result, columns, setColumns) => {
 };
 
 function DND() {
-  const [columns, setColumns] = useState(columnsFromBackend);
+  const [columns, setColumns] = useState(() => {
+    return {
+      phases: {
+        name: "Phases",
+        items: [],
+      },
+      workflow: {
+        name: "Workflow",
+        items: [],
+      },
+    };
+  });
+  // const [phases, setPhases] = useState([]);
+
+  const retrievePhases = async () => {
+    await PhaseDataService.getAll()
+      .then((response) => {
+        setColumns((previousState) => {
+          previousState.phases.items = response.data.data;
+          return { ...previousState };
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  useEffect(() => {
+    retrievePhases();
+  }, []);
+
+  const form = useRef();
+  const checkBtn = useRef();
+
+  const [loading, setLoading] = useState(false);
+  const [successful, setSuccessful] = useState(false);
+  const [message, setMessage] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [phases, setPhases] = useState([]);
+
+  const onChangeName = (e) => {
+    const name = e.target.value;
+    setName(name);
+  };
+
+  const onChangePhases = (e) => {
+    const phases = e.target.value;
+    setPhases(phases);
+  };
+  const onChangeDescription = (e) => {
+    const description = e.target.value;
+    setDescription(description);
+  };
+
+  const handleCreateWorkflow = (e) => {
+    e.preventDefault();
+    setSuccessful(false);
+    setLoading(true);
+    setMessage("");
+
+    form.current.validateAll();
+
+    if (checkBtn.current.context._errors.length === 0) {
+      var workflowIds = [];
+      for (var item of columns.workflow?.items) {
+        workflowIds.push(item._id);
+      }
+      WorkflowDataService.create(name, description, workflowIds).then(
+        (response) => {
+          setMessage(response.data.message);
+          // retrievePhases();
+          setLoading(false);
+          setSuccessful(true);
+        },
+        (error) => {
+          const resMessage = error.response.data.message;
+          error.toString();
+          setSuccessful(false);
+          setLoading(false);
+          setMessage(error.response.data.message);
+          console.log(error.response.data.message);
+          // setTimeout(function () {
+          //   setMessage("");
+          // }, 1000);
+        }
+      );
+    } else {
+      setLoading(false);
+    }
+  };
+
   return (
     <div style={{ display: "flex", height: "100%" }}>
       <DragDropContext
@@ -89,14 +178,18 @@ function DND() {
                             : "#ffffff",
                           padding: 4,
                           width: 250,
-                          minHeight: 500,
+                          minHeight: 700,
                         }}
                       >
                         {index === 1 ? (
-                          <form>
+                          <Form1
+                            onSubmit={handleCreateWorkflow}
+                            ref={form}
+                            className={Styles.form}
+                          >
                             <div style={{ marginBottom: "0px" }}>
-                              <label>Name:</label>
-                              <input
+                              <label style={{ fontSize: "12px" }}>Name:</label>
+                              <Input
                                 style={{
                                   width: "100%",
                                   height: "40px",
@@ -104,7 +197,28 @@ function DND() {
                                   border: "1px solid #4f26aa",
                                 }}
                                 placeholder="Enter Workflow Name"
-                              ></input>
+                                type="text"
+                                name="name"
+                                onChange={onChangeName}
+                                validations={[required]}
+                              />
+
+                              <label style={{ fontSize: "12px" }}>
+                                Description:
+                              </label>
+                              <textarea
+                                style={{
+                                  width: "100%",
+                                  height: "40px",
+                                  outline: "none",
+                                  border: "1px solid #4f26aa",
+                                }}
+                                placeholder="Describe Workflow"
+                                type="text"
+                                name="description"
+                                onChange={onChangeDescription}
+                                validations={[required]}
+                              ></textarea>
                               <label
                                 style={{
                                   textAlign: "center",
@@ -124,12 +238,12 @@ function DND() {
                               ></div>
                             </div>
 
-                            <div style={{ minHeight: "250px" }}>
+                            <div style={{ minHeight: "150px" }}>
                               {column.items.map((item, index) => {
                                 return (
                                   <Draggable
-                                    key={item.id}
-                                    draggableId={item.id}
+                                    key={item._id}
+                                    draggableId={item._id}
                                     index={index}
                                   >
                                     {(provided, snapshot) => {
@@ -154,7 +268,17 @@ function DND() {
                                             ...provided.draggableProps.style,
                                           }}
                                         >
-                                          {item.content}
+                                          <input
+                                            style={{
+                                              visibility: "hidden",
+                                              position: "absolute",
+                                            }}
+                                            type="text"
+                                            name="phases"
+                                            value={item._id}
+                                            onChange={onChangePhases}
+                                          ></input>
+                                          {item.name}
                                         </div>
                                       );
                                     }}
@@ -175,17 +299,42 @@ function DND() {
                                 fontWeight: "bold",
                               }}
                             >
+                              {loading && (
+                                <span className="spinner-border spinner-border-sm"></span>
+                              )}
                               Create Workflow
                             </button>
-                          </form>
+
+                            <span>
+                              {message && (
+                                <div className="form-group">
+                                  <div
+                                    className={
+                                      successful
+                                        ? "alert alert-success"
+                                        : "alert alert-danger"
+                                    }
+                                    role="alert"
+                                  >
+                                    {message}
+                                  </div>
+                                </div>
+                              )}
+                            </span>
+
+                            <CheckButton
+                              style={{ display: "none" }}
+                              ref={checkBtn}
+                            />
+                          </Form1>
                         ) : (
                           <div>
                             <div style={{ minHeight: "250px" }}>
                               {column.items.map((item, index) => {
                                 return (
                                   <Draggable
-                                    key={item.id}
-                                    draggableId={item.id}
+                                    key={item._id}
+                                    draggableId={item._id}
                                     index={index}
                                   >
                                     {(provided, snapshot) => {
@@ -210,7 +359,17 @@ function DND() {
                                             ...provided.draggableProps.style,
                                           }}
                                         >
-                                          {item.content}
+                                          <input
+                                            type="text"
+                                            name="phases"
+                                            value={item._id}
+                                            onChange={onChangePhases}
+                                            style={{
+                                              visibility: "hidden",
+                                              position: "absolute",
+                                            }}
+                                          ></input>
+                                          {item.name}
                                         </div>
                                       );
                                     }}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Styles from "./Table.module.css";
 import ApproversAvatar from "../ApproversAvatar/ApproversAvatar";
 import ProgressBar from "../ProgressBar/ProgressBar";
@@ -23,146 +23,23 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-// import ActionButton from "../ActionButton/ActionButton";
+import RequestDataService from "../../services/requester.service";
+import AuthService from "../../services/auth.service";
+import Addrequest from "../../components/ActionButton/Addrequest/Addrequest";
+import MakeRequest from "../../pages/Requester/MakeRequest/MakeRequest";
+import { Row, Col } from "react-bootstrap";
+import InvoicePreview from "../../components/InvoicePreview/InvoicePreview";
+import moment from "moment";
 
-// import DeleteIcon from "@material-ui/icons/Delete";
-// import FilterListIcon from "@material-ui/icons/FilterList";
-
-function createData(
-  title,
-  item,
-  amount,
-  due,
-  approver,
-  progress,
-  status
-  // action
-) {
-  return {
-    title,
-    item,
-    amount,
-
-    due,
-    approver,
-    progress,
-    status,
-    // action,
-  };
-}
-
-const rows = [
-  createData(
-    "Cupcake",
-    "ade",
-    "lolaWWWW",
-    "fhfhhff",
-
-    <ApproversAvatar />,
-    <ProgressBar />,
-    <ConfirmationStatus />
-  ),
-  createData(
-    "Cupcake",
-    "ade",
-    "lolaWWWW",
-    "fhfhhff",
-
-    <ApproversAvatar />,
-    <ProgressBar />,
-    <ConfirmationStatus />
-  ),
-  createData(
-    "Cupcake",
-    "ade",
-    "lolaWWWW",
-    "fhfhhff",
-
-    <ApproversAvatar />,
-    <ProgressBar />,
-    <ConfirmationStatus />
-  ),
-  createData(
-    "Cupcake",
-    "ade",
-    "lolaWWWW",
-    "fhfhhff",
-
-    <ApproversAvatar />,
-    <ProgressBar />,
-    <ConfirmationStatus />
-  ),
-  createData(
-    "Cupcake",
-    "ade",
-    "lolaWWWW",
-    "fhfhhff",
-
-    <ApproversAvatar />,
-    <ProgressBar />,
-    <ConfirmationStatus />
-  ),
-  createData(
-    "Cupcake",
-    "ade",
-    "lolaWWWW",
-    "fhfhhff",
-
-    <ApproversAvatar />,
-    <ProgressBar />,
-    <ConfirmationStatus />
-  ),
-  createData(
-    "Cupcake",
-    "ade",
-    "lolaWWWW",
-    "fhfhhff",
-
-    <ApproversAvatar />,
-    <ProgressBar />,
-    <ConfirmationStatus />
-  ),
-  createData(
-    "Cupcake",
-    "ade",
-    "lolaWWWW",
-    "fhfhhff",
-
-    <ApproversAvatar />,
-    <ProgressBar />,
-    <ConfirmationStatus />
-  ),
-  createData(
-    "Cupcake",
-    "ade",
-    "lolaWWWW",
-    "fhfhhff",
-
-    <ApproversAvatar />,
-    <ProgressBar />,
-    <ConfirmationStatus />
-  ),
-  createData(
-    "Cupcake",
-    "ade",
-    "lolaWWWW",
-    "fhfhhff",
-
-    <ApproversAvatar />,
-    <ProgressBar />,
-    <ConfirmationStatus />
-  ),
-  createData(
-    "Cupcake",
-    "ade",
-    "lolaWWWW",
-    "fhfhhff",
-
-    <ApproversAvatar />,
-    <ProgressBar />,
-    <ConfirmationStatus />
-  ),
-];
+import {
+  Drawer,
+  DrawerBody,
+  DrawerOverlay,
+  DrawerContent,
+  useDisclosure,
+  ThemeProvider,
+  // Textarea,
+} from "@chakra-ui/core";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -292,55 +169,87 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
+  const sizes = ["xl"];
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [size, setSize] = React.useState("md");
+  const handleClick = (newSize) => {
+    setSize(newSize);
+    onOpen();
+  };
 
   return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          className={classes.title}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          <div className={Styles.tabletop}>
-            <span className={Styles.tablename}>Request Table</span>{" "}
-            <span>
-              <SearchFilter />
-            </span>
-          </div>
-        </Typography>
-      )}
+    <>
+      <Toolbar
+        className={clsx(classes.root, {
+          [classes.highlight]: numSelected > 0,
+        })}
+      >
+        {numSelected > 0 ? (
+          <Typography
+            className={classes.title}
+            color="inherit"
+            variant="subtitle1"
+            component="div"
+          >
+            {numSelected} selected
+          </Typography>
+        ) : (
+          <Typography
+            className={classes.title}
+            variant="h6"
+            id="tableTitle"
+            component="div"
+          >
+            <div className={Styles.tabletop}>
+              <span>
+                <SearchFilter />
+              </span>
+              <span className={Styles.tablename}>
+                <div className={Styles.addrequest}>
+                  {sizes.map((size) => (
+                    <Addrequest
+                      name="Make a request"
+                      onClick={() => handleClick(size)}
+                      type="button"
+                      key={size}
+                    />
+                  ))}
+                </div>
+              </span>{" "}
+            </div>
+          </Typography>
+        )}
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <i className="fa fa-trash"></i>
+        {numSelected > 0 ? (
+          <Tooltip title="Delete">
+            <IconButton aria-label="delete">
+              <i className="fa fa-trash"></i>
 
-            {/* <DeleteIcon /> */}
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <span></span>
-        // <Tooltip title="Filter list">
-        //   <IconButton aria-label="filter list">
-        //     {/* <FilterListIcon /> */}
-        //   </IconButton>
-        // </Tooltip>
-      )}
-    </Toolbar>
+              {/* <DeleteIcon /> */}
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <span></span>
+        )}
+      </Toolbar>
+
+      <ThemeProvider>
+        <Drawer onClose={onClose} isOpen={isOpen} size={size}>
+          <span className={Styles.requestform}>
+            <DrawerOverlay
+              style={{ backgroundColor: "rgba(255, 255, 255,0.2)" }}
+            />
+
+            <DrawerContent>
+              <DrawerBody>
+                {" "}
+                <MakeRequest closeDrawer={onClose} />
+              </DrawerBody>
+            </DrawerContent>
+          </span>
+        </Drawer>
+      </ThemeProvider>
+    </>
   );
 };
 
@@ -370,11 +279,10 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
     alignItems: "center",
-    // color: "red",
   },
 }));
 
-export default function EnhancedTable({ preview }) {
+export default function EnhancedTable(props, { preview }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -382,6 +290,42 @@ export default function EnhancedTable({ preview }) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const [requests, setRequests] = React.useState([]);
+  const [loading, setLoading] = useState(false);
+  const [successful, setSuccessful] = useState(false);
+  const [message, setMessage] = useState("");
+  const [allUserRequest, setAllUserRequest] = useState("");
+  const currentUser = AuthService.getCurrentUser();
+  const [drawerInfo, setDrawerInfo] = React.useState({});
+
+  const checkBtn = useRef();
+  const form = useRef();
+
+  const size1 = "xs";
+  const size2 = "lg";
+
+  const retrieveRequests = async () => {
+    await RequestDataService.getUserTicketList()
+      .then((response) => {
+        setRequests(response.data.data.mytickets);
+        console.log(response.data.data.mytickets);
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log(e.response);
+      });
+  };
+
+  useEffect(() => {
+    retrieveRequests();
+  }, []);
+
+  const handleShowMore = (event, request) => {
+    setDrawerInfo(request);
+    // setSize(newSize);
+    // onOpen();
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -391,19 +335,19 @@ export default function EnhancedTable({ preview }) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.vendor);
+      const newSelecteds = requests.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, vendor) => {
-    const selectedIndex = selected.indexOf(vendor);
+  const handleClick = (event, _id) => {
+    const selectedIndex = selected.indexOf(_id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, vendor);
+      newSelected = newSelected.concat(selected, _id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -431,95 +375,155 @@ export default function EnhancedTable({ preview }) {
     setDense(event.target.checked);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, requests.length - page * rowsPerPage);
 
   return (
-    <div className={classes.root}>
-      <Paper>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            className={Styles.table}
-            // className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.vendor);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+    <>
+      <Row className="mt-5 mb-5">
+        <Col sm="9">
+          <div className={classes.root}>
+            <Paper>
+              <EnhancedTableToolbar numSelected={selected.length} />
+              <TableContainer>
+                <Table
+                  className={Styles.table}
+                  aria-labelledby="tableTitle"
+                  size={dense ? "small" : "medium"}
+                  aria-label="enhanced table"
+                >
+                  <EnhancedTableHead
+                    classes={classes}
+                    numSelected={selected.length}
+                    order={order}
+                    orderBy={orderBy}
+                    onSelectAllClick={handleSelectAllClick}
+                    onRequestSort={handleRequestSort}
+                    rowCount={requests.length}
+                  />
+                  <TableBody>
+                    {stableSort(requests, getComparator(order, orderBy))
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((request, index) => {
+                        const isItemSelected = isSelected(request._id);
+                        const labelId = `enhanced-table-checkbox-${index}`;
+                        const phases = request.workflow.phases;
 
-                  return (
-                    <TableRow
-                      hover
-                      // onClick={(event) => handleClick(event, row.vendor)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.vendor}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onClick={(event) => handleClick(event, row.vendor)}
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            aria-checked={isItemSelected}
+                            tabIndex={-1}
+                            key={request._id}
+                            selected={isItemSelected}
+                          >
+                            {/* {currentUser.userId == request.user && (
+                        <> */}
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                onClick={(event) =>
+                                  handleClick(event, request._id)
+                                }
+                                checked={isItemSelected}
+                                inputProps={{ "aria-labelledby": labelId }}
+                              />
+                            </TableCell>
+
+                            <TableCell
+                              onClick={(event) =>
+                                handleShowMore(event, request)
+                              }
+                              align="left"
+                            >
+                              {request.description}
+                            </TableCell>
+
+                            <TableCell
+                              onClick={(event) =>
+                                handleShowMore(event, request)
+                              }
+                              onClick={(event) =>
+                                handleShowMore(event, request)
+                              }
+                              align="left"
+                            >
+                              {request.items}{" "}
+                            </TableCell>
+                            <TableCell
+                              onClick={(event) =>
+                                handleShowMore(event, request)
+                              }
+                              align="left"
+                            >
+                              {request.amount}
+                            </TableCell>
+                            <TableCell
+                              onClick={(event) =>
+                                handleShowMore(event, request)
+                              }
+                              align="left"
+                            >
+                              {moment(request.dueDate).format("DD/MM/YYYY")}
+                            </TableCell>
+                            <TableCell align="left">
+                              <ApproversAvatar
+                                dotColor={request.status}
+                                phases={phases}
+                              />
+                            </TableCell>
+                            <TableCell align="left">
+                              {" "}
+                              <ProgressBar
+                                phases={phases}
+                                name={request.status}
+                              />
+                            </TableCell>
+                            <TableCell align="left">
+                              {" "}
+                              <ConfirmationStatus name={request.status} />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    {emptyRows > 0 && (
+                      <TableRow
+                        style={{ height: (dense ? 33 : 53) * emptyRows }}
                       >
-                        {row.title}
-                      </TableCell>
-                      <TableCell align="left">{row.item}</TableCell>
-                      <TableCell align="left">{row.amount}</TableCell>
-                      <TableCell align="left">{row.due}</TableCell>
-                      <TableCell align="left">{row.approver}</TableCell>
-                      <TableCell align="left">{row.progress}</TableCell>
-                      <TableCell align="left">{row.status}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={10} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 20, 30]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
-    </div>
+                        <TableCell colSpan={10} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[10, 20, 30]}
+                component="div"
+                count={requests.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+              />
+            </Paper>
+            <FormControlLabel
+              control={<Switch checked={dense} onChange={handleChangeDense} />}
+              label="Dense padding"
+            />
+          </div>
+        </Col>
+        <Col>
+          <InvoicePreview
+            drawerInfo={drawerInfo}
+            // preview={handlePreviewShow}
+          />
+        </Col>
+      </Row>
+    </>
   );
 }

@@ -30,6 +30,7 @@ import VendorDataService from "../../../../services/vendor.service";
 import { Row, Col, Form } from "react-bootstrap";
 import VendorCreate from "../VendorCreate";
 import * as vendorActions from "../../../../redux/actions/vendorActions/vendorActions";
+import kassandahmobile from "../../../assets/kassandahmobilepurple.png";
 import {
   Drawer,
   DrawerBody,
@@ -326,6 +327,11 @@ const EnhancedTableToolbar = (props) => {
         <Drawer onClose={onClose} isOpen={isOpen} size={size}>
           <DrawerContent>
             <DrawerBody style={{ paddingTop: "6%" }}>
+              <img
+                src={kassandahmobile}
+                alt="logo"
+                style={{ width: "30px", height: "45px" }}
+              />
               <VendorCreate closeDrawer={onClose} />
             </DrawerBody>
           </DrawerContent>
@@ -379,7 +385,9 @@ export default function EnhancedTable(props, { preview }) {
 
   const [loading, setLoading] = useState(false);
   const [successful, setSuccessful] = useState(false);
-  const { message } = useSelector((state) => state.messageReducer);
+  const [message, setMessage] = useState("");
+
+  const checkBtn = useRef();
 
   const dispatch = useDispatch();
   const form = useRef();
@@ -389,6 +397,7 @@ export default function EnhancedTable(props, { preview }) {
   //working with API
   const retrieveVendors = async () => {
     setLoading(true);
+
     await VendorDataService.getAll()
       .then((response) => {
         dispatch({
@@ -414,19 +423,19 @@ export default function EnhancedTable(props, { preview }) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = vendorStore.vendor.map((n) => n.name);
+      const newSelecteds = vendorStore.vendor.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, _id) => {
+    const selectedIndex = selected.indexOf(_id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, _id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -449,6 +458,7 @@ export default function EnhancedTable(props, { preview }) {
 
   const handleEdIT = (event, gotvendor, newSize) => {
     setDrawerInfo(gotvendor);
+    setMessage("");
     setSize(newSize);
     onOpen();
   };
@@ -460,10 +470,10 @@ export default function EnhancedTable(props, { preview }) {
     setDrawerInfo({ ...drawerInfoCopy });
   };
 
-  const submitVendor = (e) => {
-    e.preventDefault();
+  const submitVendor = () => {
     form.current.validateAll();
-
+    setSuccessful(false);
+    setLoading(true);
     console.log(drawerInfo);
     const {
       address,
@@ -488,28 +498,35 @@ export default function EnhancedTable(props, { preview }) {
       name,
     };
     //senddrawerInfo payload to your API
-    VendorDataService.update(drawerInfo._id, update)
-      .then((response) => {
-        console.log(response.data.message);
-        // setMessage();
-        const updatesVendors = vendorStore.vendor.map((vendor) => {
-          if (vendor._id == drawerInfo._id) {
-            const changes = {
-              ...drawerInfo,
-            };
-            return changes;
-          }
-          return vendor;
+    if (checkBtn.current.context._errors.length === 0) {
+      VendorDataService.update(drawerInfo._id, update)
+        .then((response) => {
+          setLoading(false);
+          const updatesVendors = vendorStore.vendor.map((vendor) => {
+            if (vendor._id == drawerInfo._id) {
+              const changes = {
+                ...drawerInfo,
+              };
+              return changes;
+            }
+            return vendor;
+          });
+          dispatch({
+            type: vendorActions.GET_VENDOR_SUCCESS,
+            payload: updatesVendors,
+          });
+          setMessage(response.data.message);
+          setSuccessful(true);
+          setTimeout(function () {
+            onClose();
+          }, 1000);
+        })
+        .catch((e) => {
+          console.log(e.response);
+          setSuccessful(false);
+          setLoading(false);
         });
-        dispatch({
-          type: vendorActions.GET_VENDOR_SUCCESS,
-          payload: updatesVendors,
-        });
-        onClose();
-      })
-      .catch((e) => {
-        console.log(e.response);
-      });
+    }
   };
 
   const deleteVendor = (gotvendor) => {
@@ -523,7 +540,7 @@ export default function EnhancedTable(props, { preview }) {
           type: vendorActions.GET_VENDOR_SUCCESS,
           payload: updatesVendors,
         });
-        onClose();
+        // onClose();
       })
       .catch((e) => {
         console.log(e.response);
@@ -543,7 +560,7 @@ export default function EnhancedTable(props, { preview }) {
     setDense(event.target.checked);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
   const emptyRows =
     rowsPerPage -
@@ -573,7 +590,7 @@ export default function EnhancedTable(props, { preview }) {
               {stableSort(vendorStore.vendor, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((gotvendor, index) => {
-                  const isItemSelected = isSelected(gotvendor.name);
+                  const isItemSelected = isSelected(gotvendor._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
@@ -582,14 +599,12 @@ export default function EnhancedTable(props, { preview }) {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={gotvendor.name}
+                      key={gotvendor._id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
-                          onClick={(event) =>
-                            handleClick(event, gotvendor.name)
-                          }
+                          onClick={(event) => handleClick(event, gotvendor._id)}
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
                         />
@@ -687,6 +702,15 @@ export default function EnhancedTable(props, { preview }) {
           <Drawer onClose={onClose} isOpen={isOpen} size={size}>
             <DrawerContent>
               <DrawerBody>
+                <img
+                  src={kassandahmobile}
+                  alt="logo"
+                  style={{
+                    width: "25px",
+                    height: "35px",
+                    marginTop: "20px",
+                  }}
+                />
                 <div className={Styles.vendortitle}>VENDOR</div>
                 <div className={Styles.vendor}>
                   <span className={Styles.vendornamelabel}>Name: </span>
@@ -762,8 +786,23 @@ export default function EnhancedTable(props, { preview }) {
               <DrawerBody>
                 <Row>
                   <Col>
+                    <img
+                      src={kassandahmobile}
+                      alt="logo"
+                      style={{
+                        width: "30px",
+                        height: "45px",
+                        marginTop: "20px",
+                      }}
+                    />
                     <div className={Styles.heading}>Edit Vendor</div>
-                    <Form1 ref={form} className={Styles.form}>
+                    <Form1
+                      ref={form}
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                      }}
+                      className={Styles.form}
+                    >
                       <Row>
                         <Col>
                           <Form.Group controlId="formBasicEmail">
@@ -1026,6 +1065,8 @@ export default function EnhancedTable(props, { preview }) {
 
                       <span>
                         <button
+                          type="submit"
+                          // disabled={loading}
                           style={{
                             paddingTop: "6px",
                             paddingBottom: "6px",
@@ -1037,15 +1078,14 @@ export default function EnhancedTable(props, { preview }) {
                           className={Styles.submitbutton}
                           onClick={submitVendor}
                         >
-                          {/* {loading && (
+                          {loading && (
                             <span className="spinner-border spinner-border-sm"></span>
-                          )} */}
+                          )}
                           Update Vendor
                         </button>
                       </span>
 
-                      {/* )} */}
-                      {/* {message && (
+                      {message && (
                         <div className="form-group">
                           <div
                             className={
@@ -1058,8 +1098,8 @@ export default function EnhancedTable(props, { preview }) {
                             {message}
                           </div>
                         </div>
-                      )} */}
-                      {/* <CheckButton style={{ display: "none" }} ref={checkBtn} /> */}
+                      )}
+                      <CheckButton style={{ display: "none" }} ref={checkBtn} />
                     </Form1>
                   </Col>
                 </Row>

@@ -34,8 +34,8 @@
   background: #ffffff;
   border: 1px dashed #cac6c6;
   border-radius: 2px;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   cursor: pointer;
 }
 
@@ -46,13 +46,13 @@
   background: #ffffff;
   border: 1px dashed #cac6c6;
   border-radius: 2px;
-  height: 250px;
+  height: 150px;
   padding: 10px 20px;
 }
 
 .upload-icon {
   color: #f0f0f0;
-  font-size: 70px;
+  font-size: 40px;
   text-align: center;
   margin: 0 auto;
 }
@@ -65,8 +65,8 @@
   padding: 10px 30px;
 }
 .drop-text {
-  font-size: 14px;
-  margin-top: 20px;
+  font-size: 12px;
+  margin-top: 10px;
 }
 
 .drop-message {
@@ -77,7 +77,7 @@
 }
 .preview-document {
   text-align: center !important;
-  font-size: 14px;
+  font-size: 10px;
 }
 
 /* .file-progressBar {
@@ -126,10 +126,10 @@
 .file-type {
   display: inline-block !important;
   position: absolute;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
   line-height: 13px;
-  margin-top: 25px;
+  margin-top: 20px;
   padding: 0 4px;
   border-radius: 2px;
   box-shadow: 1px 1px 2px #abc;
@@ -144,7 +144,7 @@
   vertical-align: top;
   margin-left: 40px;
   color: #1f2020;
-  font-size: 14px;
+  font-size: 10px;
   cursor: pointer;
 }
 
@@ -160,8 +160,8 @@
 }
 
 .file-type-logo {
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   font-size: 40px;
   color: rgb(168, 161, 161);
 
@@ -180,7 +180,7 @@
   margin-left: 10px;
   color: #444242;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 10px;
 }
 
 .file-remove {

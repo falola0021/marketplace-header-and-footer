@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Overview from "./Overview/Overview";
 import UserManangement from "./UserManagement/UserManagement";
+import RoleManangement from "./RoleManagement/RoleManagement";
 import Vendor from "./Vendor/Vendor";
+import Department from "./Department/Department";
 import Workflow from "./Workflow/Workflow";
 import Category from "./Category/Category";
-import Footer from "../../components/Footer/Footer";
+import Phase from "./Phase/Phase";
 import AminNav from "../../components/AdminNav/AdminNav";
 import Profile from "../../components/UserProfile/UserProfile";
 import { useDispatch } from "react-redux";
@@ -21,10 +23,12 @@ function Admin() {
     overview: true,
     usermanagement: false,
     profile: false,
+    rolemanagement: false,
     vendor: false,
     category: false,
     requestphase: false,
     workflow: false,
+    department: false,
   });
   // const { user: currentUser } = useSelector((state) => state.auth);
   // if (!currentUser) {
@@ -57,6 +61,8 @@ function Admin() {
                       category: false,
                       requestphase: false,
                       workflow: false,
+                      rolemanagement: false,
+                      department: false,
                     });
                   }}
                   className={changeView.overview ? active : inactive}
@@ -76,14 +82,95 @@ function Admin() {
                       category: false,
                       requestphase: false,
                       workflow: false,
+                      rolemanagement: false,
+                      department: false,
                     });
                   }}
                   className={changeView.usermanagement ? active : inactive}
                 >
-                  <div style={{ color: "#90e0ef" }} className="fa fa-user">
+                  <div style={{ color: "#AB82FF" }} className="fa fa-cog">
                     {" "}
                   </div>{" "}
                   <span>User Management</span>
+                </div>{" "}
+                <div
+                  onClick={() => {
+                    setChangeView({
+                      overview: false,
+                      usermanagement: false,
+                      requestflow: false,
+                      vendor: false,
+                      category: false,
+                      requestphase: false,
+                      workflow: false,
+                      rolemanagement: true,
+                      department: false,
+                    });
+                  }}
+                  className={changeView.rolemanagement ? active : inactive}
+                >
+                  <div style={{ color: "#90e0ef" }} className="fa fa-user">
+                    {" "}
+                  </div>{" "}
+                  <span>Role Management</span>
+                </div>{" "}
+                <div
+                  onClick={() => {
+                    setChangeView({
+                      overview: false,
+                      usermanagement: false,
+                      requestflow: false,
+                      vendor: false,
+                      category: false,
+                      requestphase: false,
+                      workflow: false,
+                      rolemanagement: false,
+                      department: true,
+                    });
+                  }}
+                  className={changeView.department ? active : inactive}
+                >
+                  <div style={{ color: "#B4CDCD" }} className="	fa fa-th-large">
+                    {" "}
+                  </div>{" "}
+                  <span>Department</span>
+                </div>{" "}
+                <div
+                  onClick={() => {
+                    setChangeView({
+                      vendor: false,
+                      overview: false,
+                      usermanagement: false,
+                      requestflow: false,
+                      category: false,
+                      requestphase: true,
+                      workflow: false,
+                      rolemanagement: false,
+                      department: false,
+                    });
+                  }}
+                  className={changeView.requestphase ? active : inactive}
+                >
+                  <div
+                    onClick={() => {
+                      setChangeView({
+                        vendor: false,
+                        overview: false,
+                        usermanagement: false,
+                        requestflow: false,
+                        category: false,
+                        requestphase: false,
+                        workflow: true,
+                        rolemanagement: false,
+                        department: false,
+                      });
+                    }}
+                    style={{ color: "#7161ef" }}
+                    className="fa fa-spinner"
+                  >
+                    {" "}
+                  </div>{" "}
+                  <span>Request Phase</span>
                 </div>{" "}
                 <div
                   onClick={() => {
@@ -95,6 +182,8 @@ function Admin() {
                       category: false,
                       requestphase: false,
                       workflow: false,
+                      rolemanagement: false,
+                      department: false,
                     });
                   }}
                   className={changeView.vendor ? active : inactive}
@@ -107,6 +196,27 @@ function Admin() {
                 <div
                   onClick={() => {
                     setChangeView({
+                      vendor: false,
+                      overview: false,
+                      usermanagement: false,
+                      requestflow: false,
+                      category: false,
+                      requestphase: false,
+                      workflow: true,
+                      rolemanagement: false,
+                      department: false,
+                    });
+                  }}
+                  className={changeView.workflow ? active : inactive}
+                >
+                  <div style={{ color: "#f4acb7" }} className="fas fa-sync-alt">
+                    {" "}
+                  </div>{" "}
+                  <span>Work Flow</span>
+                </div>
+                <div
+                  onClick={() => {
+                    setChangeView({
                       overview: false,
                       usermanagement: false,
                       requestflow: false,
@@ -114,6 +224,8 @@ function Admin() {
                       category: true,
                       requestphase: false,
                       workflow: false,
+                      rolemanagement: false,
+                      department: false,
                     });
                   }}
                   className={changeView.category ? active : inactive}
@@ -131,61 +243,11 @@ function Admin() {
                       usermanagement: false,
                       requestflow: false,
                       category: false,
-                      requestphase: true,
-                      workflow: false,
-                    });
-                  }}
-                  className={changeView.requestphase ? active : inactive}
-                >
-                  <div
-                    onClick={() => {
-                      setChangeView({
-                        vendor: false,
-                        overview: false,
-                        usermanagement: false,
-                        requestflow: false,
-                        category: false,
-                        requestphase: false,
-                        workflow: true,
-                      });
-                    }}
-                    style={{ color: "#7161ef" }}
-                    className="fa fa-spinner"
-                  >
-                    {" "}
-                  </div>{" "}
-                  <span>Request Phase</span>
-                </div>{" "}
-                <div
-                  onClick={() => {
-                    setChangeView({
-                      vendor: false,
-                      overview: false,
-                      usermanagement: false,
-                      requestflow: false,
-                      category: false,
-                      requestphase: false,
-                      workflow: true,
-                    });
-                  }}
-                  className={changeView.workflow ? active : inactive}
-                >
-                  <div style={{ color: "#f4acb7" }} className="fas fa-sync-alt">
-                    {" "}
-                  </div>{" "}
-                  <span>Work Flow</span>
-                </div>
-                <div
-                  onClick={() => {
-                    setChangeView({
-                      vendor: false,
-                      overview: false,
-                      usermanagement: false,
-                      requestflow: false,
-                      category: false,
                       requestphase: false,
                       workflow: false,
                       profile: true,
+                      rolemanagement: false,
+                      department: false,
                     });
                   }}
                   className={changeView.profile ? active : inactive}
@@ -222,6 +284,16 @@ function Admin() {
                 <UserManangement />
               </div>
             )}
+            {changeView.rolemanagement && (
+              <div className={Styles.overviewbody}>
+                <RoleManangement />
+              </div>
+            )}
+            {changeView.department && (
+              <div className={Styles.overviewbody}>
+                <Department />
+              </div>
+            )}
             {changeView.vendor && (
               <div className={Styles.overviewbody}>
                 <Vendor />
@@ -237,6 +309,11 @@ function Admin() {
                 <Workflow />
               </div>
             )}
+            {changeView.requestphase && (
+              <div className={Styles.overviewbody}>
+                <Phase />
+              </div>
+            )}
             {changeView.profile && (
               <div className={Styles.overviewbody}>
                 <Profile />
@@ -245,7 +322,6 @@ function Admin() {
           </Col>
         </Row>
       </div>
-      <Footer />
     </>
   );
 }

@@ -2,7 +2,7 @@ body {
   margin: 0 !important;
   padding: 0px !important;
   font-family: "Poppins", sans-serif !important;
-  height: 100 !important;
+  height: 100% !important;
   margin-bottom: 0 !important;
   padding-bottom: 0 !important;
 }
@@ -74,6 +74,12 @@ body {
   background-color: #f3f3f3;
   padding: 15px 25px;
   margin-bottom: 15px;
+}
+.carousel-control-prev-icon {
+  display: none;
+}
+.carousel-control-next-icon {
+  display: none;
 }
 
 /* 

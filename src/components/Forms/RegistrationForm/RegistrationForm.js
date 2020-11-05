@@ -1,12 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../../redux/actions/authActions/auth";
+import Select from "react-validation/build/select";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
 import { Row, Col } from "react-bootstrap";
 import Styles from "./RegistrationForm.module.css";
+import DepartmentDataService from "../../../services/department.service";
 
 const required = (value) => {
   if (!value) {
@@ -65,10 +67,12 @@ const Register = (props) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [department, setDepartment] = useState("");
   const [password, setPassword] = useState("");
   const [successful, setSuccessful] = useState(false);
   const { message } = useSelector((state) => state.messageReducer);
   const [loading, setLoading] = useState(false);
+  const [departments, setDepartments] = useState([]);
   const dispatch = useDispatch();
 
   const onChangeFirstName = (e) => {
@@ -84,6 +88,10 @@ const Register = (props) => {
     const email = e.target.value;
     setEmail(email);
   };
+  const onChangeDepartment = (e) => {
+    const department = e.target.value;
+    setDepartment(department);
+  };
 
   const onChangePassword = (e) => {
     const password = e.target.value;
@@ -97,7 +105,7 @@ const Register = (props) => {
     form.current.validateAll();
 
     if (checkBtn.current.context._errors.length === 0) {
-      dispatch(register(firstName, lastName, email, password))
+      dispatch(register(firstName, lastName, email, password, department))
         .then((response) => {
           setLoading(false);
           // setMessage(response.data.messageReducer);
@@ -109,6 +117,20 @@ const Register = (props) => {
         });
     }
   };
+
+  const retrieveDepartments = async () => {
+    await DepartmentDataService.getAll()
+      .then((response) => {
+        setDepartments(response.data.data);
+        console.log(departments);
+      })
+      .catch((e) => {
+        console.log(e.response);
+      });
+  };
+  useEffect(() => {
+    retrieveDepartments();
+  }, []);
 
   return (
     <Form onSubmit={handleRegister} ref={form} className={Styles.form}>
@@ -174,6 +196,31 @@ const Register = (props) => {
               onChange={onChangeEmail}
               validations={[required, validEmail]}
             />
+          </div>
+          <div className="form-group">
+            <label className={Styles.label} htmlFor="email">
+              Department
+            </label>
+            <Select
+              style={{
+                border: " 1px solid #4f26aa",
+                backgroundColor: "rgba(59, 122, 254, 0.02)",
+              }}
+              // type="text"
+              name="department"
+              value={department}
+              onChange={onChangeDepartment}
+              validations={[required]}
+              className="form-control"
+              as="select"
+            >
+              <option value="">- Select departmant -</option>
+              {departments.map((department) => (
+                <option key={department._id} value={department._id}>
+                  {department.name}
+                </option>
+              ))}
+            </Select>
           </div>
 
           <div className="form-group">

@@ -21,6 +21,17 @@
   color: #4f26aa !important;
   font-size: 15px !important;
 }
+.switch {
+  display: flex;
+  vertical-align: baseline;
+  margin-right: 40px;
+}
+.switch div {
+  flex: 1;
+  color: #ffffff;
+  margin-right: 10px;
+  /* font-size: 14px; */
+}
 .menulist:hover {
   color: #ffffff !important;
   outline: none !important;

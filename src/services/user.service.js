@@ -10,22 +10,32 @@ const get = (id) => {
   return http.get(`/roles/${id}`);
 };
 
-const create = (firstName, lastName, email, password, role) => {
-  return http.post(
-    "/api/admin/user",
+const create = (firstName, lastName, email, password, department, role) => {
+  return http.post("/api/admin/user", {
+    firstName,
+    lastName,
+    email,
+    password,
+    department,
+    role,
+  });
+};
 
-    {
-      firstName,
-      lastName,
-      email,
-      password,
-      role,
-    }
-  );
+const attachRoleToUser = (roleId, userId) => {
+  return http.post("/api/admin/user/role/attach", {
+    roleId,
+    userId,
+  });
+};
+const detachRoleToUser = (roleId, userId) => {
+  return http.post("/api/admin/user/role/detach", {
+    roleId,
+    userId,
+  });
 };
 
 const update = (id, data) => {
-  return http.put(`/roles/${id}`, data);
+  return http.patch(`/user/${id}`, data);
 };
 
 const remove = (id) => {
@@ -48,4 +58,6 @@ export default {
   remove,
   removeAll,
   findByTitle,
+  attachRoleToUser,
+  detachRoleToUser,
 };

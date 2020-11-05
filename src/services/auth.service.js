@@ -1,13 +1,14 @@
 import axios from "axios";
 
-const API_URL = "https://kassandah.gigmobility.com";
+const API_URL = "https://api.kassandah.gigmobility.com";
 
-const register = (firstName, lastName, email, password) => {
+const register = (firstName, lastName, email, password, department) => {
   return axios.post(API_URL + "/api/user", {
     firstName,
     lastName,
     email,
     password,
+    department,
   });
 };
 

@@ -26,7 +26,7 @@ function Navigation() {
           <Nav.Link href="#link">
             <i className="fa fa-bell "></i>
             <span style={{ color: "#ffffff", padding: "0 10px" }}>
-              Hi {currentUser.roles}{" "}
+              Hi {currentUser.roles[0]}{" "}
             </span>
           </Nav.Link>
 

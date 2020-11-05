@@ -6,6 +6,8 @@ import { isEmail } from "validator";
 import CheckButton from "react-validation/build/button";
 import { useDispatch, useSelector } from "react-redux";
 import { create } from "../../../redux/actions/vendorActions/vendor";
+import VendorDataService from "../../../services/vendor.service";
+import * as vendorActions from "../../../redux/actions/vendorActions/vendorActions";
 
 import Styles from "./Vendor.module.css";
 import { Row, Col, Form } from "react-bootstrap";
@@ -186,6 +188,18 @@ function Vendor({ closeDrawer }) {
       )
         .then((response) => {
           setSuccessful(true);
+          VendorDataService.getAll()
+            .then((response) => {
+              dispatch({
+                type: vendorActions.GET_VENDOR_SUCCESS,
+                payload: response.data.data,
+              });
+              console.log(response);
+            })
+            .catch((e) => {
+              console.log(e);
+              setLoading(false);
+            });
           setLoading(false);
 
           setTimeout(function () {
@@ -476,18 +490,23 @@ function Vendor({ closeDrawer }) {
                 Create User
               </button>
             </span>
-
-            {message && (
-              <div className="form-group">
-                <div
-                  className={
-                    successful ? "alert alert-success" : "alert alert-danger"
-                  }
-                  role="alert"
-                >
-                  {message}
-                </div>
-              </div>
+            {successful && (
+              <span>
+                {message && (
+                  <div className="form-group">
+                    <div
+                      className={
+                        successful
+                          ? "alert alert-success"
+                          : "alert alert-danger"
+                      }
+                      role="alert"
+                    >
+                      {message}
+                    </div>
+                  </div>
+                )}
+              </span>
             )}
             <CheckButton style={{ display: "none" }} ref={checkBtn} />
           </Form1>

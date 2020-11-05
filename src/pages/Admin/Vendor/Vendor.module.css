@@ -20,7 +20,7 @@
   font-weight: bold;
   font-size: 24px;
   color: #252323;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   text-align: center;
 }
 .form label {
@@ -39,7 +39,7 @@
 .submitbutton {
   display: flex;
   background-color: #4f26aa;
-  margin: 30px auto !important;
+  margin: 20px auto 15px auto !important;
   padding-left: 70px;
   padding-right: 70px;
   font-size: 15px;

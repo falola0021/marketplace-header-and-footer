@@ -58,6 +58,7 @@ const Login = (props) => {
 
     form.current.validateAll();
     setLoading(true);
+
     if (checkBtn.current.context._errors.length === 0) {
       dispatch(login(email, password))
         .then((response) => {

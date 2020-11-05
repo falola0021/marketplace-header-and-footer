@@ -18,16 +18,17 @@
 }
 .heading {
   font-weight: bold;
-  font-size: 20px;
+  font-size: 24px;
   color: #252323;
   margin-bottom: 20px;
+  text-align: center;
 }
 .form label {
-  font-size: 14px;
+  font-size: 13px;
 }
 .formcontrol {
   background: #fcfdff;
-  font-size: 18px;
+  font-size: 15px;
 }
 .formcontrol:focus {
   box-shadow: inherit;
@@ -38,21 +39,13 @@
 .submitbutton {
   display: flex;
   background-color: #4f26aa;
-  margin: 30px auto !important;
+  margin: 20px auto 15px auto !important;
   padding-left: 70px;
   padding-right: 70px;
   font-size: 15px;
   font-weight: bold;
 }
-.radiobutton [type="radio"] {
-  -ms-transform: scale(1.5);
-  -webkit-transform: scale(1.5);
-  transform: scale(1.5);
-}
-.radiobuttonrow {
-  margin-top: 10px;
-  margin-bottom: 50px;
-}
+
 /*/table/*/
 
 .tablebox {
@@ -60,6 +53,7 @@
   margin-bottom: 50px;
   height: 360px;
   overflow-y: auto;
+
   background: #ffffff;
 }
 /* width */

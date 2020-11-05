@@ -1,10 +1,16 @@
 import React from "react";
 import Styles from "./ConfirmationStatus.module.css";
 
-function ConfirmationStatus() {
+function ConfirmationStatus({ name }) {
   return (
     <>
-      <div className={Styles.confirmationstatus}>Confirmed</div>
+      {name === "pending" ? (
+        <div className={Styles.statusPending}>{name}</div>
+      ) : name === "confirmed" ? (
+        <div className={Styles.statusConfirmed}>{name}</div>
+      ) : (
+        <div className={Styles.statusDelined}>{name}</div>
+      )}
     </>
   );
 }

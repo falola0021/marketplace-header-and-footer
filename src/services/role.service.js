@@ -9,20 +9,14 @@ const get = (id) => {
 };
 
 const create = (role, status) => {
-  return http
-    .post("/api/role",
-    
-     {
-      role,
-      status,
-    }
-    
-    )
-   
+  return http.post("/api/role", {
+    role,
+    status,
+  });
 };
 
 const update = (id, data) => {
-  return http.put(`/roles/${id}`, data);
+  return http.patch(`/roles/${id}`, data);
 };
 
 const remove = (id) => {
