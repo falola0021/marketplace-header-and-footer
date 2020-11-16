@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { v4 as uuid } from "uuid";
 import Styles from "./Workflow.module.css";
-import WorkflowTable from "./WorkflowTable";
+import WorkflowTable from "./Table";
 import Form1 from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import PhaseDataService from "../../../services/phase.service";
@@ -69,7 +68,6 @@ function DND() {
       },
     };
   });
-  // const [phases, setPhases] = useState([]);
 
   const retrievePhases = async () => {
     await PhaseDataService.getAll()

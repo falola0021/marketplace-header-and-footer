@@ -12,7 +12,7 @@ function ProgressBar({ name, phases }) {
             color="yellow"
             hasStripe
             isAnimated
-            value={0}
+            value={100}
           />
         ) : name === "approved" ? (
           <Progress
@@ -20,7 +20,7 @@ function ProgressBar({ name, phases }) {
             color="green"
             hasStripe
             isAnimated
-            value={0}
+            value={100}
           />
         ) : (
           <Progress
@@ -28,7 +28,7 @@ function ProgressBar({ name, phases }) {
             color="red"
             hasStripe
             isAnimated
-            value={0}
+            value={100}
           />
         )}
       </ThemeProvider>

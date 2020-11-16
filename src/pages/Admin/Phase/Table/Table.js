@@ -615,14 +615,14 @@ export default function EnhancedTable(props, { preview }) {
                           }
                           className={Styles.editbutton}
                         >
-                          edit
+                          Edit
                         </button>
                         {/* ))} */}
                         <button
                           onClick={() => deletePhase(gotphase)}
                           className={Styles.deletebutton}
                         >
-                          delete
+                          Delete
                         </button>
                       </TableCell>
                     </TableRow>

@@ -7,13 +7,20 @@ import Footer from "../../components/Footer/Footer";
 
 function Users() {
   const currentUser = AuthService.getCurrentUser();
-  const userRole = currentUser.roles[0];
-
+  let userRoles = currentUser.roles;
+  const showDashoard = (userRoles) => {
+    if (userRoles.includes("admin")) {
+      return <Admin />;
+    } else if (userRoles.includes("approver")) {
+      return <Approver />;
+    } else {
+      return <Requester />;
+    }
+  };
   return (
     <>
-      {userRole === "admin" && <Admin />}
-      {/* {userRole === "user" && <Requester />} */}
-      {userRole === "user" && <Approver />}
+      {showDashoard(userRoles)}
+
       <Footer />
     </>
   );

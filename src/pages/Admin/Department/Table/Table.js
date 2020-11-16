@@ -199,11 +199,27 @@ const EnhancedTableToolbar = (props) => {
   const [size, setSize] = React.useState("lg");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const classes = useToolbarStyles();
+  const [departments, setDepartments] = React.useState([]);
   const { numSelected } = props;
   const handleCreateRole = (newSize) => {
     setSize(newSize);
     onOpen();
   };
+  const retrieveDepartments = () => {
+    DepartmentDataService.getAll()
+      .then((response) => {
+        setDepartments(response.data.data);
+        console.log("departments ");
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log("cannot get department");
+      });
+  };
+
+  useEffect(() => {
+    retrieveDepartments();
+  }, []);
   return (
     <>
       <Toolbar
@@ -262,7 +278,10 @@ const EnhancedTableToolbar = (props) => {
                 alt="logo"
                 style={{ width: "30px", height: "45px" }}
               />
-              <DepartmentCreate closeDrawer={onClose} />
+              <DepartmentCreate
+                setDepartments={setDepartments}
+                closeDrawer={onClose}
+              />
             </DrawerBody>
           </DrawerContent>
         </Drawer>
@@ -417,7 +436,7 @@ export default function EnhancedTable(props, { preview }) {
     form.current.validateAll();
     setSuccessful(false);
     setLoading(true);
-    console.log(drawerInfo);
+
     const { name, hod, description } = drawerInfo;
     const update = {
       name,
@@ -553,14 +572,14 @@ export default function EnhancedTable(props, { preview }) {
                           }
                           className={Styles.editbutton}
                         >
-                          edit
+                          Edit
                         </button>
                         {/* ))} */}
                         <button
                           onClick={() => deleteDepartment(department)}
                           className={Styles.deletebutton}
                         >
-                          delete
+                          Delete
                         </button>
                       </TableCell>
                     </TableRow>

@@ -22,7 +22,7 @@ function App() {
   return (
     <BrowserRouter history={history}>
       <Switch>
-        <Route exact path={["/", "/home"]} component={LandingPage} />
+        <Route exact path={["/"]} component={LandingPage} />
         <Route exact path="/user" component={User} />
         <Route exact path="/change-password" component={ForgotPasswordPage} />
         <Route exact path="/update-password" component={UpdatePasswordPage} />

@@ -33,7 +33,7 @@ const vname = (value) => {
   }
 };
 
-function Department({ closeDrawer }) {
+function Department({ closeDrawer, setDepartments }) {
   const form = useRef();
   const checkBtn = useRef();
 
@@ -41,10 +41,10 @@ function Department({ closeDrawer }) {
   const [hod, setHod] = useState("");
   const [description, setDescription] = useState("");
   const [users, setUsers] = useState([]);
-
   const [loading, setLoading] = useState(false);
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState(false);
+  const [department, setDepartment] = useState([]);
 
   const onChangeName = (e) => {
     const name = e.target.value;
@@ -75,16 +75,15 @@ function Department({ closeDrawer }) {
   useEffect(() => {
     retrieveUsers();
   }, []);
-
-  const [departments, setDepartments] = React.useState([]);
-
-  const retrieveDepartments = async () => {
-    await DepartmentDataService.getAll()
+  const retrieveDepartments = () => {
+    DepartmentDataService.getAll()
       .then((response) => {
         setDepartments(response.data.data);
+        console.log("departments may come");
       })
       .catch((e) => {
         console.log(e);
+        console.log("cannot get department");
       });
   };
 
@@ -95,12 +94,12 @@ function Department({ closeDrawer }) {
     setLoading(true);
     form.current.validateAll();
     if (checkBtn.current.context._errors.length === 0) {
-      DepartmentDataService.create(name, hod, description)
+      DepartmentDataService.create(name, description)
         .then((response) => {
           setSuccessful(true);
           setLoading(false);
           setMessage(response.data.message);
-          retrieveDepartments();
+          setDepartment(retrieveDepartments);
           setTimeout(function () {
             closeDrawer();
           }, 1000);
@@ -121,7 +120,7 @@ function Department({ closeDrawer }) {
           <div className={Styles.heading}>Create a Department</div>
           <Form1 onSubmit={handleCreateRole} ref={form} className={Styles.form}>
             <Row>
-              <Col sm="6">
+              <Col sm="12">
                 <Form.Group controlId="formBasicEmail">
                   <Form.Label>Name</Form.Label>
                   <Input
@@ -142,7 +141,7 @@ function Department({ closeDrawer }) {
                   />
                 </Form.Group>
               </Col>
-              <Col sm="6">
+              {/* <Col sm="6">
                 <Form.Group>
                   <Form.Label>Hod</Form.Label>
                   <Select
@@ -170,7 +169,7 @@ function Department({ closeDrawer }) {
                     ))}
                   </Select>
                 </Form.Group>
-              </Col>
+              </Col> */}
               <Col sm="12">
                 {" "}
                 <Form.Group controlId="formBasicEmail">

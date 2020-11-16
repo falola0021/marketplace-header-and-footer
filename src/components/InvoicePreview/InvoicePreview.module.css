@@ -98,7 +98,7 @@
 }
 .title {
   text-align: center;
-  margin-top: 40px;
+  margin-top: 0px;
 }
 .ticket {
   font-size: 20px;
@@ -118,8 +118,13 @@
 .tableInfo div {
   font-size: 12px;
 }
-
+/* 
 .document {
   font-size: 15px;
   font-weight: bold;
 }
+.img {
+  max-width: 100%;
+  min-width: 100%;
+  min-height: 150px;
+} */

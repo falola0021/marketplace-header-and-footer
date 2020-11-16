@@ -88,11 +88,9 @@ function Admin() {
                   }}
                   className={changeView.usermanagement ? active : inactive}
                 >
-                  <div style={{ color: "#AB82FF" }} className="fa fa-cog">
-                    {" "}
-                  </div>{" "}
+                  <div style={{ color: "#AB82FF" }} className="fa fa-cog"></div>
                   <span>User Management</span>
-                </div>{" "}
+                </div>
                 <div
                   onClick={() => {
                     setChangeView({

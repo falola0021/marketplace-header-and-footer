@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import Styles from "./Table.module.css";
-import ApproversAvatar from "../ApproversAvatar/ApproversAvatar";
-import ProgressBar from "../ProgressBar/ProgressBar";
-import ConfirmationStatus from "../ConfirmationStatus/ConfirmationStatus";
-import SearchFilter from "../SearchFilter/SearchFilter";
+import ApproversAvatar from "../../components/ApproversAvatar/ApproversAvatar";
+import ProgressBar from "../../components/ProgressBar/ProgressBar";
+import ConfirmationStatus from "../../components/ConfirmationStatus/ConfirmationStatus";
+import SearchFilter from "../../components/SearchFilter/SearchFilter";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -26,7 +26,7 @@ import Switch from "@material-ui/core/Switch";
 import RequestDataService from "../../services/requester.service";
 import AuthService from "../../services/auth.service";
 import Addrequest from "../../components/ActionButton/Addrequest/Addrequest";
-import MakeRequest from "../../pages/Requester/MakeRequest/MakeRequest";
+import MakeRequest from "./MakeRequest/MakeRequest";
 import { Row, Col } from "react-bootstrap";
 import InvoicePreview from "../../components/InvoicePreview/InvoicePreview";
 import moment from "moment";
@@ -256,6 +256,9 @@ const EnhancedTableToolbar = (props) => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
+const ShowSideInvoice = (props) => {
+  return <></>;
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -292,12 +295,13 @@ export default function EnhancedTable(props, { preview }) {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const [requests, setRequests] = React.useState([]);
-  const [loading, setLoading] = useState(false);
-  const [successful, setSuccessful] = useState(false);
-  const [message, setMessage] = useState("");
-  const [allUserRequest, setAllUserRequest] = useState("");
-  const currentUser = AuthService.getCurrentUser();
-  const [drawerInfo, setDrawerInfo] = React.useState({});
+  // const [loading, setLoading] = useState(false);
+  // const [successful, setSuccessful] = useState(false);
+  // const [message, setMessage] = useState("");
+  // const [allUserRequest, setAllUserRequest] = useState("");
+  // const currentUser = AuthService.getCurrentUser();
+  const [drawerInfo, setDrawerInfo] = React.useState([]);
+  const [sideview, setSideView] = React.useState({});
 
   const checkBtn = useRef();
   const form = useRef();
@@ -308,8 +312,14 @@ export default function EnhancedTable(props, { preview }) {
   const retrieveRequests = async () => {
     await RequestDataService.getUserTicketList()
       .then((response) => {
-        setRequests(response.data.data.mytickets);
-        console.log(response.data.data.mytickets);
+        console.log("responseee", response.data.data.ticketListDetails);
+        let resData = response.data.data.ticketList;
+        setRequests(resData);
+        let firstTicket = resData[0];
+        //let firstDocument = resData[3].ticketDocuments[0].document;
+        // console.log("first document", firstDocument);
+        handleSideview(firstTicket);
+        console.log("first ticket", resData);
       })
       .catch((e) => {
         console.log(e);
@@ -317,15 +327,13 @@ export default function EnhancedTable(props, { preview }) {
       });
   };
 
+  const handleSideview = (requests) => {
+    setSideView(requests);
+  };
+
   useEffect(() => {
     retrieveRequests();
   }, []);
-
-  const handleShowMore = (event, request) => {
-    setDrawerInfo(request);
-    // setSize(newSize);
-    // onOpen();
-  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -409,10 +417,12 @@ export default function EnhancedTable(props, { preview }) {
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
-                      .map((request, index) => {
-                        const isItemSelected = isSelected(request._id);
+                      .map((ticket, index) => {
+                        console.log("the req", ticket);
+                        const isItemSelected = isSelected(ticket._id);
                         const labelId = `enhanced-table-checkbox-${index}`;
-                        const phases = request.workflow.phases;
+
+                        const phases = ticket.workflow.phases;
 
                         return (
                           <TableRow
@@ -420,15 +430,15 @@ export default function EnhancedTable(props, { preview }) {
                             role="checkbox"
                             aria-checked={isItemSelected}
                             tabIndex={-1}
-                            key={request._id}
+                            key={ticket._id}
                             selected={isItemSelected}
                           >
-                            {/* {currentUser.userId == request.user && (
+                            {/* {currentUser.userId == ticket.user && (
                         <> */}
                             <TableCell padding="checkbox">
                               <Checkbox
                                 onClick={(event) =>
-                                  handleClick(event, request._id)
+                                  handleClick(event, ticket._id)
                                 }
                                 checked={isItemSelected}
                                 inputProps={{ "aria-labelledby": labelId }}
@@ -436,57 +446,49 @@ export default function EnhancedTable(props, { preview }) {
                             </TableCell>
 
                             <TableCell
-                              onClick={(event) =>
-                                handleShowMore(event, request)
-                              }
+                              onClick={(event) => setSideView(ticket)}
                               align="left"
                             >
-                              {request.description}
+                              {ticket.description}
                             </TableCell>
 
                             <TableCell
-                              onClick={(event) =>
-                                handleShowMore(event, request)
-                              }
-                              onClick={(event) =>
-                                handleShowMore(event, request)
-                              }
+                              onClick={(event) => setSideView(ticket)}
                               align="left"
                             >
-                              {request.items}{" "}
+                              {ticket.items}{" "}
+                            </TableCell>
+                            <TableCell onClick={(event) => setSideView(ticket)}>
+                              {ticket.amount}
                             </TableCell>
                             <TableCell
-                              onClick={(event) =>
-                                handleShowMore(event, request)
-                              }
+                              onClick={(event) => setSideView(ticket)}
                               align="left"
                             >
-                              {request.amount}
+                              {moment(ticket.dueDate).format("DD/MM/YYYY")}
                             </TableCell>
                             <TableCell
-                              onClick={(event) =>
-                                handleShowMore(event, request)
-                              }
                               align="left"
+                              onClick={(event) => setSideView(ticket)}
                             >
-                              {moment(request.dueDate).format("DD/MM/YYYY")}
-                            </TableCell>
-                            <TableCell align="left">
                               <ApproversAvatar
-                                dotColor={request.status}
                                 phases={phases}
+                                dotColor={ticket.status}
                               />
                             </TableCell>
-                            <TableCell align="left">
+                            <TableCell
+                              onClick={(event) => setSideView(ticket)}
+                              align="left"
+                            >
                               {" "}
-                              <ProgressBar
-                                phases={phases}
-                                name={request.status}
-                              />
+                              <ProgressBar name={ticket.status} />
                             </TableCell>
-                            <TableCell align="left">
+                            <TableCell
+                              onClick={(event) => setSideView(ticket)}
+                              align="left"
+                            >
                               {" "}
-                              <ConfirmationStatus name={request.status} />
+                              <ConfirmationStatus name={ticket.status} />
                             </TableCell>
                           </TableRow>
                         );
@@ -519,7 +521,8 @@ export default function EnhancedTable(props, { preview }) {
         </Col>
         <Col>
           <InvoicePreview
-            drawerInfo={drawerInfo}
+            sideview={sideview}
+            // phases={phases}
             // preview={handlePreviewShow}
           />
         </Col>

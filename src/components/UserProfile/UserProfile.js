@@ -1,5 +1,6 @@
 import React from "react";
 import Styles from "./UserProfile.module.css";
+import AuthService from "../../services/auth.service";
 import {
   Avatar,
   Stack,
@@ -11,11 +12,14 @@ import {
 import { Row, Col } from "react-bootstrap";
 
 function UserProfile() {
+  const currentUser = AuthService.getCurrentUser();
+  const initialName = `${currentUser.firstName} ${currentUser.lastName}`;
+  // console.log(currentUser);
   return (
     <>
       <ThemeProvider>
         <div className={Styles.container}>
-          <p className={Styles.profileheader}>User Profile</p>
+          {/* <p className={Styles.profileheader}>User Profile</p> */}
           <div className={Styles.content}>
             <div className={Styles.avatarcontainer}>
               <div>
@@ -23,12 +27,14 @@ function UserProfile() {
                   <Avatar
                     size="sm"
                     className={Styles.avatar}
-                    name="Kola Tioluwani"
+                    name={initialName}
                     src="https://bit.ly/tioluwani-kolawole"
                   />
                 </Stack>
               </div>
-              <div className={Styles.fullname}>Kami Temitayo</div>
+              <div className={Styles.fullname}>
+                {currentUser.firstName} {currentUser.lastName}
+              </div>
             </div>
 
             <hr />
@@ -39,7 +45,11 @@ function UserProfile() {
                   <FormLabel className={Styles.label} htmlFor="fname">
                     First Name
                   </FormLabel>
-                  <Input className={Styles.input} value="Kemi " readOnly />
+                  <Input
+                    className={Styles.input}
+                    value={currentUser.firstName}
+                    readOnly
+                  />
                 </FormControl>
                 <FormControl>
                   <FormLabel className={Styles.label} htmlFor="fname">
@@ -47,7 +57,7 @@ function UserProfile() {
                   </FormLabel>
                   <Input
                     className={Styles.input}
-                    value="kemi.tayo@thegiggroupng.com"
+                    value={currentUser.email}
                     readOnly
                   />
                 </FormControl>
@@ -57,7 +67,11 @@ function UserProfile() {
                   <FormLabel className={Styles.label} htmlFor="fname">
                     Last Name
                   </FormLabel>
-                  <Input className={Styles.input} value="Temitayo" readOnly />
+                  <Input
+                    className={Styles.input}
+                    value={currentUser.lastName}
+                    readOnly
+                  />
                 </FormControl>
                 <FormControl>
                   <FormLabel className={Styles.label} htmlFor="fname">

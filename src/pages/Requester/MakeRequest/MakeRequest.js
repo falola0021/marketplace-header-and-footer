@@ -101,6 +101,8 @@ function MakeRequest({ closeDrawer }) {
   };
 
   const selectFile = (event) => {
+    console.log(fileInputRef.current.files);
+    console.log(event.target.files);
     if (fileInputRef.current.files.length) {
       handleFiles(fileInputRef.current.files);
     }
@@ -245,7 +247,7 @@ function MakeRequest({ closeDrawer }) {
 
   const handleCreateRequest = (e) => {
     e.preventDefault();
-    setDocuments(selectedFiles);
+    console.log("the docs", selectedFiles);
     console.log("the docs", documents);
     setSuccessful(false);
     setLoading(true);
@@ -263,7 +265,7 @@ function MakeRequest({ closeDrawer }) {
         department,
         dueDate,
         amount,
-        documents,
+        selectedFiles,
         comment
       ).then(
         (response) => {
@@ -271,19 +273,19 @@ function MakeRequest({ closeDrawer }) {
           // retrievePhases();
           setLoading(false);
           setSuccessful(true);
-
+          window.location.reload();
           setTimeout(function () {
             closeDrawer();
           }, 1000);
         },
         (error) => {
-          const resMessage = error.response.data.message;
+          // const resMessage = error.response.data.message;
 
           error.toString();
           setSuccessful(false);
           setLoading(false);
-          setMessage(error.response.data.message);
-          console.log(error.response.data.message);
+          console.log("the here is the error", error.response);
+          setMessage("There is a problem creating this request");
         }
       );
     } else {

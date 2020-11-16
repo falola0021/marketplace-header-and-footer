@@ -21,6 +21,8 @@ function Navigation({
   handleprofileclick,
   handledashboardclick,
   handleSwitchUser,
+  switchUser,
+  setSwitchUser,
 }) {
   const currentUser = AuthService.getCurrentUser();
   const initialName = `${currentUser.firstName} ${currentUser.lastName}`;
@@ -28,6 +30,10 @@ function Navigation({
   const logOut = () => {
     AuthService.logout();
   };
+  const userRole = currentUser.roles;
+
+  //for hiding swutch
+
   return (
     <>
       <Navbar className={Styles.navbackground} expand="lg">
@@ -42,14 +48,24 @@ function Navigation({
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto"> </Nav>
-          <div>
-            <ThemeProvider>
-              <div className={Styles.switch}>
-                <div>Switch Role</div>{" "}
-                <Switch onChange={handleSwitchUser} size="sm" />
-              </div>
-            </ThemeProvider>
-          </div>
+          {userRole.includes("approver") ? (
+            <div>
+              <ThemeProvider>
+                <div className={Styles.switch}>
+                  <div>
+                    {switchUser ? (
+                      <span>Switch to approver</span>
+                    ) : (
+                      <span>Switch to requester</span>
+                    )}
+                  </div>{" "}
+                  <Switch onChange={handleSwitchUser} size="sm" />
+                </div>
+              </ThemeProvider>
+            </div>
+          ) : (
+            ""
+          )}
 
           <Nav.Link href="#link">
             <i className="fa fa-bell "> </i>

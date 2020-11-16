@@ -3,11 +3,11 @@ import Form1 from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import Select from "react-validation/build/select";
 import CheckButton from "react-validation/build/button";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { isEmail } from "validator";
-// import { create } from "../../../redux/actions/userActions/user";
+import { create } from "../../../redux/actions/userActions/user";
 import UserDataService from "../../../services/user.service";
-// import * as userActions from "../../../redux/actions/userActions/userActions";
+import * as userActions from "../../../redux/actions/userActions/userActions";
 import DepartmentDataService from "../../../services/department.service";
 import RoleDataService from "../../../services/role.service";
 
@@ -109,39 +109,74 @@ function User({ closeDrawer }) {
     form.current.validateAll();
 
     if (checkBtn.current.context._errors.length === 0) {
-      UserDataService.create(
-        firstName,
-        lastName,
-        email,
-        password,
-        department,
-        role
-      ).then(
-        (response) => {
-          setMessage(response.data.message);
-          setLoading(false);
+      dispatch(create(firstName, lastName, email, password, department, role))
+        .then((response) => {
           setSuccessful(true);
+          UserDataService.getAll()
+            .then((response) => {
+              dispatch({
+                type: userActions.GET_USER_SUCCESS,
+                payload: response.data.data,
+              });
+              console.log(response);
+              setMessage(response.data.message);
+            })
+            .catch((e) => {
+              console.log(e);
+              setLoading(false);
+              setMessage(e.response);
+            });
+          setLoading(false);
+
           setTimeout(function () {
             closeDrawer();
           }, 1000);
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.error) ||
-            error.message ||
-            error.toString();
+        })
+        .catch((e) => {
           setSuccessful(false);
           setLoading(false);
-          setMessage(resMessage);
-          console.log(error.response);
-        }
-      );
-    } else {
-      setLoading(false);
+          // setMessage(e.response)
+
+          console.log(e);
+          console.log("here");
+        });
     }
   };
+
+  //   if (checkBtn.current.context._errors.length === 0) {
+  //     UserDataService.create(
+  //       firstName,
+  //       lastName,
+  //       email,
+  //       password,
+  //       department,
+  //       role
+  //     ).then(
+  //       (response) => {
+  //         setMessage(response.data.message);
+  //         setLoading(false);
+  //         setSuccessful(true);
+  //         setTimeout(function () {
+  //           closeDrawer();
+  //         }, 1000);
+  //       },
+  //       (error) => {
+  //         const resMessage =
+  //           (error.response &&
+  //             error.response.data &&
+  //             error.response.data.error) ||
+  //           error.message ||
+  //           error.toString();
+  //         setSuccessful(false);
+  //         setLoading(false);
+  //         setMessage(resMessage);
+  //         console.log(error.response);
+  //       }
+  //     );
+  //   } else {
+  //     setLoading(false);
+  //   }
+  // };
 
   const retrieveDepartments = async () => {
     await DepartmentDataService.getAll()

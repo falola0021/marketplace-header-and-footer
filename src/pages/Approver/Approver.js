@@ -4,10 +4,12 @@ import Styles from "./Approver.module.css";
 import Navbar from "../../components/Navbar/Navbar";
 import Addrequest from "../../components/ActionButton/Addrequest/Addrequest";
 import Card from "../../components/ViewCard/ViewCard";
-import ApproverTable from "../../components/Table/ApproverTable";
+import ApproverTable from "./ApproverTable";
+import RequesterTable from "../Requester/Table";
 
 import Profile from "../../components/UserProfile/UserProfile";
 import RequestDataService from "../../services/requester.service";
+
 import {
   ThemeProvider,
   Drawer,
@@ -115,11 +117,14 @@ function Requester() {
     <>
       <div className={Styles.body}>
         <Navbar
+          switchUser={switchUser}
+          setSwitchUser={setSwitchUser}
           handleSwitchUser={handleSwitchUser}
           handledashboardclick={handleDashboardClick}
           handleprofileclick={handleProfileClick}
         />
         <Row className="mr-0 pr-0 ml-0 pl-0">
+          {/* FOR APPROVER */}
           {switchView.overview && (
             <Col>
               <div className={Styles.addrequestmobile}>
@@ -167,8 +172,52 @@ function Requester() {
                   />
                 </div>
               )}
+              {/* FOR NORMAL USER */}
+              {switchUser && (
+                <div className={Styles.cardcontainer}>
+                  <Card
+                    cardbody={Styles.cardbodyA}
+                    cardtitle={Styles.cardtitle1}
+                    cardsubtitle={Styles.cardsubtitle1}
+                    cardiconbody={Styles.cardiconbody1}
+                    value={allUserRequest}
+                    title="All Requests"
+                    cardicon="fa fa-book"
+                  />
+                  <Card
+                    cardbody={Styles.cardbodyB}
+                    cardtitle={Styles.cardtitle2}
+                    cardsubtitle={Styles.cardsubtitle2}
+                    cardiconbody={Styles.cardiconbody2}
+                    value={allUserApprovedRequest}
+                    title="Approved Requests"
+                    cardicon="fa fa-check-circle"
+                  />
+                  <Card
+                    cardbody={Styles.cardbodyC}
+                    cardtitle={Styles.cardtitle3}
+                    cardsubtitle={Styles.cardsubtitle3}
+                    cardiconbody={Styles.cardiconbody3}
+                    value={allUserPendingRequest}
+                    title="Pending Requests"
+                    cardicon="fa fa-hourglass-half"
+                  />
+                  <Card
+                    cardbody={Styles.cardbodyD}
+                    cardtitle={Styles.cardtitle4}
+                    cardsubtitle={Styles.cardsubtitle4}
+                    cardiconbody={Styles.cardiconbody4}
+                    value={allUserDeclinedRequest}
+                    title="Declined Requests"
+                    cardicon="fa fa-times-circle"
+                  />
+                </div>
+              )}
 
               <div className={Styles.tablecontainer}>
+                {/* FOR NORMAL USER */}
+                {switchUser && <RequesterTable preview={handlePreviewShow} />}
+                {/* FOR  APPROVER */}
                 {!switchUser && <ApproverTable preview={handlePreviewShow} />}
               </div>
             </Col>

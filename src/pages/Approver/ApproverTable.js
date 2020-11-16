@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import Styles from "./Table.module.css";
-import ApproversAvatar from "../ApproversAvatar/ApproversAvatar";
-import ProgressBar from "../ProgressBar/ProgressBar";
-import ConfirmationStatus from "../ConfirmationStatus/ConfirmationStatus";
-import SearchFilter from "../SearchFilter/SearchFilter";
+import ApproversAvatarApprover from "../../components/ApproversAvatar/ApproversAvatarApprover";
+import ProgressBar from "../../components/ProgressBar/ProgressBar";
+import ConfirmationStatus from "../../components/ConfirmationStatus/ConfirmationStatus";
+import SearchFilter from "../../components/SearchFilter/SearchFilter";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -23,11 +23,10 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import RequestDataService from "../../services/requester.service";
-import AuthService from "../../services/auth.service";
-import Addrequest from "../ActionButton/Addrequest/Addrequest";
+// import RequestDataService from "../../services/requester.service";
+import TicketDataService from "../../services/ticket.service";
 import { Row, Col } from "react-bootstrap";
-import InvoicePreview from "../InvoicePreview/ApproverInvoicePreview";
+import InvoicePreview from "../../components/InvoicePreview/ApproverInvoicePreview";
 import moment from "moment";
 
 import {
@@ -67,14 +66,16 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
+  { id: "requester", numeric: true, disablePadding: false, label: "Requester" },
+
   {
     id: "title",
     numeric: false,
     disablePadding: true,
-    label: "Titles",
+    label: "Title",
   },
 
-  { id: "item", numeric: true, disablePadding: false, label: "Items" },
+  { id: "item", numeric: true, disablePadding: false, label: "Item(s)" },
   { id: "amoumt", numeric: true, disablePadding: false, label: "Amount (₦)" },
   { id: "due", numeric: true, disablePadding: false, label: "Date" },
   { id: "approver", numeric: true, disablePadding: false, label: "Approvers" },
@@ -265,9 +266,10 @@ export default function EnhancedTable(props, { preview }) {
   const [loading, setLoading] = useState(false);
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
-  const [allUserRequest, setAllUserRequest] = useState("");
-  const currentUser = AuthService.getCurrentUser();
+  // const [allUserRequest, setAllUserRequest] = useState("");
+  // const currentUser = AuthService.getCurrentUser();
   const [drawerInfo, setDrawerInfo] = React.useState({});
+  const [sideview, setSideView] = React.useState({});
 
   const checkBtn = useRef();
   const form = useRef();
@@ -275,27 +277,30 @@ export default function EnhancedTable(props, { preview }) {
   const size1 = "xs";
   const size2 = "lg";
 
-  const retrieveRequests = async () => {
-    await RequestDataService.getUserTicketList()
+  const retrieveTickets = async () => {
+    await TicketDataService.getTicketAwaitingApproval()
       .then((response) => {
-        setRequests(response.data.data.mytickets);
-        console.log(response.data.data.mytickets);
+        console.log("response gggggg", response);
+        let resData = response.data.data.tickets;
+        setRequests(resData);
+        let firstData = resData[0];
+        handleSideview(firstData);
+        console.log("the data", resData);
       })
       .catch((e) => {
         console.log(e);
-        console.log(e.response);
+        console.log("errrrrrr", e.response);
       });
   };
 
-  useEffect(() => {
-    retrieveRequests();
-  }, []);
-
-  const handleShowMore = (event, request) => {
-    setDrawerInfo(request);
-    // setSize(newSize);
-    // onOpen();
+  const handleSideview = (requests) => {
+    setSideView(requests);
+    console.log("na here", sideview);
   };
+
+  useEffect(() => {
+    retrieveTickets();
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -381,10 +386,13 @@ export default function EnhancedTable(props, { preview }) {
                         page * rowsPerPage + rowsPerPage
                       )
                       .map((request, index) => {
-                        const isItemSelected = isSelected(request._id);
+                        const isItemSelected = isSelected(requests._id);
                         const labelId = `enhanced-table-checkbox-${index}`;
-                        const phases = request.workflow.phases;
-
+                        // console.log("the request", request);
+                        // const phases = request;
+                        console.log("the phasesddd", request);
+                        // return req.ticket.map(function (request) {
+                        console.log("the phases", request);
                         return (
                           <TableRow
                             hover
@@ -407,51 +415,47 @@ export default function EnhancedTable(props, { preview }) {
                             </TableCell>
 
                             <TableCell
-                              onClick={(event) =>
-                                handleShowMore(event, request)
-                              }
+                              onClick={(event) => setSideView(request)}
+                              align="left"
+                            >
+                              {request.user.firstName} {request.user.lastName}
+                            </TableCell>
+
+                            <TableCell
+                              onClick={(event) => setSideView(request)}
                               align="left"
                             >
                               {request.description}
                             </TableCell>
 
                             <TableCell
-                              onClick={(event) =>
-                                handleShowMore(event, request)
-                              }
-                              onClick={(event) =>
-                                handleShowMore(event, request)
-                              }
+                              onClick={(event) => setSideView(request)}
                               align="left"
                             >
                               {request.items}{" "}
                             </TableCell>
                             <TableCell
-                              onClick={(event) =>
-                                handleShowMore(event, request)
-                              }
+                              onClick={(event) => setSideView(request)}
                               align="left"
                             >
                               {request.amount}
                             </TableCell>
                             <TableCell
-                              onClick={(event) =>
-                                handleShowMore(event, request)
-                              }
+                              onClick={(event) => setSideView(request)}
                               align="left"
                             >
                               {moment(request.dueDate).format("DD/MM/YYYY")}
                             </TableCell>
                             <TableCell align="left">
-                              <ApproversAvatar
+                              <ApproversAvatarApprover
                                 dotColor={request.status}
-                                phases={phases}
+                                // phases={phases}
                               />
                             </TableCell>
                             <TableCell align="left">
                               {" "}
                               <ProgressBar
-                                phases={phases}
+                                // phases={phases}
                                 name={request.status}
                               />
                             </TableCell>
@@ -461,6 +465,7 @@ export default function EnhancedTable(props, { preview }) {
                             </TableCell>
                           </TableRow>
                         );
+                        // });
                       })}
                     {emptyRows > 0 && (
                       <TableRow
@@ -489,10 +494,7 @@ export default function EnhancedTable(props, { preview }) {
           </div>
         </Col>
         <Col>
-          <InvoicePreview
-            drawerInfo={drawerInfo}
-            // preview={handlePreviewShow}
-          />
+          <InvoicePreview drawerInfo={drawerInfo} sideview={sideview} />
         </Col>
       </Row>
     </>

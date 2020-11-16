@@ -3,7 +3,7 @@ import Form1 from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import Select from "react-validation/build/select";
 import CheckButton from "react-validation/build/button";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { create } from "../../../redux/actions/roleActions/role";
 import RoleDataService from "../../../services/role.service";
 import * as roleActions from "../../../redux/actions/roleActions/roleActions";
@@ -40,7 +40,8 @@ function Role({ closeDrawer }) {
 
   const [loading, setLoading] = useState(false);
   const [successful, setSuccessful] = useState(false);
-  const { message } = useSelector((state) => state.messageReducer);
+  const [message, setMessage] = useState("");
+  // const { message } = useSelector((state) => state.messageReducer);
 
   const dispatch = useDispatch();
 
@@ -73,10 +74,12 @@ function Role({ closeDrawer }) {
                 payload: response.data.data,
               });
               console.log(response);
+              setMessage(response.data.message);
             })
             .catch((e) => {
               console.log(e);
               setLoading(false);
+              setMessage(e.response);
             });
           setLoading(false);
 
@@ -87,6 +90,8 @@ function Role({ closeDrawer }) {
         .catch((e) => {
           setSuccessful(false);
           setLoading(false);
+          // setMessage(e.response)
+
           console.log(e);
           console.log("here");
         });

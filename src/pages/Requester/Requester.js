@@ -6,37 +6,28 @@ import MakeRequest from "./MakeRequest/MakeRequest";
 // import { Spring, Transition, animated } from "react-spring/renderprops";
 import PreviewRequest from "./PreviewRequest/PreviewRequest";
 import Navbar from "../../components/Navbar/Navbar";
-
 import Addrequest from "../../components/ActionButton/Addrequest/Addrequest";
 import Card from "../../components/ViewCard/ViewCard";
-import Table from "../../components/Table/Table";
-
+import Table from "./Table";
+import ApproverTable from "../Approver/ApproverTable";
 import Profile from "../../components/UserProfile/UserProfile";
 import RequestDataService from "../../services/requester.service";
-import {
-  ThemeProvider,
-  Drawer,
-  DrawerBody,
-  DrawerOverlay,
-  DrawerContent,
-  useDisclosure,
-} from "@chakra-ui/core";
+// import {
+//   ThemeProvider,
+//   Drawer,
+//   DrawerBody,
+//   DrawerOverlay,
+//   DrawerContent,
+//   useDisclosure,
+// } from "@chakra-ui/core";
 
 // import AuthService from "../../services/auth.service";
 
 function Requester() {
-  //const currentUser = AuthService.getCurrentUser();
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-  // const [size, setSize] = React.useState("md");
   const [allUserRequest, setAllUserRequest] = useState("");
   const [allUserDeclinedRequest, setAllUserDeclinedRequest] = useState("");
   const [allUserPendingRequest, setAllUserPendingRequest] = useState("");
   const [allUserApprovedRequest, setAllUserApprovedRequest] = useState("");
-
-  // const handleClick = (newSize) => {
-  //   setSize(newSize);
-  //   onOpen();
-  // };
 
   const sizes = ["xl"];
   const [modalShow, setModalShow] = useState(false);
@@ -132,49 +123,48 @@ function Requester() {
 
                 <Addrequest request={handleRequest} />
               </div>
-              {!switchUser && (
-                <div className={Styles.cardcontainer}>
-                  <Card
-                    cardbody={Styles.cardbody1}
-                    cardtitle={Styles.cardtitle1}
-                    cardsubtitle={Styles.cardsubtitle1}
-                    cardiconbody={Styles.cardiconbody1}
-                    value={allUserRequest}
-                    title="All Requests"
-                    cardicon="fa fa-book"
-                  />
-                  <Card
-                    cardbody={Styles.cardbody2}
-                    cardtitle={Styles.cardtitle2}
-                    cardsubtitle={Styles.cardsubtitle2}
-                    cardiconbody={Styles.cardiconbody2}
-                    value={allUserApprovedRequest}
-                    title="Approved Requests"
-                    cardicon="fa fa-check-circle"
-                  />
-                  <Card
-                    cardbody={Styles.cardbody3}
-                    cardtitle={Styles.cardtitle3}
-                    cardsubtitle={Styles.cardsubtitle3}
-                    cardiconbody={Styles.cardiconbody3}
-                    value={allUserPendingRequest}
-                    title="Pending Requests"
-                    cardicon="fa fa-hourglass-half"
-                  />
-                  <Card
-                    cardbody={Styles.cardbody4}
-                    cardtitle={Styles.cardtitle4}
-                    cardsubtitle={Styles.cardsubtitle4}
-                    cardiconbody={Styles.cardiconbody4}
-                    value={allUserDeclinedRequest}
-                    title="Declined Requests"
-                    cardicon="fa fa-times-circle"
-                  />
-                </div>
-              )}
+
+              <div className={Styles.cardcontainer}>
+                <Card
+                  cardbody={Styles.cardbody1}
+                  cardtitle={Styles.cardtitle1}
+                  cardsubtitle={Styles.cardsubtitle1}
+                  cardiconbody={Styles.cardiconbody1}
+                  value={allUserRequest}
+                  title="All Requests"
+                  cardicon="fa fa-book"
+                />
+                <Card
+                  cardbody={Styles.cardbody2}
+                  cardtitle={Styles.cardtitle2}
+                  cardsubtitle={Styles.cardsubtitle2}
+                  cardiconbody={Styles.cardiconbody2}
+                  value={allUserApprovedRequest}
+                  title="Approved Requests"
+                  cardicon="fa fa-check-circle"
+                />
+                <Card
+                  cardbody={Styles.cardbody3}
+                  cardtitle={Styles.cardtitle3}
+                  cardsubtitle={Styles.cardsubtitle3}
+                  cardiconbody={Styles.cardiconbody3}
+                  value={allUserPendingRequest}
+                  title="Pending Requests"
+                  cardicon="fa fa-hourglass-half"
+                />
+                <Card
+                  cardbody={Styles.cardbody4}
+                  cardtitle={Styles.cardtitle4}
+                  cardsubtitle={Styles.cardsubtitle4}
+                  cardiconbody={Styles.cardiconbody4}
+                  value={allUserDeclinedRequest}
+                  title="Declined Requests"
+                  cardicon="fa fa-times-circle"
+                />
+              </div>
 
               <div className={Styles.tablecontainer}>
-                {!switchUser && <Table preview={handlePreviewShow} />}
+                <Table preview={handlePreviewShow} />
               </div>
             </Col>
           )}

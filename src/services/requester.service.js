@@ -10,7 +10,7 @@ const create = (
   department,
   dueDate,
   amount,
-  documents,
+  selectedFiles,
   comment
 ) => {
   let formData = new FormData();
@@ -23,8 +23,13 @@ const create = (
   formData.append("department", department);
   formData.append("dueDate", dueDate);
   formData.append("amount", amount);
-  formData.append("documents", documents);
+  for (let file of selectedFiles) {
+    formData.append("documents", file);
+  }
   formData.append("comment", comment);
+
+  console.log(formData);
+  console.log(selectedFiles);
 
   return http.post("/api/ticket", formData);
 };

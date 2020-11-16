@@ -1,18 +1,18 @@
 .container {
   width: 50%;
-  margin: 40px auto;
+  margin: 20px auto;
   border-radius: 6px;
 }
 .profileheader {
   text-align: center;
   color: #666565;
-  font-size: 28px;
+  font-size: 20px;
   font-weight: bold;
 }
 .content {
   box-shadow: 0px 2px 28px rgba(0, 0, 0, 0.1);
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding-top: 10px;
+  padding-bottom: 20px;
   margin: 0 auto;
 }
 .avatarcontainer {
@@ -30,11 +30,11 @@
   background-color: #eb14c4 !important;
   color: #ffff !important;
   text-align: center !important;
-  width: 80px !important;
-  height: 80px !important;
+  width: 60px !important;
+  height: 60px !important;
 }
 .title {
-  padding: 20px 20px 0 50px;
+  padding: 0px 20px 0 50px;
   font-size: 20px;
 }
 .label {
@@ -44,7 +44,7 @@
 .input {
   outline: none;
   border: 1px solid rgb(196, 194, 194) !important;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   font-size: 16px !important;
 }
 .submitdiv {

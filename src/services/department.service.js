@@ -8,10 +8,10 @@ const get = (id) => {
   return http.get(`/roles/${id}`);
 };
 
-const create = (name, hod, description) => {
+const create = (name, description) => {
   return http.post("/api/department", {
     name,
-    hod,
+    //hod,
     description,
   });
 };

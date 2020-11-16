@@ -134,6 +134,31 @@ html {
   color: #f13c3c;
   opacity: 0.7;
 }
+/* for normal user card  */
+.cardbodyA {
+  width: 18rem;
+  padding-top: 30px;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+.cardbodyB {
+  width: 18rem;
+  padding-top: 30px;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+.cardbodyC {
+  width: 18rem;
+  padding-top: 30px;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+.cardbodyD {
+  width: 18rem;
+  padding-top: 30px;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
 
 .invoicecontainer {
   margin-top: 50px;

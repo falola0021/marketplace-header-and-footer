@@ -64,6 +64,7 @@ const Login = (props) => {
         .then((response) => {
           setLoading(false);
           setSuccessful(true);
+          window.location.reload();
         })
         .catch((error) => {
           setLoading(false);
@@ -128,7 +129,7 @@ const Login = (props) => {
           {loading && (
             <span className="spinner-border spinner-border-sm"></span>
           )}
-          <span>Login</span>
+          <span>Submit</span>
         </button>
         <Link className="link" to="/change-password">
           <div className={Styles.forgotpas}>Forgot Password ?</div>

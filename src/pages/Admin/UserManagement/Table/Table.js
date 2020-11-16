@@ -353,9 +353,10 @@ export default function EnhancedTable(props, { preview }) {
     await UserDataService.getAll()
       .then((response) => {
         setUsers(response.data.data.userList);
+        console.log("got here", response.data);
       })
       .catch((e) => {
-        console.log(e);
+        console.log(e.response);
       });
   };
 
@@ -569,7 +570,7 @@ export default function EnhancedTable(props, { preview }) {
                           handleShowMore(event, gotuser, size1)
                         }
                       >
-                        {gotuser.role}
+                        {gotuser.userId}
                       </TableCell>
                       <TableCell
                         // key={gotuser.userId}
@@ -586,7 +587,7 @@ export default function EnhancedTable(props, { preview }) {
                           handleShowMore(event, gotuser, size1)
                         }
                       >
-                        {gotuser.email}
+                        {gotuser.email} {gotuser.id}
                       </TableCell>
                       <TableCell key={gotuser._id} align="left">
                         {gotuser.status === "inactive" && (
@@ -779,7 +780,7 @@ export default function EnhancedTable(props, { preview }) {
                       name="roleId2"
                       value={roleId2}
                       onChange={detachChangeRole}
-                      validations={[required]}
+                      // validations={[required]}
                       className={Styles.formcontrol}
                       as="select"
                     >

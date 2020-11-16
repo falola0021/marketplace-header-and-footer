@@ -99,7 +99,7 @@ const headCells = [
   },
 
   { id: "status", numeric: true, disablePadding: false, label: "Status" },
-  { id: "id", numeric: true, disablePadding: false, label: "ID" },
+  { id: "id", numeric: true, disablePadding: false, label: "" },
   { id: "action", numeric: true, disablePadding: false, label: "" },
 ];
 
@@ -537,7 +537,7 @@ export default function EnhancedTable(props, { preview }) {
                           handleShowMore(event, gotrole, size1)
                         }
                       >
-                        {gotrole._id}
+                        {/* {gotrole._id} */}
                       </TableCell>
 
                       <TableCell align="left">
@@ -545,14 +545,14 @@ export default function EnhancedTable(props, { preview }) {
                           onClick={(event) => handleEdIT(event, gotrole, size2)}
                           className={Styles.editbutton}
                         >
-                          edit
+                          Edit
                         </button>
                         {/* ))} */}
                         <button
                           onClick={() => deleteRole(gotrole)}
                           className={Styles.deletebutton}
                         >
-                          delete
+                          Delete
                         </button>
                       </TableCell>
                     </TableRow>

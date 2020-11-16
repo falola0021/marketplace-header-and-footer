@@ -250,7 +250,7 @@ const Register = (props) => {
               {loading && (
                 <span className="spinner-border spinner-border-sm"></span>
               )}
-              Sign Up
+              Submit
             </button>
           </div>
         </div>
