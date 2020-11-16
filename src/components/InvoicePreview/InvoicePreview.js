@@ -28,7 +28,7 @@ function InvoicePreview({ sideview }) {
     items,
     numberOfItems,
     ref,
-  } = sideview;
+  } = sideview || {};
 
   const handlePreview = (newSize) => {
     setSize(newSize);
