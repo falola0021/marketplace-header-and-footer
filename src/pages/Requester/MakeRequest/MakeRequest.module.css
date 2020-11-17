@@ -2,8 +2,8 @@
   font-size: 25px;
   color: #5c5b5b;
   text-align: center;
-  margin-top: 10px;
-  margin-bottom: 15px;
+  /* margin-top: 10px; */
+  margin-bottom: 5px;
   font-weight: bold;
 }
 .title2 {
@@ -11,7 +11,7 @@
   color: #5c5b5b;
   text-align: center;
   margin-top: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   font-weight: bold;
 }
 
@@ -39,11 +39,11 @@ style={{
 }} */
 
 .submitdiv1 {
-  margin-top: 20px;
+  margin-top: 5px;
   text-align: center !important;
 }
 .submitdiv2 {
-  margin-top: 20px;
+  margin-top: 5px;
   text-align: center !important;
 }
 .submit {

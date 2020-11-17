@@ -30,6 +30,16 @@ const required = (value) => {
   }
 };
 
+// const number = (value) => {
+//   if (typeof value !== "number") {
+//     return (
+//       <div className="alert alert-danger" role="alert">
+//         ust be a number without commas e.g 30000
+//       </div>
+//     );
+//   }
+// };
+
 function MakeRequest({ closeDrawer }) {
   const form = useRef();
   const checkBtn = useRef();
@@ -419,7 +429,7 @@ function MakeRequest({ closeDrawer }) {
               <Input1
                 type="number"
                 validations={[required]}
-                placeholder="Enter Amount"
+                placeholder=" Amount without coma e.g 3000"
                 className={Styles.input}
                 name="amount"
                 value={amount}

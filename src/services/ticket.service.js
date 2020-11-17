@@ -4,8 +4,8 @@ const getTicketAwaitingApproval = () => {
   return http.get("/api/ticket/pending");
 };
 
-const rejectTicket = (id, rejectComment) => {
-  return http.patch(`/api/ticket/reject/${id}`, rejectComment);
+const rejectTicket = (id) => {
+  return http.patch(`/api/ticket/reject/${id}`);
 };
 
 const approveTicket = (id) => {

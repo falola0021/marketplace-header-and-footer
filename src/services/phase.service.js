@@ -5,7 +5,7 @@ const getAll = () => {
 };
 
 const get = (id) => {
-  return http.get(`/roles/${id}`);
+  return http.get(`/api/phase/${id}`);
 };
 
 const create = (name, phaseType, approver, sla, isDynamic) => {

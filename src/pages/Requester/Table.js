@@ -29,6 +29,7 @@ import Addrequest from "../../components/ActionButton/Addrequest/Addrequest";
 import MakeRequest from "./MakeRequest/MakeRequest";
 import { Row, Col } from "react-bootstrap";
 import InvoicePreview from "../../components/InvoicePreview/InvoicePreview";
+import PhaseDataService from "../../services/phase.service";
 import moment from "moment";
 
 import {
@@ -287,12 +288,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EnhancedTable(props, { preview }) {
   const classes = useStyles();
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [dense, setDense] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [requests, setRequests] = React.useState([]);
   // const [loading, setLoading] = useState(false);
@@ -300,9 +301,9 @@ export default function EnhancedTable(props, { preview }) {
   // const [message, setMessage] = useState("");
   // const [allUserRequest, setAllUserRequest] = useState("");
   // const currentUser = AuthService.getCurrentUser();
-  const [drawerInfo, setDrawerInfo] = React.useState([]);
-  const [sideview, setSideView] = React.useState({});
-
+  const [drawerInfo, setDrawerInfo] = useState([]);
+  const [sideview, setSideView] = useState({});
+  const [phaseObj, setPhaseObj] = useState([]);
   const checkBtn = useRef();
   const form = useRef();
 
@@ -330,6 +331,21 @@ export default function EnhancedTable(props, { preview }) {
   const handleSideview = (requests) => {
     setSideView(requests);
   };
+  // const getPhasesObj = (phases) => {
+  //   phases.forEach((phase) => {
+  //     PhaseDataService.get(phase)
+  //       .then((response) => {
+  //         console.log("the reponse", response.data);
+  //         let copyOfPhases = [...phaseObj];
+  //         copyOfPhases.push(response.data.data);
+  //         setPhaseObj(copyOfPhases);
+  //       })
+  //       .catch((e) => {
+  //         console.log(e);
+  //         console.log("phase eror", e.response);
+  //       });
+  //   });
+  // };
 
   useEffect(() => {
     retrieveRequests();
@@ -421,8 +437,8 @@ export default function EnhancedTable(props, { preview }) {
                         console.log("the req", ticket);
                         const isItemSelected = isSelected(ticket._id);
                         const labelId = `enhanced-table-checkbox-${index}`;
-
                         const phases = ticket.workflow.phases;
+                        // getPhasesObj(phases);
 
                         return (
                           <TableRow
@@ -472,6 +488,7 @@ export default function EnhancedTable(props, { preview }) {
                               onClick={(event) => setSideView(ticket)}
                             >
                               <ApproversAvatar
+                                // phaseObj={phaseObj}
                                 phases={phases}
                                 dotColor={ticket.status}
                               />

@@ -6,7 +6,7 @@ function ConfirmationStatus({ name }) {
     <>
       {name === "pending" ? (
         <div className={Styles.statusPending}>{name}</div>
-      ) : name === "confirmed" ? (
+      ) : name === "approved" ? (
         <div className={Styles.statusConfirmed}>{name}</div>
       ) : (
         <div className={Styles.statusDelined}>{name}</div>

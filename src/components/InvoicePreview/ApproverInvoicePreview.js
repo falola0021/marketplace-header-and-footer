@@ -81,9 +81,10 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
         // retrievePhases();
         setLoading(false);
         setSuccessful(true);
-        // setTimeout(function () {
-        //   closeDrawer();
-        // }, 1000);
+
+        setTimeout(function () {
+          window.location.reload();
+        }, 500);
       },
       (error) => {
         const resMessage = error.response.data.message;
@@ -102,15 +103,15 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
   };
   const handleRejectComment = (e) => {
     e.preventDefault();
-    TicketDataService.rejectTicket(rejectComment, sideview._id).then(
+    TicketDataService.rejectTicket(sideview._id).then(
       (response) => {
         setMessage(response.data.message);
         // retrievePhases();
         setLoading(false);
         setSuccessful(true);
-        // setTimeout(function () {
-        //   closeDrawer();
-        // }, 1000);
+        setTimeout(function () {
+          window.location.reload();
+        }, 500);
       },
       (error) => {
         const resMessage = error.response.data.message;
@@ -135,15 +136,19 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
 
           <div className={Styles.invoiceimg}>
             <span onClick={() => handlePreview(size)}>
-              <img
-                style={{ width: "100%", height: "50%" }}
-                src={
-                  ticketDocuments[0].document
-                    ? ticketDocuments[0].document
-                    : Placeholder
-                }
-                alt="CHECK FOR FILE"
-              />
+              {ticketDocuments.document ? (
+                <img
+                  style={{ width: "100%", height: "50%" }}
+                  src={
+                    ticketDocuments[0].document
+                      ? ticketDocuments[0].document
+                      : Placeholder
+                  }
+                  alt="CHECK FOR FILE"
+                />
+              ) : (
+                ""
+              )}
               <div className={Styles.download}>
                 <i className="fa fa-download" aria-hidden="true">
                   <span>Download</span>

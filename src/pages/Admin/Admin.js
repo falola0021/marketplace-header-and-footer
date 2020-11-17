@@ -168,7 +168,7 @@ function Admin() {
                   >
                     {" "}
                   </div>{" "}
-                  <span>Request Phase</span>
+                  <span>Phase</span>
                 </div>{" "}
                 <div
                   onClick={() => {
@@ -210,7 +210,7 @@ function Admin() {
                   <div style={{ color: "#f4acb7" }} className="fas fa-sync-alt">
                     {" "}
                   </div>{" "}
-                  <span>Work Flow</span>
+                  <span>Workflow</span>
                 </div>
                 <div
                   onClick={() => {

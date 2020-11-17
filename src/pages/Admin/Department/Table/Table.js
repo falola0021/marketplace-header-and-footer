@@ -106,7 +106,7 @@ const headCells = [
     id: "status",
     numeric: true,
     disablePadding: false,
-    label: "HOD",
+    label: "hod name",
   },
   { id: "id", numeric: true, disablePadding: false, label: "Description" },
   { id: "action", numeric: true, disablePadding: false, label: "" },

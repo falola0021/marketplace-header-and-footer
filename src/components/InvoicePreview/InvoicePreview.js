@@ -49,15 +49,19 @@ function InvoicePreview({ sideview }) {
             <span className={Styles.invoicelabel}>Ticket Details</span>
           </p>
           <div className={Styles.invoiceimg}>
-            <img
-              style={{ width: "100%", height: "50%" }}
-              src={
-                ticketDocuments[0].document
-                  ? ticketDocuments[0].document
-                  : Placeholder
-              }
-              alt="CHECK FOR FILE"
-            />
+            {ticketDocuments.document ? (
+              <img
+                style={{ width: "100%", height: "50%" }}
+                src={
+                  ticketDocuments[0].document
+                    ? ticketDocuments[0].document
+                    : Placeholder
+                }
+                alt="CHECK FOR FILE"
+              />
+            ) : (
+              ""
+            )}
 
             <div className={Styles.download}>
               <i className="fa fa-download" aria-hidden="true">

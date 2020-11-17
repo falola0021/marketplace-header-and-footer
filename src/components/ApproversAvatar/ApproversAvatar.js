@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Styles from "./ApproversAvatar.module.css";
 import {
   ThemeProvider,
@@ -6,32 +6,15 @@ import {
   Avatar,
   AvatarBadge,
 } from "@chakra-ui/core";
-import PhaseDataService from "../../services/phase.service";
+
 function ApproversAvatar({ phases, dotColor }) {
   console.log("the phasesssssssshhh", phases);
-  const [phaseData, setPhaseData] = React.useState([]);
-
-  const retrievePhaseData = async (phase) => {
-    await PhaseDataService.get(phase)
-      .then((response) => {
-        console.log("responseee", response.data.data);
-        let resData = response.data.data;
-        setPhaseData(resData);
-      })
-      .catch((e) => {
-        console.log(e);
-        console.log(e.response);
-      });
-  };
 
   return (
     <>
       <ThemeProvider>
         <AvatarGroup style={{ fontSize: "20px" }} size="sm" max={4}>
           {phases.map((phase) => {
-            console.log("this is what is inside phase dami", phase);
-            retrievePhaseData(phase);
-            console.log("Phase data", phaseData);
             return (
               <Avatar
                 //key={phase.approver._id}
