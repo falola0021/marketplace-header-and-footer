@@ -31,6 +31,7 @@ function Navigation({
     AuthService.logout();
   };
   const userRole = currentUser.roles;
+  //console.log("the user userole ", currentUser);
 
   //for hiding swutch
 
@@ -67,24 +68,30 @@ function Navigation({
             ""
           )}
 
-          <Nav.Link href="#link">
+          <Nav.Link onClick={handleprofileclick}>
             <i className="fa fa-bell "> </i>
             <span style={{ color: "#ffffff", padding: "0 10px" }}>
-              Hi {currentUser.firstName}{" "}
+              Hi {currentUser.firstName} (Technology)
             </span>
-            {/* <span style={{ color: "#ffffff" }}>Role : {currentUser.roles}</span> */}
           </Nav.Link>
 
           <ThemeProvider>
             <Stack>
               <Avatar
+                style={{ cursor: "pointer" }}
+                onClick={handleprofileclick}
                 size="sm"
                 className={Styles.avatar}
                 name={initialName}
                 src="https://bit.ly/tioluwani-kolawole"
               />
             </Stack>
-
+            <Nav.Link href="/" onClick={logOut}>
+              <span style={{ color: "#ffffff", padding: "0 10px" }}>
+                <i className="fa fa-sign-out-alt "></i>
+              </span>
+            </Nav.Link>
+            {/* 
             <div className={Styles.desktopmenu}>
               <Menu>
                 <MenuButton
@@ -104,7 +111,7 @@ function Navigation({
                   </a>
                 </MenuList>
               </Menu>
-            </div>
+            </div> */}
           </ThemeProvider>
           <div className={Styles.mobilemenu}>
             <Nav.Link className={Styles.link} href="#home">

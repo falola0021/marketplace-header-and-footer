@@ -3,8 +3,6 @@ import Form1 from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import Select from "react-validation/build/select";
 import CheckButton from "react-validation/build/button";
-import { useDispatch, useSelector } from "react-redux";
-import { create } from "../../../redux/actions/roleActions/role";
 import DepartmentDataService from "../../../services/department.service";
 import UserDataService from "../../../services/user.service";
 // import * as roleActions from "../../../redux/actions/roleActions/roleActions";
@@ -33,7 +31,7 @@ const vname = (value) => {
   }
 };
 
-function Department({ closeDrawer, setDepartments }) {
+function Department({ closeDrawer, retrieveDepartments }) {
   const form = useRef();
   const checkBtn = useRef();
 
@@ -44,7 +42,6 @@ function Department({ closeDrawer, setDepartments }) {
   const [loading, setLoading] = useState(false);
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState(false);
-  const [department, setDepartment] = useState([]);
 
   const onChangeName = (e) => {
     const name = e.target.value;
@@ -64,7 +61,6 @@ function Department({ closeDrawer, setDepartments }) {
     UserDataService.getAll()
       .then((response) => {
         setUsers(response.data.data.userList);
-        console.log(response.data.data.userList);
       })
       .catch((e) => {
         console.log(e);
@@ -75,19 +71,8 @@ function Department({ closeDrawer, setDepartments }) {
   useEffect(() => {
     retrieveUsers();
   }, []);
-  const retrieveDepartments = () => {
-    DepartmentDataService.getAll()
-      .then((response) => {
-        setDepartments(response.data.data);
-        console.log("departments may come");
-      })
-      .catch((e) => {
-        console.log(e);
-        console.log("cannot get department");
-      });
-  };
 
-  const handleCreateRole = (e) => {
+  const handleCreateDepartment = (e) => {
     e.preventDefault();
 
     setSuccessful(false);
@@ -99,7 +84,7 @@ function Department({ closeDrawer, setDepartments }) {
           setSuccessful(true);
           setLoading(false);
           setMessage(response.data.message);
-          setDepartment(retrieveDepartments);
+          retrieveDepartments();
           setTimeout(function () {
             closeDrawer();
           }, 1000);
@@ -107,7 +92,8 @@ function Department({ closeDrawer, setDepartments }) {
         .catch((e) => {
           setSuccessful(false);
           setLoading(false);
-          console.log(e);
+          console.log(e.response.data.message);
+          setMessage(e.response.data.message);
           console.log("here");
         });
     }
@@ -118,7 +104,11 @@ function Department({ closeDrawer, setDepartments }) {
       <Row>
         <Col>
           <div className={Styles.heading}>Create a Department</div>
-          <Form1 onSubmit={handleCreateRole} ref={form} className={Styles.form}>
+          <Form1
+            onSubmit={handleCreateDepartment}
+            ref={form}
+            className={Styles.form}
+          >
             <Row>
               <Col sm="12">
                 <Form.Group controlId="formBasicEmail">
@@ -212,22 +202,18 @@ function Department({ closeDrawer, setDepartments }) {
                 Create Department
               </button>
             </span>
-            {successful && (
+            {message && (
               <span>
-                {message && (
-                  <div className="form-group">
-                    <div
-                      className={
-                        successful
-                          ? "alert alert-success"
-                          : "alert alert-danger"
-                      }
-                      role="alert"
-                    >
-                      {message}
-                    </div>
+                <div className="form-group">
+                  <div
+                    className={
+                      successful ? "alert alert-success" : "alert alert-danger"
+                    }
+                    role="alert"
+                  >
+                    {message}
                   </div>
-                )}
+                </div>
               </span>
             )}
             <CheckButton style={{ display: "none" }} ref={checkBtn} />

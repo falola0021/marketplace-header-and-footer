@@ -217,7 +217,7 @@ function Vendor({ closeDrawer }) {
     <>
       <Row>
         <Col>
-          <div className={Styles.heading}>Create a Vendor</div>
+          <div className={Styles.heading}>Create A Vendor</div>
           <Form1
             onSubmit={handleCreateVendor}
             ref={form}
@@ -226,7 +226,7 @@ function Vendor({ closeDrawer }) {
             <Row>
               <Col>
                 <Form.Group controlId="formBasicEmail">
-                  <Form.Label>Vendor Name</Form.Label>
+                  <Form.Label>Company Name</Form.Label>
                   <Input
                     style={{
                       border: " 1px solid  #f3f3f3",
@@ -242,26 +242,6 @@ function Vendor({ closeDrawer }) {
                     value={name}
                     onChange={onChangeName}
                     validations={[required, vname]}
-                  />
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label>Email</Form.Label>
-                  <Input
-                    style={{
-                      border: " 1px solid #f3f3f3",
-                      backgroundColor: "rgba(59, 122, 254, 0.02)",
-                      width: "100%",
-                      padding: "6px 10px",
-                      borderRadius: "3px",
-                      outline: "none",
-                    }}
-                    type="email"
-                    placeholder="Enter Vendor Name"
-                    name="email"
-                    value={email}
-                    onChange={onChangeEmail}
-                    validations={[required, vemail]}
                   />
                 </Form.Group>
 
@@ -284,9 +264,28 @@ function Vendor({ closeDrawer }) {
                     validations={[required, vphone]}
                   />
                 </Form.Group>
+                <Form.Group>
+                  <Form.Label>Email</Form.Label>
+                  <Input
+                    style={{
+                      border: " 1px solid #f3f3f3",
+                      backgroundColor: "rgba(59, 122, 254, 0.02)",
+                      width: "100%",
+                      padding: "6px 10px",
+                      borderRadius: "3px",
+                      outline: "none",
+                    }}
+                    type="email"
+                    placeholder="Enter Vendor Name"
+                    name="email"
+                    value={email}
+                    onChange={onChangeEmail}
+                    validations={[required, vemail]}
+                  />
+                </Form.Group>
 
                 <Form.Group>
-                  <Form.Label>Address</Form.Label>
+                  <Form.Label>Company Address</Form.Label>
                   <Input
                     style={{
                       border: " 1px solid #f3f3f3",
@@ -305,7 +304,7 @@ function Vendor({ closeDrawer }) {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label>Account Name</Form.Label>
+                  <Form.Label>City</Form.Label>
                   <Input
                     style={{
                       border: " 1px solid #f3f3f3",
@@ -316,40 +315,15 @@ function Vendor({ closeDrawer }) {
                       outline: "none",
                     }}
                     type="text"
-                    placeholder="Enter Account Name"
-                    name="accountName"
-                    value={accountName}
-                    onChange={onChangeAccountName}
-                    validations={[required, vaccountName]}
+                    placeholder="Enter Vendor city"
+                    name="city"
+                    value={city}
+                    onChange={onChangeCity}
+                    validations={[required]}
                   />
                 </Form.Group>
               </Col>
               <Col>
-                <Form.Group>
-                  <Form.Label>Verification Status</Form.Label>
-                  <Select
-                    style={{
-                      border: " 1px solid #f3f3f3",
-                      backgroundColor: "rgba(59, 122, 254, 0.02)",
-                      width: "100%",
-                      padding: "6px 10px",
-                      borderRadius: "3px",
-                      outline: "none",
-                    }}
-                    type="text"
-                    name="isVerified"
-                    value={isVerified}
-                    onChange={onChangeIsVerified}
-                    validations={[required]}
-                    className={Styles.formcontrol}
-                    as="select"
-                  >
-                    <option value="">- Select Status -</option>
-                    <option value="true">Verified</option>
-                    <option value="false">Not Verified</option>
-                  </Select>
-                </Form.Group>
-
                 <Form.Group>
                   <Form.Label>State</Form.Label>
                   <Select
@@ -411,6 +385,45 @@ function Vendor({ closeDrawer }) {
                   </Select>
                 </Form.Group>
                 <Form.Group>
+                  <Form.Label>Bank</Form.Label>
+                  <Input
+                    style={{
+                      border: " 1px solid #f3f3f3",
+                      backgroundColor: "rgba(59, 122, 254, 0.02)",
+                      width: "100%",
+                      padding: "6px 10px",
+                      borderRadius: "3px",
+                      outline: "none",
+                    }}
+                    type="text"
+                    placeholder="Enter Bank Name"
+                    name="bank"
+                    value={bank}
+                    onChange={onChangeBank}
+                    validations={[required, vbank]}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Account Name</Form.Label>
+                  <Input
+                    style={{
+                      border: " 1px solid #f3f3f3",
+                      backgroundColor: "rgba(59, 122, 254, 0.02)",
+                      width: "100%",
+                      padding: "6px 10px",
+                      borderRadius: "3px",
+                      outline: "none",
+                    }}
+                    type="text"
+                    placeholder="Enter Account Name"
+                    name="accountName"
+                    value={accountName}
+                    onChange={onChangeAccountName}
+                    validations={[required, vaccountName]}
+                  />
+                </Form.Group>
+
+                <Form.Group>
                   <Form.Label>Account Number</Form.Label>
                   <Input
                     style={{
@@ -429,10 +442,9 @@ function Vendor({ closeDrawer }) {
                     validations={[required, vaccountNumber]}
                   />
                 </Form.Group>
-
                 <Form.Group>
-                  <Form.Label>City</Form.Label>
-                  <Input
+                  <Form.Label>Status</Form.Label>
+                  <Select
                     style={{
                       border: " 1px solid #f3f3f3",
                       backgroundColor: "rgba(59, 122, 254, 0.02)",
@@ -442,32 +454,17 @@ function Vendor({ closeDrawer }) {
                       outline: "none",
                     }}
                     type="text"
-                    placeholder="Enter Vendor city"
-                    name="city"
-                    value={city}
-                    onChange={onChangeCity}
+                    name="isVerified"
+                    value={isVerified}
+                    onChange={onChangeIsVerified}
                     validations={[required]}
-                  />
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label>Bank</Form.Label>
-                  <Input
-                    style={{
-                      border: " 1px solid #f3f3f3",
-                      backgroundColor: "rgba(59, 122, 254, 0.02)",
-                      width: "100%",
-                      padding: "6px 10px",
-                      borderRadius: "3px",
-                      outline: "none",
-                    }}
-                    type="text"
-                    placeholder="Enter Bank Name"
-                    name="bank"
-                    value={bank}
-                    onChange={onChangeBank}
-                    validations={[required, vbank]}
-                  />
+                    className={Styles.formcontrol}
+                    as="select"
+                  >
+                    <option value="">- Select Status -</option>
+                    <option value="true">Verified</option>
+                    <option value="false">Not Verified</option>
+                  </Select>
                 </Form.Group>
               </Col>
             </Row>
@@ -487,7 +484,7 @@ function Vendor({ closeDrawer }) {
                 {loading && (
                   <span className="spinner-border spinner-border-sm"></span>
                 )}
-                Create User
+                Submit
               </button>
             </span>
             {successful && (

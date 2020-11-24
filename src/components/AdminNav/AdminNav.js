@@ -5,15 +5,25 @@ import { Avatar, Stack, ThemeProvider } from "@chakra-ui/core";
 import kassandah from "../../pages/assets/kassandahwhite.png";
 // import kassandahmobile from "../../pages/assets/kassandah.svg";
 import AuthService from "../../services/auth.service";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/actions/authActions/auth";
 
-function Navigation() {
+import { useSelector } from "react-redux";
+
+function Navigation({ showProfile }) {
+  const dispatch = useDispatch();
   const currentUser = AuthService.getCurrentUser();
 
+  const logOut = () => {
+    dispatch(logout());
+  };
+
   const initialName = `${currentUser.firstName} ${currentUser.lastName}`;
+
   return (
     <>
       <Navbar className={Styles.navbackground} expand="lg">
-        <Navbar.Brand href="#home">
+        <Navbar.Brand href="/">
           <img
             src={kassandah}
             alt="logo"
@@ -25,7 +35,10 @@ function Navigation() {
           <Nav className="mr-auto"></Nav>
           <Nav.Link href="#link">
             <i className="fa fa-bell "></i>
-            <span style={{ color: "#ffffff", padding: "0 10px" }}>
+            <span
+              onClick={showProfile}
+              style={{ color: "#ffffff", padding: "0 10px" }}
+            >
               Hi {currentUser.roles[0]}{" "}
             </span>
           </Nav.Link>
@@ -33,6 +46,8 @@ function Navigation() {
           <ThemeProvider>
             <Stack>
               <Avatar
+                style={{ cursor: "pointer" }}
+                onClick={showProfile}
                 size="sm"
                 className={Styles.avatar}
                 name={initialName}
@@ -41,6 +56,14 @@ function Navigation() {
             </Stack>
             <div className={Styles.desktopmenu}></div>
           </ThemeProvider>
+          <Nav.Link href="/" onClick={logOut}>
+            <span
+              onClick={showProfile}
+              style={{ color: "#ffffff", padding: "0 10px" }}
+            >
+              <i className="fa fa-sign-out-alt "></i>
+            </span>
+          </Nav.Link>
           <div className={Styles.mobilemenu}>
             <Nav.Link className={Styles.link} href="#home">
               Home

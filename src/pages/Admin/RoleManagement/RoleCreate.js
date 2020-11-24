@@ -3,10 +3,7 @@ import Form1 from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import Select from "react-validation/build/select";
 import CheckButton from "react-validation/build/button";
-import { useDispatch } from "react-redux";
-import { create } from "../../../redux/actions/roleActions/role";
 import RoleDataService from "../../../services/role.service";
-import * as roleActions from "../../../redux/actions/roleActions/roleActions";
 
 import Styles from "./Role.module.css";
 import { Row, Col, Form } from "react-bootstrap";
@@ -31,7 +28,7 @@ const rname = (value) => {
   }
 };
 
-function Role({ closeDrawer }) {
+function Role({ closeDrawer, retrieveRoles }) {
   const form = useRef();
   const checkBtn = useRef();
 
@@ -41,9 +38,6 @@ function Role({ closeDrawer }) {
   const [loading, setLoading] = useState(false);
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
-  // const { message } = useSelector((state) => state.messageReducer);
-
-  const dispatch = useDispatch();
 
   const onChangeRole = (e) => {
     const role = e.target.value;
@@ -64,35 +58,19 @@ function Role({ closeDrawer }) {
     form.current.validateAll();
 
     if (checkBtn.current.context._errors.length === 0) {
-      dispatch(create(role, status))
+      RoleDataService.create(role, status)
         .then((response) => {
           setSuccessful(true);
-          RoleDataService.getAll()
-            .then((response) => {
-              dispatch({
-                type: roleActions.GET_ROLE_SUCCESS,
-                payload: response.data.data,
-              });
-              console.log(response);
-              setMessage(response.data.message);
-            })
-            .catch((e) => {
-              console.log(e);
-              setLoading(false);
-              setMessage(e.response);
-            });
-          setLoading(false);
-
+          retrieveRoles();
+          setMessage(response.data.message);
           setTimeout(function () {
             closeDrawer();
           }, 1000);
         })
-        .catch((e) => {
+        .catch((error) => {
           setSuccessful(false);
           setLoading(false);
-          // setMessage(e.response)
-
-          console.log(e);
+          setMessage(error.response.data.message);
           console.log("here");
         });
     }
@@ -172,24 +150,22 @@ function Role({ closeDrawer }) {
                 Create Role
               </button>
             </span>
-            {successful && (
-              <span>
-                {message && (
-                  <div className="form-group">
-                    <div
-                      className={
-                        successful
-                          ? "alert alert-success"
-                          : "alert alert-danger"
-                      }
-                      role="alert"
-                    >
-                      {message}
-                    </div>
+
+            <span>
+              {message && (
+                <div className="form-group">
+                  <div
+                    className={
+                      successful ? "alert alert-success" : "alert alert-danger"
+                    }
+                    role="alert"
+                  >
+                    {message}
                   </div>
-                )}
-              </span>
-            )}
+                </div>
+              )}
+            </span>
+
             <CheckButton style={{ display: "none" }} ref={checkBtn} />
           </Form1>
         </Col>

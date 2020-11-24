@@ -14,13 +14,6 @@ html {
   bottom: 0;
 }
 
-.addrequest {
-  margin-top: 40px;
-  float: right;
-}
-.addrequestmobile {
-  display: none;
-}
 .cardcontainer {
   margin-top: 60px;
   display: flex;
@@ -182,6 +175,7 @@ html {
     width: 100%;
     padding: 10px 0;
     overflow: auto;
+    margin-top: 20px !important;
   }
   .cardbody1 {
     width: 300px;
@@ -218,10 +212,5 @@ html {
   }
   .addrequest {
     display: none;
-  }
-  .addrequestmobile {
-    display: flex;
-    margin-top: 30px;
-    float: right;
   }
 }

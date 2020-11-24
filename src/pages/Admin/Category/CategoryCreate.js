@@ -22,7 +22,7 @@ const required = (value) => {
   }
 };
 
-function Category({ closeDrawer }) {
+function Category({ closeDrawer, retrieveCategories }) {
   const form = useRef();
   const checkBtn = useRef();
   const [workflows, setWorkflows] = useState([]);
@@ -62,7 +62,7 @@ function Category({ closeDrawer }) {
       CategoryDataService.create(name, description, workflow).then(
         (response) => {
           setMessage(response.data.message);
-          // retrievePhases();
+          retrieveCategories();
           setLoading(false);
           setSuccessful(true);
 

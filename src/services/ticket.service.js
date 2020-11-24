@@ -15,8 +15,28 @@ const approveTicket = (id) => {
   );
 };
 
+//aprovers stats
+
+const countAllApprovedTickets = () => {
+  return http.get("/api/dashboard/approver/ticket-count");
+};
+
+const countApprovedTicketsByApprover = () => {
+  return http.get("/api/dashboard/approver/ticket-approved");
+};
+const countRejectedTicketsByApprover = () => {
+  return http.get("/api/dashboard/approver/ticket-rejected");
+};
+const countPendingTicketsByApprover = () => {
+  return http.get("/api/dashboard/approver/ticket-pending");
+};
+
 export default {
   getTicketAwaitingApproval,
   rejectTicket,
   approveTicket,
+  countAllApprovedTickets,
+  countApprovedTicketsByApprover,
+  countRejectedTicketsByApprover,
+  countPendingTicketsByApprover,
 };

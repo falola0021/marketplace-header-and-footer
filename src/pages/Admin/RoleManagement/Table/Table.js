@@ -186,11 +186,10 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnhancedTableToolbar = (props) => {
+const EnhancedTableToolbar = ({ retrieveRoles, numSelected }) => {
   const [size, setSize] = React.useState("lg");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const classes = useToolbarStyles();
-  const { numSelected } = props;
   const handleCreateRole = (newSize) => {
     setSize(newSize);
     onOpen();
@@ -253,7 +252,7 @@ const EnhancedTableToolbar = (props) => {
                 alt="logo"
                 style={{ width: "30px", height: "45px" }}
               />
-              <RoleCreate closeDrawer={onClose} />
+              <RoleCreate retrieveRoles={retrieveRoles} closeDrawer={onClose} />
             </DrawerBody>
           </DrawerContent>
         </Drawer>
@@ -377,79 +376,87 @@ export default function EnhancedTable(props, { preview }) {
     onOpen();
   };
 
-  const handleEdIT = (event, gotrole, newSize) => {
-    setDrawerInfo(gotrole);
-    setMessage("");
-    setSize(newSize);
-    onOpen();
-  };
-  const handleInputChange = (event, objKey, validation) => {
-    const { name, value } = event.target;
+  // const handleEdIT = (event, gotrole, newSize) => {
+  //   setDrawerInfo(gotrole);
+  //   setMessage("");
+  //   setSize(newSize);
+  //   onOpen();
+  // };
+  // const handleInputChange = (event, objKey, validation) => {
+  //   const { name, value } = event.target;
 
-    let drawerInfoCopy = { ...drawerInfo };
-    drawerInfoCopy[objKey] = value;
-    setDrawerInfo({ ...drawerInfoCopy });
-  };
+  //   let drawerInfoCopy = { ...drawerInfo };
+  //   drawerInfoCopy[objKey] = value;
+  //   setDrawerInfo({ ...drawerInfoCopy });
+  // };
 
-  const submitRole = () => {
-    form.current.validateAll();
-    setSuccessful(false);
-    setLoading(true);
-    console.log(drawerInfo);
-    const { role, status } = drawerInfo;
-    const update = {
-      role,
-      status,
-    };
-    //senddrawerInfo payload to your API
-    if (checkBtn.current.context._errors.length === 0) {
-      RoleDataService.update(drawerInfo._id, update)
-        .then((response) => {
-          setLoading(false);
-          const updatesRoles = roleStore.role.map((role) => {
-            if (role._id == drawerInfo._id) {
-              const changes = {
-                ...drawerInfo,
-              };
-              return changes;
-            }
-            return role;
-          });
-          dispatch({
-            type: roleActions.GET_ROLE_SUCCESS,
-            payload: updatesRoles,
-          });
-          setMessage(response.data.message);
-          setSuccessful(true);
-          setTimeout(function () {
-            onClose();
-          }, 1000);
-        })
-        .catch((e) => {
-          console.log(e.response);
-          setSuccessful(false);
-          setLoading(false);
-        });
-    }
-  };
+  // const submitRole = () => {
+  //   form.current.validateAll();
+  //   setSuccessful(false);
+  //   setLoading(true);
+  //   console.log(drawerInfo);
+  //   const { role, status } = drawerInfo;
+  //   const update = {
+  //     role,
+  //     status,
+  //   };
 
-  const deleteRole = (gotrole) => {
-    console.log(gotrole._id);
-    RoleDataService.remove(gotrole._id)
-      .then((response) => {
-        const updatesRoles = roleStore.role.filter(
-          (role) => role._id !== gotrole._id
-        );
-        dispatch({
-          type: roleActions.GET_ROLE_SUCCESS,
-          payload: updatesRoles,
-        });
-        // onClose();
-      })
-      .catch((e) => {
-        console.log(e.response);
-      });
-  };
+  //   if (checkBtn.current.context._errors.length === 0) {
+  //     RoleDataService.update(drawerInfo._id, update)
+  //       .then((response) => {
+  //         setLoading(false);
+  //         const updatesRoles = roleStore.role.map((role) => {
+  //           if (role._id == drawerInfo._id) {
+  //             const changes = {
+  //               ...drawerInfo,
+  //             };
+  //             return changes;
+  //           }
+  //           return role;
+  //         });
+  //         dispatch({
+  //           type: roleActions.GET_ROLE_SUCCESS,
+  //           payload: updatesRoles,
+  //         });
+  //         setMessage(response.data.message);
+  //         setSuccessful(true);
+  //         setTimeout(function () {
+  //           onClose();
+  //         }, 1000);
+  //       })
+  //       .catch((e) => {
+  //         console.log(e.response);
+  //         setSuccessful(false);
+  //         setLoading(false);
+  //       });
+  //   }
+  // };
+
+  // const deleteRole = (gotrole) => {
+  //   console.log(gotrole._id);
+  //   RoleDataService.remove(gotrole._id)
+  //     .then((response) => {
+  //       const updatesRoles = roleStore.role.filter(
+  //         (role) => role._id !== gotrole._id
+  //       );
+  //       dispatch({
+  //         type: roleActions.GET_ROLE_SUCCESS,
+  //         payload: updatesRoles,
+  //       });
+  //       console.log("got here");
+  //     })
+  //     .catch((e) => {
+  //       dispatch({
+  //         type: roleActions.GET_ROLE_FAILURE,
+  //       });
+  //       console.log(
+  //         dispatch({
+  //           type: roleActions.GET_ROLE_FAILURE,
+  //         })
+  //       );
+  //       console.log(e.response);
+  //     });
+  // };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -473,7 +480,10 @@ export default function EnhancedTable(props, { preview }) {
   return (
     <div className={classes.root}>
       <Paper>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          retrieveRoles={retrieveRoles}
+          numSelected={selected.length}
+        />
         <TableContainer>
           <Table
             className={Styles.table}
@@ -536,24 +546,22 @@ export default function EnhancedTable(props, { preview }) {
                         onClick={(event) =>
                           handleShowMore(event, gotrole, size1)
                         }
-                      >
-                        {/* {gotrole._id} */}
-                      </TableCell>
+                      ></TableCell>
 
                       <TableCell align="left">
-                        <button
+                        {/* <button
                           onClick={(event) => handleEdIT(event, gotrole, size2)}
                           className={Styles.editbutton}
                         >
                           Edit
                         </button>
-                        {/* ))} */}
+                       
                         <button
                           onClick={() => deleteRole(gotrole)}
                           className={Styles.deletebutton}
                         >
                           Delete
-                        </button>
+                        </button> */}
                       </TableCell>
                     </TableRow>
                   );
@@ -580,7 +588,7 @@ export default function EnhancedTable(props, { preview }) {
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
-      <ThemeProvider>
+      {/* <ThemeProvider>
         {size === "xs" ? (
           <Drawer onClose={onClose} isOpen={isOpen} size={size}>
             <DrawerContent>
@@ -700,7 +708,7 @@ export default function EnhancedTable(props, { preview }) {
                       <span>
                         <button
                           type="submit"
-                          // disabled={loading}
+            
                           style={{
                             paddingTop: "6px",
                             paddingBottom: "6px",
@@ -741,7 +749,7 @@ export default function EnhancedTable(props, { preview }) {
             </DrawerContent>
           </Drawer>
         )}
-      </ThemeProvider>
+      </ThemeProvider> */}
     </div>
   );
 }

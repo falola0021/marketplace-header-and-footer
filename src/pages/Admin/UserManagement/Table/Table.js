@@ -108,21 +108,21 @@ const headCells = [
     disablePadding: true,
     label: "Name",
   },
+  { id: "email", numeric: true, disablePadding: false, label: "Email" },
 
-  {
-    id: "role",
-    numeric: true,
-    disablePadding: false,
-    label: "Role",
-  },
   {
     id: "department",
     numeric: true,
     disablePadding: false,
     label: "Department",
   },
+  {
+    id: "role",
+    numeric: true,
+    disablePadding: false,
+    label: "Role",
+  },
 
-  { id: "email", numeric: true, disablePadding: false, label: "Email" },
   { id: "action", numeric: true, disablePadding: false, label: "" },
 ];
 
@@ -247,7 +247,7 @@ const EnhancedTableToolbar = (props) => {
               </span>
               <span className={Styles.tablename}>
                 <button onClick={() => handleCreateRole(size)}>
-                  <i className="fa fa-plus pr-2"></i> Create Department
+                  <i className="fa fa-plus pr-2"></i> Create User
                 </button>
               </span>{" "}
             </div>
@@ -562,16 +562,15 @@ export default function EnhancedTable(props, { preview }) {
                       >
                         {gotuser.firstName} {gotuser.lastName}
                       </TableCell>
-
                       <TableCell
-                        // key={gotuser.userId}
                         align="left"
                         onClick={(event) =>
                           handleShowMore(event, gotuser, size1)
                         }
                       >
-                        {gotuser.userId}
+                        {gotuser.email} {gotuser.id}
                       </TableCell>
+
                       <TableCell
                         // key={gotuser.userId}
                         align="left"
@@ -582,13 +581,15 @@ export default function EnhancedTable(props, { preview }) {
                         {gotuser.department}
                       </TableCell>
                       <TableCell
+                        // key={gotuser.userId}
                         align="left"
                         onClick={(event) =>
                           handleShowMore(event, gotuser, size1)
                         }
                       >
-                        {gotuser.email} {gotuser.id}
+                        {gotuser.userId}
                       </TableCell>
+
                       <TableCell key={gotuser._id} align="left">
                         {gotuser.status === "inactive" && (
                           <button className={Styles.editbutton}>

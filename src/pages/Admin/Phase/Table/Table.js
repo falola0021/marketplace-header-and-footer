@@ -30,7 +30,7 @@ import RoleDataService from "../../../../services/role.service";
 import { Row, Col, Form } from "react-bootstrap";
 import PhaseDataService from "../../../../services/phase.service";
 import UserDataService from "../../../../services/user.service";
-
+import swal from "sweetalert";
 import RoleCreate from "../PhaseCreate";
 import * as roleActions from "../../../../redux/actions/roleActions/roleActions";
 import kassandahmobile from "../../../assets/kassandahmobilepurple.png";
@@ -100,6 +100,7 @@ const headCells = [
     disablePadding: true,
     label: "Name",
   },
+  { id: "approver", numeric: true, disablePadding: false, label: "Approver" },
 
   {
     id: "phasetype",
@@ -109,7 +110,7 @@ const headCells = [
   },
   { id: "status", numeric: true, disablePadding: false, label: "Status" },
   { id: "sla", numeric: true, disablePadding: false, label: "SLA (days)" },
-  { id: "approver", numeric: true, disablePadding: false, label: "Approver" },
+
   { id: "action", numeric: true, disablePadding: false, label: "" },
 ];
 
@@ -196,11 +197,11 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnhancedTableToolbar = (props) => {
+const EnhancedTableToolbar = ({ numSelected, retrievePhases }) => {
   const [size, setSize] = React.useState("lg");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+  // const { numSelected } = props;
   const handleCreateRole = (newSize) => {
     setSize(newSize);
     onOpen();
@@ -263,7 +264,10 @@ const EnhancedTableToolbar = (props) => {
                 alt="logo"
                 style={{ width: "30px", height: "45px" }}
               />
-              <RoleCreate closeDrawer={onClose} />
+              <RoleCreate
+                retrievePhases={retrievePhases}
+                closeDrawer={onClose}
+              />
             </DrawerBody>
           </DrawerContent>
         </Drawer>
@@ -417,31 +421,54 @@ export default function EnhancedTable(props, { preview }) {
     onOpen();
     setMessage("");
   };
+  // const deletePhase = (gotphase) => {
+  //   PhaseDataService.remove(gotphase._id).then(
+  //     (response) => {
+  //       setMessage(response.data.message);
+  //       retrievePhases();
+  //       setLoading(false);
+  //       setSuccessful(true);
+  //       setTimeout(function () {
+  //         onClose();
+  //       }, 1000);
+  //     },
+  //     (error) => {
+  //       const resMessage =
+  //         (error.response &&
+  //           error.response.data &&
+  //           error.response.data.error) ||
+  //         error.message ||
+  //         error.toString();
+  //       setSuccessful(false);
+  //       setLoading(false);
+  //       setMessage(resMessage);
+  //       console.log(error.response);
+  //     }
+  //   );
+  // };
   const deletePhase = (gotphase) => {
-    console.log(gotphase._id);
-    PhaseDataService.remove(gotphase._id).then(
-      (response) => {
-        setMessage(response.data.message);
-        retrievePhases();
-        setLoading(false);
-        setSuccessful(true);
-        setTimeout(function () {
-          onClose();
-        }, 1000);
-      },
-      (error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.error) ||
-          error.message ||
-          error.toString();
-        setSuccessful(false);
-        setLoading(false);
-        setMessage(resMessage);
-        console.log(error.response);
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover ",
+      // icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        PhaseDataService.remove(gotphase._id)
+          .then((response) => {
+            retrievePhases();
+          })
+          .catch((e) => {
+            console.log("error deleting");
+          });
+        swal("Phase has been deleted!", {
+          icon: "success",
+        });
+      } else {
+        swal("Phase is safe!");
       }
-    );
+    });
   };
 
   const handleEdIT = (event, gotphase, newSize) => {
@@ -476,6 +503,7 @@ export default function EnhancedTable(props, { preview }) {
       PhaseDataService.update(drawerInfo._id, update)
         .then((response) => {
           setLoading(false);
+          retrievePhases();
           // const updatesRoles = roleStore.role.map((role) => {
           //   if (role._id == drawerInfo._id) {
           //     const changes = {
@@ -496,7 +524,7 @@ export default function EnhancedTable(props, { preview }) {
           }, 1000);
         })
         .catch((e) => {
-          console.log(e.response);
+          setMessage(e.response.data.message);
           setSuccessful(false);
           setLoading(false);
         });
@@ -525,7 +553,10 @@ export default function EnhancedTable(props, { preview }) {
   return (
     <div className={classes.root}>
       <Paper>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          retrievePhases={retrievePhases}
+          numSelected={selected.length}
+        />
         <TableContainer>
           <Table
             className={Styles.table}
@@ -548,6 +579,9 @@ export default function EnhancedTable(props, { preview }) {
                 .map((gotphase, index) => {
                   const isItemSelected = isSelected(gotphase._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
+                  const approver = gotphase.approver;
+
+                  const { firstName = "", lastName = "" } = approver || {};
 
                   return (
                     <TableRow
@@ -574,6 +608,14 @@ export default function EnhancedTable(props, { preview }) {
                       >
                         {gotphase.name}
                       </TableCell>
+                      <TableCell
+                        align="left"
+                        onClick={(event) =>
+                          handleShowMore(event, gotphase, size1)
+                        }
+                      >
+                        {firstName} {lastName}
+                      </TableCell>
 
                       <TableCell
                         align="left"
@@ -598,14 +640,6 @@ export default function EnhancedTable(props, { preview }) {
                         }
                       >
                         {gotphase.sla}
-                      </TableCell>
-                      <TableCell
-                        align="left"
-                        onClick={(event) =>
-                          handleShowMore(event, gotphase, size1)
-                        }
-                      >
-                        {gotphase.approver}
                       </TableCell>
 
                       <TableCell align="left">
@@ -689,7 +723,8 @@ export default function EnhancedTable(props, { preview }) {
                 <div className={Styles.vendor}>
                   <span className={Styles.vendornamelabel}>Approver: </span>
                   <span className={Styles.vendorname}>
-                    {drawerInfo.approver}
+                    {drawerInfo.approver ? drawerInfo.approver.firstName : ""}{" "}
+                    {drawerInfo.approver ? drawerInfo.approver.lastName : ""}
                   </span>
                 </div>
 
@@ -816,9 +851,14 @@ export default function EnhancedTable(props, { preview }) {
                                 handleInputChange(event, "approver")
                               }
                             >
-                              <option value={drawerInfo.approver}>
-                                {drawerInfo.approver}
-                              </option>
+                              {drawerInfo.approver ? (
+                                <option value={drawerInfo.approver}>
+                                  {drawerInfo.approver.firstName}{" "}
+                                  {drawerInfo.approver.lastName}
+                                </option>
+                              ) : (
+                                <option>Select approver</option>
+                              )}
 
                               {users.map((user) => (
                                 <option key={user.userId} value={user.userId}>

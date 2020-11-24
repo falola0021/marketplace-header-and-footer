@@ -40,7 +40,7 @@ const required = (value) => {
 //   }
 // };
 
-function MakeRequest({ closeDrawer }) {
+function MakeRequest({ closeDrawer, retrieveRequests }) {
   const form = useRef();
   const checkBtn = useRef();
   const [vendors, setVendors] = useState([]);
@@ -280,10 +280,9 @@ function MakeRequest({ closeDrawer }) {
       ).then(
         (response) => {
           setMessage(response.data.message);
-          // retrievePhases();
+          retrieveRequests();
           setLoading(false);
           setSuccessful(true);
-          window.location.reload();
           setTimeout(function () {
             closeDrawer();
           }, 1000);

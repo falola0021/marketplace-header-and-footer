@@ -136,7 +136,7 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
 
           <div className={Styles.invoiceimg}>
             <span onClick={() => handlePreview(size)}>
-              {ticketDocuments.document ? (
+              {/* {ticketDocuments.document ? (
                 <img
                   style={{ width: "100%", height: "50%" }}
                   src={
@@ -148,7 +148,41 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                 />
               ) : (
                 ""
-              )}
+              )} */}
+              <div
+                style={{
+                  width: "100%",
+                  maxHeight: "300px",
+                  overflowY: "scroll",
+                }}
+              >
+                {/* {ticketDocuments.map((docs) => (
+                <img
+                  key={docs._id}
+                  style={{ width: "100%" }}
+                  src={docs.document}
+                  alt="CHECK FOR FILE"
+                />
+              ))} */}
+                <Carousel>
+                  {ticketDocuments.map((docs) => (
+                    <Carousel.Item key={docs._id}>
+                      <div
+                        style={{
+                          width: "100%",
+                        }}
+                      >
+                        <img
+                          className="d-block w-100"
+                          src={docs.document}
+                          alt="CHECK FOR FILE"
+                        />
+                      </div>
+                    </Carousel.Item>
+                  ))}
+                </Carousel>
+              </div>
+
               <div className={Styles.download}>
                 <i className="fa fa-download" aria-hidden="true">
                   <span>Download</span>
@@ -390,7 +424,7 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                       <div className={Styles.title}>
                         <span className={Styles.document}>Document(s)</span>
                       </div>{" "}
-                      <Carousel>
+                      {/* <Carousel>
                         {ticketDocuments.map((docs) => (
                           <Carousel.Item key={docs._id}>
                             <img
@@ -398,6 +432,25 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                               src={docs.document}
                               alt="First slide"
                             />
+                          </Carousel.Item>
+                        ))}
+                        
+                      </Carousel> */}
+                      <Carousel>
+                        {ticketDocuments.map((docs) => (
+                          <Carousel.Item key={docs._id}>
+                            <div
+                              style={{
+                                maxHeight: "250px",
+                                overflowY: "scroll",
+                              }}
+                            >
+                              <img
+                                className="d-block w-100"
+                                src={docs.document}
+                                alt="First slide"
+                              />
+                            </div>
                           </Carousel.Item>
                         ))}
                       </Carousel>

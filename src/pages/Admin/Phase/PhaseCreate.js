@@ -19,7 +19,7 @@ const required = (value) => {
   }
 };
 
-function Phase({ closeDrawer }) {
+function Phase({ closeDrawer, retrievePhases }) {
   const form = useRef();
   const checkBtn = useRef();
   const [users, setUsers] = useState([]);
@@ -28,8 +28,6 @@ function Phase({ closeDrawer }) {
   const [approver, setApprover] = useState("");
   const [isDynamic, setIsDynamic] = useState("");
   const [phaseType, setPhaseType] = useState("");
-
-  const [phases, setPhases] = useState([]);
   const [loading, setLoading] = useState(false);
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
@@ -93,16 +91,6 @@ function Phase({ closeDrawer }) {
     }
   };
 
-  const retrievePhases = async () => {
-    await PhaseDataService.getAll()
-      .then((response) => {
-        setPhases(response.data.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
   const retrieveUsers = async () => {
     await UserDataService.getAll()
       .then((response) => {
@@ -121,7 +109,7 @@ function Phase({ closeDrawer }) {
     <>
       <Row>
         <Col>
-          <div className={Styles.heading}>Create request Phase</div>
+          <div className={Styles.heading}>Create A Phase</div>
           <Form1
             onSubmit={handleCreatePhase}
             ref={form}
@@ -272,7 +260,7 @@ function Phase({ closeDrawer }) {
                 {loading && (
                   <span className="spinner-border spinner-border-sm"></span>
                 )}
-                Create Phase
+                Submit
               </button>
             </span>
 

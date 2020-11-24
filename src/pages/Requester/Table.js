@@ -29,7 +29,7 @@ import Addrequest from "../../components/ActionButton/Addrequest/Addrequest";
 import MakeRequest from "./MakeRequest/MakeRequest";
 import { Row, Col } from "react-bootstrap";
 import InvoicePreview from "../../components/InvoicePreview/InvoicePreview";
-import PhaseDataService from "../../services/phase.service";
+// import PhaseDataService from "../../services/phase.service";
 import moment from "moment";
 
 import {
@@ -73,7 +73,7 @@ const headCells = [
     id: "title",
     numeric: false,
     disablePadding: true,
-    label: "Titles",
+    label: "Title",
   },
 
   { id: "item", numeric: true, disablePadding: false, label: "Items" },
@@ -167,9 +167,9 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnhancedTableToolbar = (props) => {
+const EnhancedTableToolbar = ({ retrieveRequests, numSelected }) => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+  //const { numSelected } = props;
   const sizes = ["xl"];
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
@@ -244,7 +244,10 @@ const EnhancedTableToolbar = (props) => {
             <DrawerContent>
               <DrawerBody>
                 {" "}
-                <MakeRequest closeDrawer={onClose} />
+                <MakeRequest
+                  retrieveRequests={retrieveRequests}
+                  closeDrawer={onClose}
+                />
               </DrawerBody>
             </DrawerContent>
           </span>
@@ -303,7 +306,7 @@ export default function EnhancedTable(props, { preview }) {
   // const currentUser = AuthService.getCurrentUser();
   const [drawerInfo, setDrawerInfo] = useState([]);
   const [sideview, setSideView] = useState({});
-  const [phaseObj, setPhaseObj] = useState([]);
+  // const [phaseObj, setPhaseObj] = useState([]);
   const checkBtn = useRef();
   const form = useRef();
 
@@ -313,14 +316,12 @@ export default function EnhancedTable(props, { preview }) {
   const retrieveRequests = async () => {
     await RequestDataService.getUserTicketList()
       .then((response) => {
-        console.log("responseee", response.data.data.ticketListDetails);
         let resData = response.data.data.ticketList;
         setRequests(resData);
         let firstTicket = resData[0];
         //let firstDocument = resData[3].ticketDocuments[0].document;
         // console.log("first document", firstDocument);
         handleSideview(firstTicket);
-        console.log("first ticket", resData);
       })
       .catch((e) => {
         console.log(e);
@@ -410,7 +411,10 @@ export default function EnhancedTable(props, { preview }) {
         <Col sm="9">
           <div className={classes.root}>
             <Paper>
-              <EnhancedTableToolbar numSelected={selected.length} />
+              <EnhancedTableToolbar
+                retrieveRequests={retrieveRequests}
+                numSelected={selected.length}
+              />
               <TableContainer>
                 <Table
                   className={Styles.table}
@@ -434,11 +438,9 @@ export default function EnhancedTable(props, { preview }) {
                         page * rowsPerPage + rowsPerPage
                       )
                       .map((ticket, index) => {
-                        console.log("the req", ticket);
                         const isItemSelected = isSelected(ticket._id);
                         const labelId = `enhanced-table-checkbox-${index}`;
-                        const phases = ticket.workflow.phases;
-                        // getPhasesObj(phases);
+                        const workflow = ticket.workflow;
 
                         return (
                           <TableRow
@@ -449,8 +451,6 @@ export default function EnhancedTable(props, { preview }) {
                             key={ticket._id}
                             selected={isItemSelected}
                           >
-                            {/* {currentUser.userId == ticket.user && (
-                        <> */}
                             <TableCell padding="checkbox">
                               <Checkbox
                                 onClick={(event) =>
@@ -488,8 +488,7 @@ export default function EnhancedTable(props, { preview }) {
                               onClick={(event) => setSideView(ticket)}
                             >
                               <ApproversAvatar
-                                // phaseObj={phaseObj}
-                                phases={phases}
+                                workflow={workflow}
                                 dotColor={ticket.status}
                               />
                             </TableCell>

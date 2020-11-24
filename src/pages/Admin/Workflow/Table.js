@@ -21,7 +21,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { Row, Col } from "react-bootstrap";
-import workflowDataService from "../../../services/workflow.service";
+import swal from "sweetalert";
+import WorkflowDataService from "../../../services/workflow.service";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -57,7 +58,8 @@ const headCells = [
     disablePadding: false,
     label: "Description",
   },
-  { id: "Workflow", numeric: true, disablePadding: false, label: "Workflow" },
+  { id: "Workflow", numeric: true, disablePadding: false, label: "Approvers" },
+  { id: "action", numeric: true, disablePadding: false, label: "" },
 ];
 
 function EnhancedTableHead(props) {
@@ -224,7 +226,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EnhancedTable(props, { preview }) {
+export default function EnhancedTable({
+  preview,
+  retrieveWorkflows,
+  workflows,
+}) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -232,8 +238,36 @@ export default function EnhancedTable(props, { preview }) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [workflows, setWorkflows] = React.useState([]);
+
   //const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    retrieveWorkflows();
+  }, []);
+
+  const deleteWorkflow = (workflow) => {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover ",
+      // icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        WorkflowDataService.remove(workflow._id)
+          .then((response) => {
+            retrieveWorkflows();
+          })
+          .catch((e) => {
+            console.log("error deleting");
+          });
+        swal("Workflow has been deleted!", {
+          icon: "success",
+        });
+      } else {
+        swal("Workflow is safe!");
+      }
+    });
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -288,27 +322,6 @@ export default function EnhancedTable(props, { preview }) {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, workflows.length - page * rowsPerPage);
 
-  const retrieveWorkflows = () => {
-    //setLoading(true);
-
-    workflowDataService
-      .getAll()
-      .then((response) => {
-        setWorkflows(response.data.data);
-        // setLoading(false);
-
-        console.log(response.data.data);
-      })
-      .catch((e) => {
-        console.log(e);
-        console.log("cannot get user");
-      });
-  };
-
-  useEffect(() => {
-    retrieveWorkflows();
-  }, []);
-
   return (
     <>
       <Row className="mt-5 mb-5">
@@ -345,6 +358,8 @@ export default function EnhancedTable(props, { preview }) {
                         const isItemSelected = isSelected(workflow._id);
                         const labelId = `enhanced-table-checkbox-${index}`;
                         //const phases = request.workflow.phases;
+                        // const phases = workflow.phases;
+                        // const { firstName = "", lastName = "" } = phases || {};
 
                         return (
                           <TableRow
@@ -371,12 +386,23 @@ export default function EnhancedTable(props, { preview }) {
                               {workflow.description}
                             </TableCell>
                             <TableCell align="left">
-                              <div>{workflow.phases[0]}</div>
+                              <div>approvers names</div>
+                              {/* 
                               <div>{workflow.phases[1]}</div>
                               <div>{workflow.phases[2]}</div>
-                              <div>{workflow.phases[3]}</div>
+                              <div>{workflow.phases[3]}</div> */}
                               {/* <div>{workflow.phases[4]}</div>
                               <div>{workflow.phases[5]}</div> */}
+                            </TableCell>
+
+                            <TableCell align="left">
+                              <button
+                                onClick={() => deleteWorkflow(workflow)}
+                                className={Styles.deletebutton}
+                              >
+                                {" "}
+                                Delete
+                              </button>
                             </TableCell>
                           </TableRow>
                         );

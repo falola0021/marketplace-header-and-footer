@@ -30,7 +30,7 @@ import RoleDataService from "../../../../services/role.service";
 import { Row, Col, Form } from "react-bootstrap";
 import CategoryDataService from "../../../../services/category.service";
 import WorkflowDataService from "../../../../services/workflow.service";
-
+import swal from "sweetalert";
 import CategoryCreate from "../CategoryCreate";
 
 import kassandahmobile from "../../../assets/kassandahmobilepurple.png";
@@ -186,11 +186,11 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnhancedTableToolbar = (props) => {
+const EnhancedTableToolbar = ({ retrieveCategories, numSelected }) => {
   const [size, setSize] = React.useState("lg");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+
   const handleCreateCategory = (newSize) => {
     setSize(newSize);
     onOpen();
@@ -253,7 +253,10 @@ const EnhancedTableToolbar = (props) => {
                 alt="logo"
                 style={{ width: "30px", height: "45px" }}
               />
-              <CategoryCreate closeDrawer={onClose} />
+              <CategoryCreate
+                retrieveCategories={retrieveCategories}
+                closeDrawer={onClose}
+              />
             </DrawerBody>
           </DrawerContent>
         </Drawer>
@@ -373,31 +376,58 @@ export default function EnhancedTable(props, { preview }) {
     onOpen();
     setMessage("");
   };
+
   const deleteCategory = (category) => {
-    CategoryDataService.remove(category._id).then(
-      (response) => {
-        setMessage(response.data.message);
-        retrieveCategories();
-        setLoading(false);
-        setSuccessful(true);
-        setTimeout(function () {
-          onClose();
-        }, 1000);
-      },
-      (error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.error) ||
-          error.message ||
-          error.toString();
-        setSuccessful(false);
-        setLoading(false);
-        setMessage(resMessage);
-        console.log(error.response);
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover ",
+      // icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        CategoryDataService.remove(category._id)
+          .then((response) => {
+            retrieveCategories();
+          })
+          .catch((e) => {
+            console.log("error deleting");
+          });
+        swal("Category has been deleted!", {
+          icon: "success",
+        });
+      } else {
+        swal("Category is safe!");
       }
-    );
+    });
   };
+
+  //const deleteCategory = (category) => {
+
+  //   CategoryDataService.remove(category._id).then(
+  //     (response) => {
+  //       setMessage(response.data.message);
+  //       retrieveCategories();
+  //       setLoading(false);
+  //       setSuccessful(true);
+  //       setTimeout(function () {
+  //         onClose();
+  //       }, 1000);
+  //     },
+  //     (error) => {
+  //       const resMessage =
+  //         (error.response &&
+  //           error.response.data &&
+  //           error.response.data.error) ||
+  //         error.message ||
+  //         error.toString();
+  //       setSuccessful(false);
+  //       setLoading(false);
+  //       setMessage(resMessage);
+  //       console.log(error.response);
+  //     }
+  //   );
+  // };
 
   const handleEdIT = (event, category, newSize) => {
     setDrawerInfo(category);
@@ -480,7 +510,10 @@ export default function EnhancedTable(props, { preview }) {
   return (
     <div className={classes.root}>
       <Paper>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          retrieveCategories={retrieveCategories}
+          numSelected={selected.length}
+        />
         <TableContainer>
           <Table
             className={Styles.table}
@@ -503,6 +536,9 @@ export default function EnhancedTable(props, { preview }) {
                 .map((category, index) => {
                   const isItemSelected = isSelected(category._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
+
+                  const workflow = category.workflow;
+                  const { name = "" } = workflow || {};
 
                   return (
                     <TableRow
@@ -545,7 +581,7 @@ export default function EnhancedTable(props, { preview }) {
                           handleShowMore(event, category, size1)
                         }
                       >
-                        {category.workflow}
+                        {name}
                       </TableCell>
 
                       <TableCell align="left">
@@ -619,7 +655,7 @@ export default function EnhancedTable(props, { preview }) {
                 <div className={Styles.vendor}>
                   <span className={Styles.vendornamelabel}>Workflow </span>
                   <span className={Styles.vendorname}>
-                    {drawerInfo.workflow}
+                    {drawerInfo.workflow ? drawerInfo.workflow.name : ""}
                   </span>
                 </div>
 
@@ -721,7 +757,7 @@ export default function EnhancedTable(props, { preview }) {
                               className={Styles.formcontrol}
                               as="select"
                             >
-                              <option value="">{drawerInfo.workflow}</option>
+                              {/* <option value="">{drawerInfo.workflow}</option> */}
                               {workflows.map((workflow) => (
                                 <option key={workflow._id} value={workflow._id}>
                                   {workflow.name}

@@ -38,7 +38,7 @@
 }
 
 .editbutton {
-  background-color: #c0bcbc;
+  background-color: rgb(95, 94, 94);
   color: #ffffff;
   font-size: 12px;
   outline: none !important;
@@ -52,7 +52,7 @@
   background: rgb(95, 94, 94) !important;
 }
 .deletebutton {
-  background-color: #f38de0;
+  background-color: #fc37d8;
   color: #ffffff;
   font-size: 12px;
   outline: none !important;
@@ -91,7 +91,7 @@
 .delete2 {
   padding: 5px 40px;
   margin-left: 20px;
-  background-color: #f38de0;
+  background-color: #fc37d8;
   color: #ffffff;
   font-size: 12px;
   outline: none !important;
@@ -103,7 +103,7 @@
   background: #fc37d8 !important;
 }
 .edit2 {
-  background-color: #c0bcbc;
+  background-color: rgb(95, 94, 94);
   color: #ffffff;
   font-size: 12px;
   outline: none !important;

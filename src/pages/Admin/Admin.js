@@ -9,16 +9,11 @@ import Category from "./Category/Category";
 import Phase from "./Phase/Phase";
 import AminNav from "../../components/AdminNav/AdminNav";
 import Profile from "../../components/UserProfile/UserProfile";
-import { useDispatch } from "react-redux";
-import { logout } from "../../redux/actions/authActions/auth";
-// import { Redirect } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 import { Row, Col } from "react-bootstrap";
 import Styles from "./Admin.module.css";
 
 function Admin() {
-  const dispatch = useDispatch();
   const [changeView, setChangeView] = useState({
     overview: true,
     usermanagement: false,
@@ -38,14 +33,25 @@ function Admin() {
   const active = `${Styles.sidebaractive} `;
   const inactive = `${Styles.sidebarinactive}  `;
 
-  const logOut = () => {
-    dispatch(logout());
+  const showProfile = () => {
+    setChangeView({
+      vendor: false,
+      overview: false,
+      usermanagement: false,
+      requestflow: false,
+      category: false,
+      requestphase: false,
+      workflow: false,
+      profile: true,
+      rolemanagement: false,
+      department: false,
+    });
   };
 
   return (
     <>
       <div className={Styles.body}>
-        <AminNav />
+        <AminNav showProfile={showProfile} />
 
         <Row>
           <Col sm="2" className="p-0">
@@ -89,29 +95,8 @@ function Admin() {
                   className={changeView.usermanagement ? active : inactive}
                 >
                   <div style={{ color: "#AB82FF" }} className="fa fa-cog"></div>
-                  <span>User Management</span>
+                  <span>User Mgmnt</span>
                 </div>
-                <div
-                  onClick={() => {
-                    setChangeView({
-                      overview: false,
-                      usermanagement: false,
-                      requestflow: false,
-                      vendor: false,
-                      category: false,
-                      requestphase: false,
-                      workflow: false,
-                      rolemanagement: true,
-                      department: false,
-                    });
-                  }}
-                  className={changeView.rolemanagement ? active : inactive}
-                >
-                  <div style={{ color: "#90e0ef" }} className="fa fa-user">
-                    {" "}
-                  </div>{" "}
-                  <span>Role Management</span>
-                </div>{" "}
                 <div
                   onClick={() => {
                     setChangeView({
@@ -131,7 +116,7 @@ function Admin() {
                   <div style={{ color: "#B4CDCD" }} className="	fa fa-th-large">
                     {" "}
                   </div>{" "}
-                  <span>Department</span>
+                  <span>Departments</span>
                 </div>{" "}
                 <div
                   onClick={() => {
@@ -168,28 +153,7 @@ function Admin() {
                   >
                     {" "}
                   </div>{" "}
-                  <span>Phase</span>
-                </div>{" "}
-                <div
-                  onClick={() => {
-                    setChangeView({
-                      vendor: true,
-                      overview: false,
-                      usermanagement: false,
-                      requestflow: false,
-                      category: false,
-                      requestphase: false,
-                      workflow: false,
-                      rolemanagement: false,
-                      department: false,
-                    });
-                  }}
-                  className={changeView.vendor ? active : inactive}
-                >
-                  <div style={{ color: "#ee2677" }} className=" fa fa-user-md">
-                    {" "}
-                  </div>{" "}
-                  <span>Vendor</span>
+                  <span>Phases</span>
                 </div>{" "}
                 <div
                   onClick={() => {
@@ -210,8 +174,29 @@ function Admin() {
                   <div style={{ color: "#f4acb7" }} className="fas fa-sync-alt">
                     {" "}
                   </div>{" "}
-                  <span>Workflow</span>
+                  <span>Workflows</span>
                 </div>
+                <div
+                  onClick={() => {
+                    setChangeView({
+                      vendor: true,
+                      overview: false,
+                      usermanagement: false,
+                      requestflow: false,
+                      category: false,
+                      requestphase: false,
+                      workflow: false,
+                      rolemanagement: false,
+                      department: false,
+                    });
+                  }}
+                  className={changeView.vendor ? active : inactive}
+                >
+                  <div style={{ color: "#ee2677" }} className=" fa fa-user-md">
+                    {" "}
+                  </div>{" "}
+                  <span>Vendors</span>
+                </div>{" "}
                 <div
                   onClick={() => {
                     setChangeView({
@@ -231,43 +216,29 @@ function Admin() {
                   <div style={{ color: "#88d498" }} className="fa fa-list-alt">
                     {" "}
                   </div>{" "}
-                  <span>Category</span>
+                  <span>Categories</span>
                 </div>{" "}
                 <div
                   onClick={() => {
                     setChangeView({
-                      vendor: false,
                       overview: false,
                       usermanagement: false,
                       requestflow: false,
+                      vendor: false,
                       category: false,
                       requestphase: false,
                       workflow: false,
-                      profile: true,
-                      rolemanagement: false,
+                      rolemanagement: true,
                       department: false,
                     });
                   }}
-                  className={changeView.profile ? active : inactive}
+                  className={changeView.rolemanagement ? active : inactive}
                 >
-                  <div
-                    style={{ color: "#3b28cc" }}
-                    className="fa fa-user-circle"
-                  ></div>{" "}
-                  <span>Profile</span>
-                </div>
-                <a href="/" className="nav-link" onClick={logOut}>
-                  <div
-                    style={{ marginTop: "50px", cursor: "pointer" }}
-                    className={inactive}
-                  >
-                    <div
-                      style={{ color: "#eb14c4" }}
-                      className="fa fa-sign-out-alt"
-                    ></div>{" "}
-                    <span>Logout</span>
-                  </div>
-                </a>
+                  <div style={{ color: "#90e0ef" }} className="fa fa-user">
+                    {" "}
+                  </div>{" "}
+                  <span>Role Mgmnt</span>
+                </div>{" "}
               </div>
             </div>
           </Col>

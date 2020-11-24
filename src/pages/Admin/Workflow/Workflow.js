@@ -6,7 +6,9 @@ import Form1 from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import PhaseDataService from "../../../services/phase.service";
 import WorkflowDataService from "../../../services/workflow.service";
+
 import CheckButton from "react-validation/build/button";
+import { Row, Col } from "react-bootstrap";
 
 const required = (value) => {
   if (!value) {
@@ -95,6 +97,7 @@ function DND() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [phases, setPhases] = useState([]);
+  const [workflows, setWorkflows] = React.useState([]);
 
   const onChangeName = (e) => {
     const name = e.target.value;
@@ -125,10 +128,12 @@ function DND() {
       }
       WorkflowDataService.create(name, description, workflowIds).then(
         (response) => {
-          setMessage(response.data.message);
-          // retrievePhases();
+          retrieveWorkflows();
           setLoading(false);
           setSuccessful(true);
+          setTimeout(function () {
+            setMessage(response.data.message);
+          }, 1000);
         },
         (error) => {
           const resMessage = error.response.data.message;
@@ -146,6 +151,26 @@ function DND() {
       setLoading(false);
     }
   };
+
+  const retrieveWorkflows = () => {
+    //setLoading(true);
+
+    WorkflowDataService.getAll()
+      .then((response) => {
+        setWorkflows(response.data.data);
+        // setLoading(false);
+
+        console.log(response.data.data);
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log("cannot get user");
+      });
+  };
+
+  // useEffect(() => {
+
+  // }, []);
 
   return (
     <div style={{ display: "flex", height: "100%" }}>
@@ -367,7 +392,15 @@ function DND() {
                                               position: "absolute",
                                             }}
                                           ></input>
-                                          {item.name}
+                                          {item.name}-
+                                          <span
+                                            style={{
+                                              color: "red",
+                                              fontSize: "10px",
+                                            }}
+                                          >
+                                            {item.phaseType}
+                                          </span>
                                         </div>
                                       );
                                     }}
@@ -387,9 +420,11 @@ function DND() {
           );
         })}
       </DragDropContext>
-      <div>
-        <WorkflowTable />
-      </div>
+
+      <WorkflowTable
+        workflows={workflows}
+        retrieveWorkflows={retrieveWorkflows}
+      />
     </div>
   );
 }

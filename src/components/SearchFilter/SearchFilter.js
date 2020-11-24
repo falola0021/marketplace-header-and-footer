@@ -11,11 +11,11 @@ function Addrequest({ request }) {
             <Input
               className={Styles.search}
               type="text"
-              placeholder="Search..."
+              placeholder="Enter search text"
             />
           </FormControl>
           <Button className={Styles.button} type="submit" variantColor="green">
-            Send
+            Search
           </Button>
         </form>
       </ThemeProvider>

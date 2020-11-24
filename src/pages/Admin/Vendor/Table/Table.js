@@ -31,6 +31,7 @@ import { Row, Col, Form } from "react-bootstrap";
 import VendorCreate from "../VendorCreate";
 import * as vendorActions from "../../../../redux/actions/vendorActions/vendorActions";
 import kassandahmobile from "../../../assets/kassandahmobilepurple.png";
+import swal from "sweetalert";
 import {
   Drawer,
   DrawerBody,
@@ -298,7 +299,7 @@ const EnhancedTableToolbar = (props) => {
               </span>
               <span className={Styles.tablename}>
                 <button onClick={() => handleCreateVendor(size)}>
-                  <i className="fa fa-plus pr-2"></i> Create User
+                  <i className="fa fa-plus pr-2"></i> Create Vendor
                 </button>
               </span>{" "}
             </div>
@@ -326,7 +327,7 @@ const EnhancedTableToolbar = (props) => {
       <ThemeProvider>
         <Drawer onClose={onClose} isOpen={isOpen} size={size}>
           <DrawerContent>
-            <DrawerBody style={{ paddingTop: "6%" }}>
+            <DrawerBody style={{ paddingTop: "2%" }}>
               <img
                 src={kassandahmobile}
                 alt="logo"
@@ -530,21 +531,35 @@ export default function EnhancedTable(props, { preview }) {
   };
 
   const deleteVendor = (gotvendor) => {
-    console.log(gotvendor._id);
-    VendorDataService.remove(gotvendor._id)
-      .then((response) => {
-        const updatesVendors = vendorStore.vendor.filter(
-          (vendor) => vendor._id !== gotvendor._id
-        );
-        dispatch({
-          type: vendorActions.GET_VENDOR_SUCCESS,
-          payload: updatesVendors,
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover ",
+      // icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        VendorDataService.remove(gotvendor._id)
+          .then((response) => {
+            const updatesVendors = vendorStore.vendor.filter(
+              (vendor) => vendor._id !== gotvendor._id
+            );
+            dispatch({
+              type: vendorActions.GET_VENDOR_SUCCESS,
+              payload: updatesVendors,
+            });
+            // onClose();
+          })
+          .catch((e) => {
+            console.log(e.response);
+          });
+        swal("Vendor has been deleted!", {
+          icon: "success",
         });
-        // onClose();
-      })
-      .catch((e) => {
-        console.log(e.response);
-      });
+      } else {
+        swal("Vendor is safe!");
+      }
+    });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -792,7 +807,7 @@ export default function EnhancedTable(props, { preview }) {
                       style={{
                         width: "30px",
                         height: "45px",
-                        marginTop: "20px",
+                        marginTop: "7px",
                       }}
                     />
                     <div className={Styles.heading}>Edit Vendor</div>

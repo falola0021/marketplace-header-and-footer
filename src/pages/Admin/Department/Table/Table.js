@@ -27,13 +27,12 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import RoleDataService from "../../../../services/role.service";
 import DepartmentDataService from "../../../../services/department.service";
 import { Row, Col, Form } from "react-bootstrap";
 import DepartmentCreate from "../DepartmentCreate";
-import * as roleActions from "../../../../redux/actions/roleActions/roleActions";
 import kassandahmobile from "../../../assets/kassandahmobilepurple.png";
 import UserDataService from "../../../../services/user.service";
+import swal from "sweetalert";
 import {
   Drawer,
   DrawerBody,
@@ -195,31 +194,18 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnhancedTableToolbar = (props) => {
+const EnhancedTableToolbar = ({ retrieveDepartments, numSelected }) => {
   const [size, setSize] = React.useState("lg");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const classes = useToolbarStyles();
-  const [departments, setDepartments] = React.useState([]);
-  const { numSelected } = props;
+  // const { departments } = props;
+
+  // const { numSelected } = props;
   const handleCreateRole = (newSize) => {
     setSize(newSize);
     onOpen();
   };
-  const retrieveDepartments = () => {
-    DepartmentDataService.getAll()
-      .then((response) => {
-        setDepartments(response.data.data);
-        console.log("departments ");
-      })
-      .catch((e) => {
-        console.log(e);
-        console.log("cannot get department");
-      });
-  };
 
-  useEffect(() => {
-    retrieveDepartments();
-  }, []);
   return (
     <>
       <Toolbar
@@ -260,8 +246,6 @@ const EnhancedTableToolbar = (props) => {
           <Tooltip title="Delete">
             <IconButton aria-label="delete">
               <i className="fa fa-trash"></i>
-
-              {/* <DeleteIcon /> */}
             </IconButton>
           </Tooltip>
         ) : (
@@ -279,7 +263,7 @@ const EnhancedTableToolbar = (props) => {
                 style={{ width: "30px", height: "45px" }}
               />
               <DepartmentCreate
-                setDepartments={setDepartments}
+                retrieveDepartments={retrieveDepartments}
                 closeDrawer={onClose}
               />
             </DrawerBody>
@@ -337,6 +321,12 @@ export default function EnhancedTable(props, { preview }) {
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
 
+  //delete confirmation
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const checkBtn = useRef();
 
   const dispatch = useDispatch();
@@ -349,7 +339,7 @@ export default function EnhancedTable(props, { preview }) {
     DepartmentDataService.getAll()
       .then((response) => {
         setDepartments(response.data.data);
-        console.log("department list");
+        console.log(response.data.data);
       })
       .catch((e) => {
         console.log(e);
@@ -438,6 +428,8 @@ export default function EnhancedTable(props, { preview }) {
     setLoading(true);
 
     const { name, hod, description } = drawerInfo;
+    const departmentHod = drawerInfo.hod;
+
     const update = {
       name,
       hod,
@@ -459,19 +451,34 @@ export default function EnhancedTable(props, { preview }) {
           console.log(e.response);
           setSuccessful(false);
           setLoading(false);
+          setMessage(e.response.data.message);
         });
     }
   };
 
   const deleteDepartment = (department) => {
-    console.log(department._id);
-    DepartmentDataService.remove(department._id)
-      .then((response) => {
-        retrieveDepartments();
-      })
-      .catch((e) => {
-        console.log("error deleting");
-      });
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover ",
+      // icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        DepartmentDataService.remove(department._id)
+          .then((response) => {
+            retrieveDepartments();
+          })
+          .catch((e) => {
+            console.log("error deleting");
+          });
+        swal("Department has been deleted!", {
+          icon: "success",
+        });
+      } else {
+        swal("Department is safe!");
+      }
+    });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -496,7 +503,10 @@ export default function EnhancedTable(props, { preview }) {
   return (
     <div className={classes.root}>
       <Paper>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          retrieveDepartments={retrieveDepartments}
+        />
         <TableContainer>
           <Table
             className={Styles.table}
@@ -519,6 +529,8 @@ export default function EnhancedTable(props, { preview }) {
                 .map((department, index) => {
                   const isItemSelected = isSelected(department._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
+                  const departmentHod = department.hod;
+                  const { firstName = "", lastName = "" } = departmentHod || {};
 
                   return (
                     <TableRow
@@ -554,7 +566,7 @@ export default function EnhancedTable(props, { preview }) {
                           handleShowMore(event, department, size1)
                         }
                       >
-                        {department.hod}
+                        {firstName} {lastName}
                       </TableCell>
                       <TableCell
                         align="left"
@@ -579,6 +591,7 @@ export default function EnhancedTable(props, { preview }) {
                           onClick={() => deleteDepartment(department)}
                           className={Styles.deletebutton}
                         >
+                          {" "}
                           Delete
                         </button>
                       </TableCell>
@@ -607,6 +620,7 @@ export default function EnhancedTable(props, { preview }) {
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
+
       <ThemeProvider>
         {size === "xs" ? (
           <Drawer onClose={onClose} isOpen={isOpen} size={size}>
@@ -629,7 +643,13 @@ export default function EnhancedTable(props, { preview }) {
 
                 <div className={Styles.vendor}>
                   <span className={Styles.vendornamelabel}>HOD: </span>
-                  <span className={Styles.vendorname}>{drawerInfo.hod}</span>
+                  {drawerInfo.hod ? (
+                    <span className={Styles.vendorname}>
+                      {drawerInfo.hod.firstName} {drawerInfo.hod.lastName}
+                    </span>
+                  ) : (
+                    ""
+                  )}
                 </div>
 
                 <div className={Styles.vendor}>
@@ -713,16 +733,20 @@ export default function EnhancedTable(props, { preview }) {
                                 borderRadius: "3px",
                                 outline: "none",
                               }}
-                              value={drawerInfo.hod}
+                              //value={drawerInfo.userId}
                               type="text"
-                              validations={[required]}
                               onChange={(event) =>
                                 handleInputChange(event, "hod")
                               }
                             >
-                              <option value="" selected="selected">
-                                {drawerInfo.hod}
-                              </option>
+                              {drawerInfo.hod ? (
+                                <option value={""}>
+                                  {drawerInfo.hod.firstName}{" "}
+                                  {drawerInfo.hod.lastName}
+                                </option>
+                              ) : (
+                                <option value={""}>Select HOD</option>
+                              )}
                               {users.map((user) => (
                                 <option key={user.userId} value={user.userId}>
                                   {user.firstName} {user.lastName}

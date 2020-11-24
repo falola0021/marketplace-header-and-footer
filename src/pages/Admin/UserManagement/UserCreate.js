@@ -109,37 +109,34 @@ function User({ closeDrawer }) {
     form.current.validateAll();
 
     if (checkBtn.current.context._errors.length === 0) {
-      dispatch(create(firstName, lastName, email, password, department, role))
+      UserDataService.create(
+        firstName,
+        lastName,
+        email,
+        password,
+        department,
+        role
+      )
         .then((response) => {
-          setSuccessful(true);
-          UserDataService.getAll()
-            .then((response) => {
-              dispatch({
-                type: userActions.GET_USER_SUCCESS,
-                payload: response.data.data,
-              });
-              console.log(response);
-              setMessage(response.data.message);
-            })
-            .catch((e) => {
-              console.log(e);
-              setLoading(false);
-              setMessage(e.response);
-            });
           setLoading(false);
-
+          setSuccessful(true);
+          dispatch({
+            type: userActions.GET_USER_SUCCESS,
+            payload: response.data.data,
+          });
+          console.log(response);
+          setMessage(response.data.message);
           setTimeout(function () {
             closeDrawer();
-          }, 1000);
+          }, 2000);
         })
-        .catch((e) => {
+        .catch((error) => {
+          // setLoading(false);
           setSuccessful(false);
-          setLoading(false);
-          // setMessage(e.response)
 
-          console.log(e);
-          console.log("here");
+          setMessage(error.response.data.message);
         });
+      setLoading(false);
     }
   };
 
@@ -210,7 +207,7 @@ function User({ closeDrawer }) {
     <>
       <Row>
         <Col>
-          <div className={Styles.heading}>Create a User</div>
+          <div className={Styles.heading}>Create A User</div>
           <Form1 onSubmit={handleCreateUser} ref={form} className={Styles.form}>
             <Row>
               <Col>
@@ -233,25 +230,7 @@ function User({ closeDrawer }) {
                     validations={[required, name]}
                   />
                 </Form.Group>
-                <Form.Group controlId="formBasicEmail">
-                  <Form.Label>Lastname</Form.Label>
-                  <Input
-                    style={{
-                      border: " 1px solid  #f3f3f3",
-                      backgroundColor: "rgba(59, 122, 254, 0.02)",
-                      width: "100%",
-                      padding: "6px 10px",
-                      borderRadius: "3px",
-                      outline: "none",
-                    }}
-                    type="text"
-                    placeholder="Enter LastName"
-                    name="lastName"
-                    value={lastName}
-                    onChange={onChangeLastName}
-                    validations={[required, name]}
-                  />
-                </Form.Group>
+
                 <Form.Group>
                   <Form.Label>Department</Form.Label>
                   <Select
@@ -279,8 +258,7 @@ function User({ closeDrawer }) {
                     ))}
                   </Select>
                 </Form.Group>
-              </Col>
-              <Col>
+
                 <Form.Group controlId="formBasicEmail">
                   <Form.Label>Email</Form.Label>
                   <Input
@@ -300,8 +278,10 @@ function User({ closeDrawer }) {
                     validations={[required, vemail]}
                   />
                 </Form.Group>
+              </Col>
+              <Col>
                 <Form.Group controlId="formBasicEmail">
-                  <Form.Label>Password</Form.Label>
+                  <Form.Label>Lastname</Form.Label>
                   <Input
                     style={{
                       border: " 1px solid  #f3f3f3",
@@ -311,12 +291,12 @@ function User({ closeDrawer }) {
                       borderRadius: "3px",
                       outline: "none",
                     }}
-                    type="password"
-                    placeholder="Enter Password"
-                    name="password"
-                    value={password}
-                    onChange={onChangePassword}
-                    validations={[required, vpassword]}
+                    type="text"
+                    placeholder="Enter LastName"
+                    name="lastName"
+                    value={lastName}
+                    onChange={onChangeLastName}
+                    validations={[required, name]}
                   />
                 </Form.Group>
                 <Form.Group>
@@ -346,6 +326,26 @@ function User({ closeDrawer }) {
                     ))}
                   </Select>
                 </Form.Group>
+
+                <Form.Group controlId="formBasicEmail">
+                  <Form.Label>Password</Form.Label>
+                  <Input
+                    style={{
+                      border: " 1px solid  #f3f3f3",
+                      backgroundColor: "rgba(59, 122, 254, 0.02)",
+                      width: "100%",
+                      padding: "6px 10px",
+                      borderRadius: "3px",
+                      outline: "none",
+                    }}
+                    type="password"
+                    placeholder="Enter Password"
+                    name="password"
+                    value={password}
+                    onChange={onChangePassword}
+                    validations={[required, vpassword]}
+                  />
+                </Form.Group>
               </Col>
             </Row>
 
@@ -364,7 +364,7 @@ function User({ closeDrawer }) {
                 {loading && (
                   <span className="spinner-border spinner-border-sm"></span>
                 )}
-                Create User
+                Submit
               </button>
             </span>
             {/* {successful && ( */}

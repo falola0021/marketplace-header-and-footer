@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Modal } from "react-bootstrap";
 import Styles from "./Approver.module.css";
 import Navbar from "../../components/Navbar/Navbar";
-import Addrequest from "../../components/ActionButton/Addrequest/Addrequest";
 import Card from "../../components/ViewCard/ViewCard";
 import ApproverTable from "./ApproverTable";
 import RequesterTable from "../Requester/Table";
-
 import Profile from "../../components/UserProfile/UserProfile";
 import RequestDataService from "../../services/requester.service";
+import TicketDataService from "../../services/ticket.service";
 
 import {
   ThemeProvider,
@@ -21,24 +20,30 @@ import {
 
 // import AuthService from "../../services/auth.service";
 
-function Requester() {
+function Approver() {
   //const currentUser = AuthService.getCurrentUser();
   // const { isOpen, onOpen, onClose } = useDisclosure();
   // const [size, setSize] = React.useState("md");
+
   const [allUserRequest, setAllUserRequest] = useState("");
   const [allUserDeclinedRequest, setAllUserDeclinedRequest] = useState("");
   const [allUserPendingRequest, setAllUserPendingRequest] = useState("");
   const [allUserApprovedRequest, setAllUserApprovedRequest] = useState("");
 
-  // const handleClick = (newSize) => {
-  //   setSize(newSize);
-  //   onOpen();
-  // };
+  const [allApproverTickets, setAllApproverTickets] = useState("");
+  const [allApproverDeclinedTickets, setAllApproverDeclinedTickets] = useState(
+    ""
+  );
+  const [allApproverPendingTickets, setAllApproverPendingTickets] = useState(
+    ""
+  );
+  const [allApproverApprovedTickets, setAllApproverApprovedTickets] = useState(
+    ""
+  );
 
   const sizes = ["xl"];
   const [modalShow, setModalShow] = useState(false);
   const handleRequest = () => setModalShow(true);
-  // const [showTicketInfo, setShowTicketInfo] = useState(false);
   const [previewShow, setPreviewShow] = React.useState(false);
   const handlePreviewShow = () => {
     setPreviewShow(!previewShow);
@@ -49,15 +54,13 @@ function Requester() {
     profile: false,
   });
 
+  //requester
   const handleProfileClick = () => {
     setSwitchView({ overview: false, profile: true });
   };
   const handleDashboardClick = () => {
     setSwitchView({ overview: true, profile: false });
   };
-  // const handleShowTicketInfo = () => {
-  //   setShowTicketInfo(!showTicketInfo);
-  // };
 
   const retrieveAllRequestCount = async () => {
     await RequestDataService.getAllCount()
@@ -103,11 +106,57 @@ function Requester() {
       });
   };
 
+  //approver
+
+  const retrieveAllApproverTicketCount = async () => {
+    await TicketDataService.countAllApprovedTickets()
+      .then((response) => {
+        setAllApproverTickets(response.data.data.allApproverTicketsCount);
+      })
+      .catch((e) => {
+        console.log(e.response);
+      });
+  };
+  const retrieveApproverApprovedTickets = async () => {
+    await TicketDataService.countApprovedTicketsByApprover()
+      .then((response) => {
+        setAllApproverApprovedTickets(response.data.data.approvedTicketsCount);
+      })
+      .catch((e) => {
+        console.log("the error");
+        console.log(e.response);
+      });
+  };
+  const retrieveApproverPendingTickets = async () => {
+    await TicketDataService.countPendingTicketsByApprover()
+      .then((response) => {
+        setAllApproverPendingTickets(response.data.data.rejectedTicketsCount);
+      })
+      .catch((e) => {
+        console.log(e.response);
+      });
+  };
+
+  const retrieveApproverRejectedTickets = async () => {
+    await TicketDataService.countRejectedTicketsByApprover()
+      .then((response) => {
+        setAllApproverDeclinedTickets(response.data.data.rejectedTicketsCount);
+      })
+      .catch((e) => {
+        console.log(e.response);
+      });
+  };
+
   useEffect(() => {
     retrieveAllRequestCount();
     retrieveDeclinedRequestCount();
     retrievePendingRequestCount();
     retrieveApprovedRequestCount();
+
+    retrieveApproverRejectedTickets();
+    retrieveApproverPendingTickets();
+    retrieveApproverApprovedTickets();
+    retrieveAllApproverTicketCount();
   }, []);
 
   const [switchUser, setSwitchUser] = useState(false);
@@ -127,11 +176,6 @@ function Requester() {
           {/* FOR APPROVER */}
           {switchView.overview && (
             <Col>
-              <div className={Styles.addrequestmobile}>
-                <Addrequest name="Make a request" request={handleRequest} />
-
-                <Addrequest request={handleRequest} />
-              </div>
               {!switchUser && (
                 <div className={Styles.cardcontainer}>
                   <Card
@@ -139,8 +183,8 @@ function Requester() {
                     cardtitle={Styles.cardtitle1}
                     cardsubtitle={Styles.cardsubtitle1}
                     cardiconbody={Styles.cardiconbody1}
-                    value={allUserRequest}
-                    title="All Requests"
+                    value={allApproverTickets}
+                    title="All Tickets"
                     cardicon="fa fa-book"
                   />
                   <Card
@@ -148,8 +192,8 @@ function Requester() {
                     cardtitle={Styles.cardtitle2}
                     cardsubtitle={Styles.cardsubtitle2}
                     cardiconbody={Styles.cardiconbody2}
-                    value={allUserApprovedRequest}
-                    title="Approved Requests"
+                    value={allApproverApprovedTickets}
+                    title="Approved Tickets"
                     cardicon="fa fa-check-circle"
                   />
                   <Card
@@ -157,8 +201,8 @@ function Requester() {
                     cardtitle={Styles.cardtitle3}
                     cardsubtitle={Styles.cardsubtitle3}
                     cardiconbody={Styles.cardiconbody3}
-                    value={allUserPendingRequest}
-                    title="Pending Requests"
+                    value={allApproverPendingTickets}
+                    title="Pending Tickets"
                     cardicon="fa fa-hourglass-half"
                   />
                   <Card
@@ -166,8 +210,8 @@ function Requester() {
                     cardtitle={Styles.cardtitle4}
                     cardsubtitle={Styles.cardsubtitle4}
                     cardiconbody={Styles.cardiconbody4}
-                    value={allUserDeclinedRequest}
-                    title="Declined Requests"
+                    value={allApproverDeclinedTickets}
+                    title="Declined Tickets"
                     cardicon="fa fa-times-circle"
                   />
                 </div>
@@ -233,4 +277,4 @@ function Requester() {
   );
 }
 
-export default Requester;
+export default Approver;
