@@ -4,6 +4,16 @@ const getTicketAwaitingApproval = () => {
   return http.get("/api/ticket/pending");
 };
 
+const allApproverTickets = () => {
+  return http.get("/api/ticket/approver/tickets");
+};
+const AllApprovedTickets = () => {
+  return http.get("/api/ticket/approver/ticket-approved");
+};
+const AllRejectedTickets = () => {
+  return http.get("/api/ticket/approver/ticket-rejected");
+};
+
 const rejectTicket = (id) => {
   return http.patch(`/api/ticket/reject/${id}`);
 };
@@ -32,11 +42,15 @@ const countPendingTicketsByApprover = () => {
 };
 
 export default {
+  allApproverTickets,
   getTicketAwaitingApproval,
+  AllApprovedTickets,
+  AllRejectedTickets,
   rejectTicket,
   approveTicket,
   countAllApprovedTickets,
   countApprovedTicketsByApprover,
+
   countRejectedTicketsByApprover,
   countPendingTicketsByApprover,
 };

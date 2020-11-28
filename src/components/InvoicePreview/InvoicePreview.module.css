@@ -125,18 +125,18 @@
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #4f26aa #4f26aa;
+  scrollbar-color: #4a4850 #343335;
 }
 *::-webkit-scrollbar {
   width: 6px;
 }
 *::-webkit-scrollbar-track {
-  background: #4f26aa;
+  background: #4e4c52;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: #4f26aa;
+  background-color: #5b5861;
   border-radius: 20px;
-  border: 3px solid #4f26aa;
+  border: 3px solid #515053;
 }
 .approveravater {
   align-items: center;
@@ -156,26 +156,4 @@
   margin-top: 40px;
   display: flex;
   justify-content: space-around;
-}
-.b1 {
-  padding: 2px 20px 4px 20px;
-  border-radius: 5px;
-  outline: none !important;
-  background: #eb14c4;
-  color: #ffffff;
-  border: none;
-}
-.b2 {
-  padding: 2px 20px 4px 20px;
-  border-radius: 5px;
-  outline: none !important;
-  background-color: #494849;
-  color: #ffffff;
-  border: none;
-}
-.b1:hover {
-  background: #eb14c4 !important;
-}
-.b2:hover {
-  background-color: #494849 !important;
 }

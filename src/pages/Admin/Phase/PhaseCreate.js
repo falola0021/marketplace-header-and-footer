@@ -12,7 +12,11 @@ import { Row, Col, Form } from "react-bootstrap";
 const required = (value) => {
   if (!value) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         This field is required!
       </div>
     );
@@ -244,7 +248,23 @@ function Phase({ closeDrawer, retrievePhases }) {
                 </Form.Group>
               </Col>
             </Row>
-
+            <span>
+              {message && (
+                <div
+                  style={{ fontSize: "12px", padding: "0 3px" }}
+                  className="form-group"
+                >
+                  <div
+                    className={
+                      successful ? "alert alert-success" : "alert alert-danger"
+                    }
+                    role="alert"
+                  >
+                    {message}
+                  </div>
+                </div>
+              )}
+            </span>
             <span>
               <button
                 style={{
@@ -257,26 +277,14 @@ function Phase({ closeDrawer, retrievePhases }) {
                 }}
                 className={Styles.submitbutton}
               >
-                {loading && (
-                  <span className="spinner-border spinner-border-sm"></span>
-                )}
-                Submit
+                <span className={Styles.alignLoader}>
+                  {" "}
+                  {loading && (
+                    <span className="spinner-border spinner-border-sm"></span>
+                  )}
+                  <span className="pl-2">Submit</span>
+                </span>
               </button>
-            </span>
-
-            <span>
-              {message && (
-                <div className="form-group">
-                  <div
-                    className={
-                      successful ? "alert alert-success" : "alert alert-danger"
-                    }
-                    role="alert"
-                  >
-                    {message}
-                  </div>
-                </div>
-              )}
             </span>
 
             <CheckButton style={{ display: "none" }} ref={checkBtn} />

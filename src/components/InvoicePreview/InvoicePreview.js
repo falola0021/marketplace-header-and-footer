@@ -3,7 +3,6 @@ import Styles from "./InvoicePreview.module.css";
 import { Row, Col, Carousel } from "react-bootstrap";
 import Placeholder from "../../pages/assets/image-placeholder.png";
 import kassandahmobile from "../../pages/assets/kassandahmobilepurple.png";
-import PossibleDuplicate from "../PossibleDuplicateTable/PossibleDuplicateTable";
 
 import moment from "moment";
 
@@ -14,13 +13,11 @@ import {
   useDisclosure,
   ThemeProvider,
   Avatar,
-  AvatarBadge,
 } from "@chakra-ui/core";
 
 function InvoicePreview({ sideview }) {
   const [size, setSize] = React.useState("lg");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const [phaseState, setPhaseState] = useState("");
 
   const {
     description,
@@ -29,6 +26,7 @@ function InvoicePreview({ sideview }) {
     ticketDocuments = [""],
     comments = [""],
     status,
+    phase = [""],
     phaseStatus,
     items,
     numberOfItems,
@@ -36,84 +34,101 @@ function InvoicePreview({ sideview }) {
     workflow = [""],
   } = sideview || {};
 
+  const { phases = [""] } = workflow || {};
+  let phaseIdArray = [];
+  for (const fhase of phases) {
+    phaseIdArray.push(fhase._id);
+  }
+  const currentPhaseId = phase._id;
+
+  const positionOfCurrentPhaseId = phaseIdArray.indexOf(currentPhaseId);
+
+  const positivePosition = Math.abs(positionOfCurrentPhaseId);
+  const addOneToAll = positivePosition + 1;
+  const onePhasePercentage = Number(100 / addOneToAll);
+
   const handlePreview = (newSize) => {
     setSize(newSize);
     onOpen();
   };
-  const { phases = [""] } = workflow || {};
-
-  // useEffect(() => {
-  //   setPhaseState(phaseStatus);
-  // }, []);
 
   return (
     <>
       <div className={Styles.reviewbox}>
         <div className={Styles.review}>Review</div>
-        {console.log("sideview", sideview)}
+        {amount && description ? (
+          <div
+            className={Styles.reviewitems}
+            onClick={() => handlePreview(size)}
+          >
+            <p>
+              <span className={Styles.invoicelabel}>Ticket Details</span>
+            </p>
+            <div className={Styles.invoiceimg}>
+              <div
+                style={{
+                  width: "100%",
+                  maxHeight: "300px",
+                  overflowY: "scroll",
+                }}
+              >
+                <Carousel>
+                  {ticketDocuments.map((docs) => (
+                    <Carousel.Item key={docs._id}>
+                      <div
+                        style={{
+                          width: "100%",
+                        }}
+                      >
+                        <img
+                          className="d-block w-100"
+                          src={docs.document}
+                          alt="CHECK FOR FILE"
+                        />
+                      </div>
+                    </Carousel.Item>
+                  ))}
+                </Carousel>
+              </div>
 
-        <div className={Styles.reviewitems} onClick={() => handlePreview(size)}>
-          <p>
-            <span className={Styles.invoicelabel}>Ticket Details</span>
-          </p>
-          <div className={Styles.invoiceimg}>
-            <div
-              style={{ width: "100%", maxHeight: "300px", overflowY: "scroll" }}
-            >
-              <Carousel>
-                {ticketDocuments.map((docs) => (
-                  <Carousel.Item key={docs._id}>
-                    <div
-                      style={{
-                        width: "100%",
-                      }}
-                    >
-                      <img
-                        className="d-block w-100"
-                        src={docs.document}
-                        alt="CHECK FOR FILE"
-                      />
-                    </div>
-                  </Carousel.Item>
-                ))}
-              </Carousel>
-            </div>
-
-            <div className={Styles.download}>
-              <i className="fa fa-download" aria-hidden="true">
-                <span>Download</span>
-              </i>
-            </div>
-            <div className="mt-3">
-              <Row className="mt-2">
-                <Col className={Styles.invoicedesc} sm="4">
-                  Item(s):
-                </Col>
-                <Col className={Styles.invoicelabel}>{description}</Col>
-              </Row>
-              <Row className="mt-2">
-                <Col className={Styles.invoicedesc} sm="4">
-                  Stutus:
-                </Col>
-                <Col className={Styles.invoicelabel}>{status}</Col>
-              </Row>
-              <Row className="mt-2">
-                <Col className={Styles.invoicedesc} sm="4">
-                  Due-Date:
-                </Col>
-                <Col className={Styles.invoicelabel}>
-                  {moment(dueDate).format("DD/MM/YYYY")}
-                </Col>
-              </Row>
-              <Row className="mt-2">
-                <Col className={Styles.invoicedesc} sm="4">
-                  Amount:
-                </Col>
-                <Col className={Styles.invoicelabel}>₦ {amount}</Col>
-              </Row>
+              <div className={Styles.download}>
+                <i className="fa fa-download" aria-hidden="true">
+                  <span>Download</span>
+                </i>
+              </div>
+              <div className="mt-3">
+                <Row className="mt-2">
+                  <Col className={Styles.invoicedesc} sm="4">
+                    Item(s):
+                  </Col>
+                  <Col className={Styles.invoicelabel}>{description}</Col>
+                </Row>
+                <Row className="mt-2">
+                  <Col className={Styles.invoicedesc} sm="4">
+                    Stutus:
+                  </Col>
+                  <Col className={Styles.invoicelabel}>{status}</Col>
+                </Row>
+                <Row className="mt-2">
+                  <Col className={Styles.invoicedesc} sm="4">
+                    Due-Date:
+                  </Col>
+                  <Col className={Styles.invoicelabel}>
+                    {moment(dueDate).format("DD/MM/YYYY")}
+                  </Col>
+                </Row>
+                <Row className="mt-2">
+                  <Col className={Styles.invoicedesc} sm="4">
+                    Amount:
+                  </Col>
+                  <Col className={Styles.invoicelabel}>₦ {amount}</Col>
+                </Row>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
       </div>
 
       <ThemeProvider>
@@ -180,7 +195,6 @@ function InvoicePreview({ sideview }) {
                       ))}
                     </Col>
                   </Row>
-
                   <Row className="mt-4">
                     <Col sm={7}>
                       <div className={Styles.title}>
@@ -211,62 +225,67 @@ function InvoicePreview({ sideview }) {
                       <div className={Styles.title}>
                         <span className={Styles.document}>Approvers</span>
                       </div>{" "}
-                      {phases.map(
-                        (phase) => (
-                          console.log("yea phase", phase),
-                          (
-                            <div className={Styles.approveravater}>
-                              {" "}
-                              <Row>
-                                <Col sm="2">
-                                  <Avatar
-                                    size="sm"
-                                    name={
-                                      phase.approver
-                                        ? phase.approver.firstName +
-                                          " " +
-                                          phase.approver.lastName
-                                        : ""
-                                    }
-                                    src="https://bit.ly/tioluwani-kolawole"
-                                  />
-                                </Col>
-                                <Col style={{ fontSize: "14px" }} sm="8">
-                                  {phase.approver
+                      {phases.map((phase, index) => (
+                        <div className={Styles.approveravater}>
+                          {" "}
+                          <Row>
+                            <Col sm="2">
+                              <Avatar
+                                size="sm"
+                                name={
+                                  phase.approver
                                     ? phase.approver.firstName +
                                       " " +
                                       phase.approver.lastName
-                                    : ""}
-                                </Col>
-                                <Col sm="2">
-                                  {phaseStatus === "approved" ? (
-                                    <div
-                                      style={{ color: "green" }}
-                                      className="fa fa-circle"
-                                    ></div>
-                                  ) : phaseStatus === "pending" ? (
-                                    <div
-                                      style={{ color: "rgb(255, 208, 0)" }}
-                                      className="fa fa-circle"
-                                    ></div>
-                                  ) : (
-                                    <div
-                                      style={{ color: "red" }}
-                                      className="fa fa-circle"
-                                    ></div>
-                                  )}
-                                </Col>
-                              </Row>
-                            </div>
-                          )
-                        )
-                      )}
+                                    : ""
+                                }
+                                src="https://bit.ly/tioluwani-kolawole"
+                              />
+                            </Col>
+                            <Col style={{ fontSize: "14px" }} sm="8">
+                              {phase.approver
+                                ? phase.approver.firstName +
+                                  " " +
+                                  phase.approver.lastName
+                                : ""}
+                            </Col>
+                            <Col sm="2">
+                              {phaseStatus == "rejected" &&
+                              positionOfCurrentPhaseId === index ? (
+                                <div
+                                  style={{ color: "red" }}
+                                  className="fa fa-circle"
+                                ></div>
+                              ) : positionOfCurrentPhaseId > index ? (
+                                <div
+                                  style={{ color: "green" }}
+                                  className="fa fa-circle"
+                                ></div>
+                              ) : currentPhaseId === phase._id ? (
+                                <div
+                                  style={{ color: "rgb(255, 208, 0)" }}
+                                  className="fa fa-circle"
+                                ></div>
+                              ) : (
+                                <div
+                                  style={{ color: "#f3f3f3" }}
+                                  className="fa fa-circle"
+                                ></div>
+                              )}
+                            </Col>
+                          </Row>
+                        </div>
+                      ))}
+                      <div style={{ textAlign: "center" }} className="mt-3">
+                        <span style={{ fontSize: "14px", fontWeight: "bold" }}>
+                          Progress:
+                        </span>
+                        <span style={{ fontSize: "14px", paddingLeft: "5px" }}>
+                          {addOneToAll == 1 || 0 ? 0 : onePhasePercentage}%
+                        </span>
+                      </div>
                     </Col>
                   </Row>
-                  <div className={Styles.duplicate}>Possible Duplicate(s) </div>
-                  <div>
-                    <PossibleDuplicate />
-                  </div>
                 </div>
                 <div className={Styles.duplicate}>Comment(s) </div>
                 <div>

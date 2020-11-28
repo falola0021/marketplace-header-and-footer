@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Form1 from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import Textarea from "react-validation/build/textarea";
 import Select from "react-validation/build/select";
 import CheckButton from "react-validation/build/button";
 import DepartmentDataService from "../../../services/department.service";
@@ -9,12 +10,16 @@ import UserDataService from "../../../services/user.service";
 
 import Styles from "./Department.module.css";
 import { Row, Col, Form } from "react-bootstrap";
-import { Textarea } from "@chakra-ui/core";
+// import { Textarea } from "@chakra-ui/core";
 
 const required = (value) => {
   if (!value) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         This field is required!
       </div>
     );
@@ -24,7 +29,11 @@ const required = (value) => {
 const vname = (value) => {
   if (value.length < 3) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         The name of vendor cannot be less than 3 characters.
       </div>
     );
@@ -96,6 +105,8 @@ function Department({ closeDrawer, retrieveDepartments }) {
           setMessage(e.response.data.message);
           console.log("here");
         });
+    } else {
+      setLoading(false);
     }
   };
 
@@ -183,7 +194,21 @@ function Department({ closeDrawer, retrieveDepartments }) {
                 </Form.Group>
               </Col>
             </Row>
-
+            {message && (
+              <span>
+                <div className="form-group">
+                  <div
+                    style={{ fontSize: "12px", padding: "0 3px" }}
+                    className={
+                      successful ? "alert alert-success" : "alert alert-danger"
+                    }
+                    role="alert"
+                  >
+                    {message}
+                  </div>
+                </div>
+              </span>
+            )}
             <span>
               <button
                 style={{
@@ -196,26 +221,16 @@ function Department({ closeDrawer, retrieveDepartments }) {
                 }}
                 className={Styles.submitbutton}
               >
-                {loading && (
-                  <span className="spinner-border spinner-border-sm"></span>
-                )}
-                Create Department
+                <span className={Styles.alignLoader}>
+                  {" "}
+                  {loading && (
+                    <span className="spinner-border spinner-border-sm"></span>
+                  )}
+                  <span className="pl-2">Submit</span>
+                </span>
               </button>
             </span>
-            {message && (
-              <span>
-                <div className="form-group">
-                  <div
-                    className={
-                      successful ? "alert alert-success" : "alert alert-danger"
-                    }
-                    role="alert"
-                  >
-                    {message}
-                  </div>
-                </div>
-              </span>
-            )}
+
             <CheckButton style={{ display: "none" }} ref={checkBtn} />
           </Form1>
         </Col>

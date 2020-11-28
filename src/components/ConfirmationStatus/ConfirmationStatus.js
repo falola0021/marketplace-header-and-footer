@@ -9,7 +9,7 @@ function ConfirmationStatus({ name }) {
       ) : name === "approved" ? (
         <div className={Styles.statusConfirmed}>{name}</div>
       ) : (
-        <div className={Styles.statusDelined}>{name}</div>
+        <div className={Styles.statusDeclined}>{name}</div>
       )}
     </>
   );

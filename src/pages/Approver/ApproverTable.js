@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Styles from "./Table.module.css";
-import ApproversAvatarApprover from "../../components/ApproversAvatar/ApproversAvatarApprover";
+import ApproversAvatar from "../../components/ApproversAvatar/ApproversAvatar";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import ConfirmationStatus from "../../components/ConfirmationStatus/ConfirmationStatus";
 import SearchFilter from "../../components/SearchFilter/SearchFilter";
@@ -211,7 +211,7 @@ const EnhancedTableToolbar = (props) => {
         {numSelected > 0 ? (
           <Tooltip title="Delete">
             <IconButton aria-label="delete">
-              <i className="fa fa-trash"></i>
+              <i className="fa fa-download"></i>
 
               {/* <DeleteIcon /> */}
             </IconButton>
@@ -281,7 +281,9 @@ export default function EnhancedTable(props, { preview }) {
     await TicketDataService.getTicketAwaitingApproval()
       .then((response) => {
         console.log("response gggggg", response);
-        let resData = response.data.data.tickets;
+        let resData = response.data.data.tickets.sort((a, b) =>
+          new Date(a) < new Date(b) ? 1 : -1
+        );
         setRequests(resData);
         let firstData = resData[0];
         handleSideview(firstData);
@@ -388,11 +390,9 @@ export default function EnhancedTable(props, { preview }) {
                       .map((request, index) => {
                         const isItemSelected = isSelected(requests._id);
                         const labelId = `enhanced-table-checkbox-${index}`;
-                        // console.log("the request", request);
-                        // const phases = request;
-                        console.log("the phasesddd", request);
-                        // return req.ticket.map(function (request) {
-                        console.log("the phases", request);
+                        const workflow = request.workflow;
+                        const currentPhase = request.phase._id;
+                        const currentPhaseStatus = request.phaseStatus;
                         return (
                           <TableRow
                             hover
@@ -447,16 +447,18 @@ export default function EnhancedTable(props, { preview }) {
                               {moment(request.dueDate).format("DD/MM/YYYY")}
                             </TableCell>
                             <TableCell align="left">
-                              <ApproversAvatarApprover
-                                dotColor={request.status}
-                                // phases={phases}
+                              <ApproversAvatar
+                                workflow={workflow}
+                                currentPhase={currentPhase}
+                                ticketStatus={request.status}
                               />
                             </TableCell>
                             <TableCell align="left">
                               {" "}
                               <ProgressBar
-                                // phases={phases}
-                                name={request.status}
+                                workflow={workflow}
+                                currentPhase={currentPhase}
+                                ticketStatus={request.status}
                               />
                             </TableCell>
                             <TableCell align="left">

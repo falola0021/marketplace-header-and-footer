@@ -125,6 +125,10 @@
   font-size: 15px;
   font-weight: bold;
 }
+.alignLoader {
+  align-items: center;
+  display: inline-flex;
+}
 
 /* 
   ##Device = Most of the Smartphones Mobiles (Portrait)

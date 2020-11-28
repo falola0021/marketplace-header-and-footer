@@ -10,33 +10,20 @@ import {
 
 import PhaseDataService from "../../services/phase.service";
 
-function ApproversAvatar({ workflow, dotColor }) {
-  //const [phaseObj, setPhaseObj] = useState([]);
-
+function ApproversAvatar({ workflow, currentPhase, currentPhaseStatus }) {
   const { phases = [""] } = workflow || {};
-  // console.log("the phase", phases);
+  let phaseIdArray = [];
+  for (const fhase of phases) {
+    phaseIdArray.push(fhase._id);
+  }
 
-  // const getPhasesObj = (phase) => {
-
-  //   PhaseDataService.get(phase)
-  //     .then((response) => {
-  //       console.log("the reponse", response.data);
-  //       let copyOfPhases = [...phaseObj];
-  //       copyOfPhases.push(response.data.data);
-  //       setPhaseObj(copyOfPhases);
-  //     })
-  //     .catch((e) => {
-  //       console.log(e);
-  //       console.log("phase eror", e.response);
-  //     });
-
-  // };
+  const position = phaseIdArray.indexOf(currentPhase);
 
   return (
     <>
       <ThemeProvider>
         <AvatarGroup style={{ fontSize: "20px" }} size="sm" max={4}>
-          {phases.map((phase) => (
+          {phases.map((phase, index) => (
             <Avatar
               //key={phase.approver._id}
               className={Styles.backgroundcolor}
@@ -52,12 +39,14 @@ function ApproversAvatar({ workflow, dotColor }) {
                   : ""
               }
             >
-              {dotColor === "pending" ? (
-                <AvatarBadge size="0.9em" bg="yellow.500" />
-              ) : dotColor === "approved" ? (
-                <AvatarBadge size="0.9em" bg="green.500" />
-              ) : (
+              {currentPhaseStatus == "rejected" && position === index ? (
                 <AvatarBadge size="0.9em" bg="red.500" />
+              ) : position > index ? (
+                <AvatarBadge size="0.9em" bg="green.500" />
+              ) : phase._id === currentPhase ? (
+                <AvatarBadge size="0.9em" bg="yellow.500" />
+              ) : (
+                <AvatarBadge size="0.9em" bg="#f3f3f3" />
               )}
             </Avatar>
           ))}

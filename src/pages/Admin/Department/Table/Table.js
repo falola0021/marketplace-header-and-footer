@@ -48,7 +48,11 @@ import {
 const required = (value) => {
   if (!value) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         This field is required!
       </div>
     );
@@ -58,7 +62,11 @@ const required = (value) => {
 const vname = (value) => {
   if (value.length < 3) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         The name of vendor cannot be less than 3 characters.
       </div>
     );
@@ -777,7 +785,21 @@ export default function EnhancedTable(props, { preview }) {
                           </Form.Group>
                         </Col>
                       </Row>
-
+                      {message && (
+                        <div className="form-group">
+                          <div
+                            style={{ fontSize: "12px", padding: "0 3px" }}
+                            className={
+                              successful
+                                ? "alert alert-success"
+                                : "alert alert-danger"
+                            }
+                            role="alert"
+                          >
+                            {message}
+                          </div>
+                        </div>
+                      )}
                       <span>
                         <button
                           type="submit"
@@ -793,27 +815,16 @@ export default function EnhancedTable(props, { preview }) {
                           className={Styles.submitbutton}
                           onClick={submitDepartment}
                         >
-                          {loading && (
-                            <span className="spinner-border spinner-border-sm"></span>
-                          )}
-                          Update Department
+                          <span className={Styles.alignLoader}>
+                            {" "}
+                            {loading && (
+                              <span className="spinner-border spinner-border-sm"></span>
+                            )}
+                            <span className="pl-2">Update</span>
+                          </span>
                         </button>
                       </span>
 
-                      {message && (
-                        <div className="form-group">
-                          <div
-                            className={
-                              successful
-                                ? "alert alert-success"
-                                : "alert alert-danger"
-                            }
-                            role="alert"
-                          >
-                            {message}
-                          </div>
-                        </div>
-                      )}
                       <CheckButton style={{ display: "none" }} ref={checkBtn} />
                     </Form1>
                   </Col>

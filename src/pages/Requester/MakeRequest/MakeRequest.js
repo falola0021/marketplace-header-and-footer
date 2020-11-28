@@ -631,10 +631,17 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
         </div>
         <div className={Styles.submitdiv1}>
           <button className={Styles.submit}>
-            {loading && (
+            <span className={Styles.alignLoader}>
+              {" "}
+              {loading && (
+                <span className="spinner-border spinner-border-sm"></span>
+              )}
+              <span className="pl-2">Submit</span>
+            </span>
+            {/* {loading && (
               <span className="spinner-border spinner-border-sm"></span>
             )}
-            Submit
+            Submit */}
           </button>
         </div>
         <span>

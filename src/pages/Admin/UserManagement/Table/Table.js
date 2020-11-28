@@ -488,6 +488,40 @@ export default function EnhancedTable(props, { preview }) {
     }
   };
 
+  const activateUser = (gotuser) => {
+    setLoading(true);
+    UserDataService.activateUser(gotuser.userId)
+      .then((response) => {
+        setSuccessful(true);
+        setMessage(response.data.message);
+        retrieveUsers();
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log("hiiiii");
+        setMessage(e.response.data.message);
+        setSuccessful(false);
+        setLoading(false);
+      });
+  };
+
+  const deactivateUser = (gotuser) => {
+    setLoading(true);
+    UserDataService.deactivateUser(gotuser.userId)
+      .then((response) => {
+        setSuccessful(true);
+        setMessage(response.data.message);
+        retrieveUsers();
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log("hiiiii");
+        setMessage(e.response.data.message);
+        setSuccessful(false);
+        setLoading(false);
+      });
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -532,6 +566,8 @@ export default function EnhancedTable(props, { preview }) {
                 .map((gotuser, index) => {
                   const isItemSelected = isSelected(gotuser.userId);
                   const labelId = `enhanced-table-checkbox-${index}`;
+                  const roles = gotuser.roles;
+                  console.log("roles", roles);
 
                   return (
                     <TableRow
@@ -568,7 +604,8 @@ export default function EnhancedTable(props, { preview }) {
                           handleShowMore(event, gotuser, size1)
                         }
                       >
-                        {gotuser.email} {gotuser.id}
+                        {gotuser.email}
+                        {/* {gotuser.id} */}
                       </TableCell>
 
                       <TableCell
@@ -578,26 +615,39 @@ export default function EnhancedTable(props, { preview }) {
                           handleShowMore(event, gotuser, size1)
                         }
                       >
-                        {gotuser.department}
+                        {gotuser.department.name}
                       </TableCell>
                       <TableCell
-                        // key={gotuser.userId}
                         align="left"
                         onClick={(event) =>
                           handleShowMore(event, gotuser, size1)
                         }
                       >
-                        {gotuser.userId}
+                        {roles.map((role) => (
+                          <span className="mr-2">{role.role}</span>
+                        ))}
                       </TableCell>
 
                       <TableCell key={gotuser._id} align="left">
                         {gotuser.status === "inactive" && (
-                          <button className={Styles.editbutton}>
+                          <button
+                            onClick={() => activateUser(gotuser)}
+                            className={Styles.editbutton}
+                          >
+                            {loading && (
+                              <span className="spinner-border spinner-border-sm"></span>
+                            )}
                             Activate User
                           </button>
                         )}
                         {gotuser.status === "active" && (
-                          <button className={Styles.deletebutton}>
+                          <button
+                            onClick={() => deactivateUser(gotuser)}
+                            className={Styles.deletebutton}
+                          >
+                            {loading && (
+                              <span className="spinner-border spinner-border-sm"></span>
+                            )}
                             Deactivate User
                           </button>
                         )}
@@ -652,12 +702,17 @@ export default function EnhancedTable(props, { preview }) {
                 <div className={Styles.vendor}>
                   <span className={Styles.vendornamelabel}>Department: </span>
                   <span className={Styles.vendorname}>
-                    {drawerInfo.department}
+                    {drawerInfo.department.name}
                   </span>
                 </div>
                 <div className={Styles.vendor}>
                   <span className={Styles.vendornamelabel}>Role: </span>
-                  <span className={Styles.vendorname}>{drawerInfo.role}</span>
+                  <span className={Styles.vendorname}>
+                    {" "}
+                    {drawerInfo.roles.map((role) => (
+                      <span className="mr-2">{role.role}</span>
+                    ))}
+                  </span>
                 </div>
                 <div className={Styles.vendor}>
                   <span className={Styles.vendornamelabel}>Email: </span>

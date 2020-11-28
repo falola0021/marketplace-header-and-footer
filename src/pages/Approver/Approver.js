@@ -4,6 +4,9 @@ import Styles from "./Approver.module.css";
 import Navbar from "../../components/Navbar/Navbar";
 import Card from "../../components/ViewCard/ViewCard";
 import ApproverTable from "./ApproverTable";
+import AllApproverTicketTable from "./AllApproverTicketTable";
+import ApprovedTicketTable from "./ApprovedTicketTable";
+import RejectedTicketTable from "./RejectedTable";
 import RequesterTable from "../Requester/Table";
 import Profile from "../../components/UserProfile/UserProfile";
 import RequestDataService from "../../services/requester.service";
@@ -162,6 +165,15 @@ function Approver() {
   const [switchUser, setSwitchUser] = useState(false);
   const handleSwitchUser = React.useCallback(() => setSwitchUser(!switchUser));
 
+  const [changeTable, setChangeTable] = useState({
+    pendingTable: true,
+    allApproverTicketTable: false,
+    rejectedTable: false,
+    approvedTable: false,
+  });
+  const active = `${Styles.cardactive} `;
+  const inactive = `${Styles.cardinactive}  `;
+
   return (
     <>
       <div className={Styles.body}>
@@ -178,42 +190,148 @@ function Approver() {
             <Col>
               {!switchUser && (
                 <div className={Styles.cardcontainer}>
-                  <Card
-                    cardbody={Styles.cardbody1}
-                    cardtitle={Styles.cardtitle1}
-                    cardsubtitle={Styles.cardsubtitle1}
-                    cardiconbody={Styles.cardiconbody1}
-                    value={allApproverTickets}
-                    title="All Tickets"
-                    cardicon="fa fa-book"
-                  />
-                  <Card
-                    cardbody={Styles.cardbody2}
-                    cardtitle={Styles.cardtitle2}
-                    cardsubtitle={Styles.cardsubtitle2}
-                    cardiconbody={Styles.cardiconbody2}
-                    value={allApproverApprovedTickets}
-                    title="Approved Tickets"
-                    cardicon="fa fa-check-circle"
-                  />
-                  <Card
-                    cardbody={Styles.cardbody3}
-                    cardtitle={Styles.cardtitle3}
-                    cardsubtitle={Styles.cardsubtitle3}
-                    cardiconbody={Styles.cardiconbody3}
-                    value={allApproverPendingTickets}
-                    title="Pending Tickets"
-                    cardicon="fa fa-hourglass-half"
-                  />
-                  <Card
-                    cardbody={Styles.cardbody4}
-                    cardtitle={Styles.cardtitle4}
-                    cardsubtitle={Styles.cardsubtitle4}
-                    cardiconbody={Styles.cardiconbody4}
-                    value={allApproverDeclinedTickets}
-                    title="Declined Tickets"
-                    cardicon="fa fa-times-circle"
-                  />
+                  <span
+                    onClick={() => {
+                      setChangeTable({
+                        pendingTable: false,
+                        allApproverTicketTable: true,
+                        rejectedTable: false,
+                        approvedTable: false,
+                      });
+                    }}
+                  >
+                    <Card
+                      cardbody={
+                        changeTable.allApproverTicketTable
+                          ? Styles.active
+                          : Styles.cardbody1
+                      }
+                      cardtitle={
+                        changeTable.allApproverTicketTable
+                          ? Styles.activeTitle
+                          : Styles.cardtitle1
+                      }
+                      cardsubtitle={
+                        changeTable.allApproverTicketTable
+                          ? Styles.activesubtitle
+                          : Styles.cardsubtitle1
+                      }
+                      cardiconbody={
+                        changeTable.allApproverTicketTable
+                          ? Styles.activeiconbody
+                          : Styles.cardiconbody1
+                      }
+                      value={allApproverTickets}
+                      title="All Tickets"
+                      cardicon="fa fa-book"
+                    />
+                  </span>
+                  <span
+                    onClick={() => {
+                      setChangeTable({
+                        pendingTable: false,
+                        allApproverTicketTable: false,
+                        rejectedTable: false,
+                        approvedTable: true,
+                      });
+                    }}
+                  >
+                    <Card
+                      cardbody={
+                        changeTable.approvedTable
+                          ? Styles.active
+                          : Styles.cardbody2
+                      }
+                      cardtitle={
+                        changeTable.approvedTable
+                          ? Styles.activeTitle
+                          : Styles.cardtitle2
+                      }
+                      cardsubtitle={
+                        changeTable.approvedTable
+                          ? Styles.activesubtitle
+                          : Styles.cardsubtitle2
+                      }
+                      cardiconbody={
+                        changeTable.approvedTable
+                          ? Styles.activeiconbody
+                          : Styles.cardiconbody2
+                      }
+                      value={allApproverApprovedTickets}
+                      title="Approved Tickets"
+                      cardicon="fa fa-check-circle"
+                    />
+                  </span>
+                  <span
+                    onClick={() => {
+                      setChangeTable({
+                        pendingTable: true,
+                        allApproverTicketTable: false,
+                      });
+                    }}
+                  >
+                    <Card
+                      cardbody={
+                        changeTable.pendingTable
+                          ? Styles.active
+                          : Styles.cardbody3
+                      }
+                      cardtitle={
+                        changeTable.pendingTable
+                          ? Styles.activeTitle
+                          : Styles.cardtitle3
+                      }
+                      cardsubtitle={
+                        changeTable.pendingTable
+                          ? Styles.activesubtitle
+                          : Styles.cardsubtitle3
+                      }
+                      cardiconbody={
+                        changeTable.pendingTable
+                          ? Styles.activeiconbody
+                          : Styles.cardiconbody3
+                      }
+                      value={allApproverPendingTickets}
+                      title="Pending Tickets"
+                      cardicon="fa fa-hourglass-half"
+                    />
+                  </span>
+                  <span
+                    onClick={() => {
+                      setChangeTable({
+                        pendingTable: false,
+                        allApproverTicketTable: false,
+                        rejectedTable: true,
+                        approvedTable: false,
+                      });
+                    }}
+                  >
+                    <Card
+                      cardbody={
+                        changeTable.rejectedTable
+                          ? Styles.active
+                          : Styles.cardbody4
+                      }
+                      cardtitle={
+                        changeTable.rejectedTable
+                          ? Styles.activeTitle
+                          : Styles.cardtitle4
+                      }
+                      cardsubtitle={
+                        changeTable.rejectedTable
+                          ? Styles.activesubtitle
+                          : Styles.cardsubtitle4
+                      }
+                      cardiconbody={
+                        changeTable.rejectedTable
+                          ? Styles.activeiconbody
+                          : Styles.cardiconbody4
+                      }
+                      value={allApproverDeclinedTickets}
+                      title="Declined Tickets"
+                      cardicon="fa fa-times-circle"
+                    />
+                  </span>
                 </div>
               )}
               {/* FOR NORMAL USER */}
@@ -262,7 +380,23 @@ function Approver() {
                 {/* FOR NORMAL USER */}
                 {switchUser && <RequesterTable preview={handlePreviewShow} />}
                 {/* FOR  APPROVER */}
-                {!switchUser && <ApproverTable preview={handlePreviewShow} />}
+                {/* {!switchUser && <ApproverTable preview={handlePreviewShow} />} */}
+                {!switchUser && (
+                  <div>
+                    {changeTable.pendingTable && (
+                      <ApproverTable preview={handlePreviewShow} />
+                    )}
+                    {changeTable.allApproverTicketTable && (
+                      <AllApproverTicketTable preview={handlePreviewShow} />
+                    )}
+                    {changeTable.approvedTable && (
+                      <ApprovedTicketTable preview={handlePreviewShow} />
+                    )}
+                    {changeTable.rejectedTable && (
+                      <RejectedTicketTable preview={handlePreviewShow} />
+                    )}
+                  </div>
+                )}
               </div>
             </Col>
           )}

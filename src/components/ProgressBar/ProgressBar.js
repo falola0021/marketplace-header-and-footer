@@ -2,25 +2,36 @@ import React from "react";
 // import Styles from "./ProgressBar.module.css";
 import { Progress, ThemeProvider } from "@chakra-ui/core";
 
-function ProgressBar({ name, phases }) {
+function ProgressBar({ ticketStatus, workflow, currentPhase }) {
+  const { phases = [""] } = workflow || {};
+  let phaseIdArray = [];
+  for (const fhase of phases) {
+    phaseIdArray.push(fhase._id);
+  }
+
+  const position = phaseIdArray.indexOf(currentPhase);
+  const positivePosition = Math.abs(position);
+  const addOneToAll = positivePosition + 1;
+  const onePhasePercentage = Number(100 / addOneToAll);
+
   return (
     <>
       <ThemeProvider>
-        {name === "pending" ? (
+        {ticketStatus === "pending" ? (
           <Progress
             style={{ height: "4px", width: "130px" }}
             color="yellow"
             hasStripe
             isAnimated
-            value={100}
+            value={addOneToAll == 1 || 0 ? 0 : onePhasePercentage}
           />
-        ) : name === "approved" ? (
+        ) : ticketStatus === "approved" ? (
           <Progress
             style={{ height: "4px", width: "130px" }}
             color="green"
             hasStripe
             isAnimated
-            value={100}
+            value={onePhasePercentage}
           />
         ) : (
           <Progress
@@ -28,7 +39,7 @@ function ProgressBar({ name, phases }) {
             color="red"
             hasStripe
             isAnimated
-            value={100}
+            value={onePhasePercentage}
           />
         )}
       </ThemeProvider>

@@ -13,7 +13,11 @@ import DepartmentDataService from "../../../services/department.service";
 const required = (value) => {
   if (!value) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         This field is required!
       </div>
     );
@@ -23,7 +27,11 @@ const required = (value) => {
 const validEmail = (value) => {
   if (!isEmail(value)) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         This is not a valid email.
       </div>
     );
@@ -33,7 +41,11 @@ const validEmail = (value) => {
 const vfirstname = (value) => {
   if (value.length < 3 || value.length > 20) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         The firstname must be between 3 and 20 characters.
       </div>
     );
@@ -43,7 +55,11 @@ const vfirstname = (value) => {
 const vlastname = (value) => {
   if (value.length < 3 || value.length > 20) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         The lastnmae must be between 3 and 20 characters.
       </div>
     );
@@ -53,7 +69,11 @@ const vlastname = (value) => {
 const vpassword = (value) => {
   if (value.length < 6 || value.length > 40) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         The password must be atleast 6 characters.
       </div>
     );
@@ -115,6 +135,8 @@ const Register = (props) => {
           setSuccessful(false);
           setLoading(false);
         });
+    } else {
+      setLoading(false);
     }
   };
 
@@ -247,18 +269,21 @@ const Register = (props) => {
               style={{ backgroundColor: "#4f26aa", color: "#ffffff" }}
               className="btn  btn-block"
             >
-              {loading && (
-                <span className="spinner-border spinner-border-sm"></span>
-              )}
-              Submit
+              <span className={Styles.alignLoader}>
+                {" "}
+                {loading && (
+                  <span className="spinner-border spinner-border-sm"></span>
+                )}
+                <span className="pl-2">Submit</span>
+              </span>
             </button>
           </div>
         </div>
       )}
-
       {message && (
         <div className="form-group">
           <div
+            style={{ fontSize: "12px", padding: "0 3px" }}
             className={
               successful ? "alert alert-success" : "alert alert-danger"
             }

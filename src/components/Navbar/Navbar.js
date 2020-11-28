@@ -31,7 +31,7 @@ function Navigation({
     AuthService.logout();
   };
   const userRole = currentUser.roles;
-  //console.log("the user userole ", currentUser);
+  console.log("the user user ", currentUser);
 
   //for hiding swutch
 

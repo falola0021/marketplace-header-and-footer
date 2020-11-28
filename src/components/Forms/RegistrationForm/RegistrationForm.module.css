@@ -50,6 +50,10 @@
   display: flex;
   justify-content: space-between;
 }
+.alignLoader {
+  align-items: center;
+  display: inline-flex;
+}
 
 /* 
       ##Device = Most of the Smartphones Mobiles (Portrait)

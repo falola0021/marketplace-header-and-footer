@@ -50,6 +50,13 @@ const findByTitle = (title) => {
   return http.get(`/roles?title=${title}`);
 };
 
+const activateUser = (id) => {
+  return http.patch(`/api/admin/user/activate/${id}`);
+};
+const deactivateUser = (id) => {
+  return http.patch(`/api/admin/user/deactivate/${id}`);
+};
+
 export default {
   getAll,
   get,
@@ -60,4 +67,6 @@ export default {
   findByTitle,
   attachRoleToUser,
   detachRoleToUser,
+  activateUser,
+  deactivateUser,
 };

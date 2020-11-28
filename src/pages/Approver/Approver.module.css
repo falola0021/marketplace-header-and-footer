@@ -24,18 +24,45 @@ html {
   padding-top: 30px;
   border-radius: 10px;
   background-color: #f8fcfd;
+  cursor: pointer;
 }
+.active {
+  width: 18rem;
+  padding-top: 30px;
+  border-radius: 10px;
+  background-color: #4f26aa;
+  cursor: pointer;
+  color: #ffffff !important;
+}
+.activeTitle {
+  font-size: 20px;
+  padding-left: 40px;
+  padding-bottom: 3px;
+  color: #ffffff;
+}
+
 .cardtitle1 {
   font-size: 20px;
   padding-left: 40px;
   padding-bottom: 3px;
   color: rgb(65, 62, 62);
 }
+.activeTitle {
+  font-size: 20px;
+  padding-left: 40px;
+  padding-bottom: 3px;
+  color: #ffffff;
+}
 .cardsubtitle1 {
   font-size: 45px;
   padding-left: 55px;
   color: rgb(65, 62, 62);
   /* font-weight: 500; */
+}
+.activesubtitle {
+  font-size: 45px;
+  padding-left: 55px;
+  color: #ffffff;
 }
 
 .cardiconbody1 {
@@ -45,6 +72,14 @@ html {
   padding-right: 30px;
   color: #4f26aa;
   opacity: 0.7;
+}
+.activeiconbody {
+  font-size: 45px;
+  float: right;
+  padding-top: 20px;
+  padding-right: 30px;
+  color: #ffffff;
+  /* opacity: 0.7; */
 }
 .cardbody2 {
   width: 18rem;
@@ -84,6 +119,7 @@ html {
   padding-left: 40px;
   padding-bottom: 3px;
   color: rgb(65, 62, 62);
+  cursor: pointer;
 }
 .cardsubtitle3 {
   font-size: 45px;
@@ -183,6 +219,12 @@ html {
     margin: 0 5px;
     flex-shrink: 0;
   }
+  /* .cardactive {
+    width: 300px;
+    min-height: 80px;
+    margin: 0 5px;
+    flex-shrink: 0
+  } */
   .cardbody2 {
     width: 300px;
     min-height: 80px;
@@ -214,3 +256,36 @@ html {
     display: none;
   }
 }
+/* 
+.cardinactive {
+  margin-bottom: 12px;
+  padding: 12px 15px;
+  font-size: 14px;
+  color: #666565;
+  font-weight: 500;
+}
+.cardinactive:hover {
+  cursor: pointer;
+}
+.cardactive:hover {
+  cursor: pointer;
+} */
+
+/* .cardinactive span {
+  padding-left: 10px;
+  vertical-align: middle;
+}
+.cardactive span {
+  padding-left: 10px;
+  vertical-align: middle;
+  color: #8473cf;
+}
+.cardinactive div {
+  font-size: 23px;
+  vertical-align: middle;
+}
+.cardactive div {
+  font-size: 23px;
+  vertical-align: middle;
+ 
+} */

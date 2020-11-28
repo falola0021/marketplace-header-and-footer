@@ -23,22 +23,18 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import RequestDataService from "../../services/requester.service";
-import AuthService from "../../services/auth.service";
-import Addrequest from "../../components/ActionButton/Addrequest/Addrequest";
-import MakeRequest from "./MakeRequest/MakeRequest";
+import TicketDataService from "../../services/ticket.service";
 import { Row, Col } from "react-bootstrap";
-import InvoicePreview from "../../components/InvoicePreview/InvoicePreview";
-// import PhaseDataService from "../../services/phase.service";
+import InvoicePreview from "../../components/InvoicePreview/ApproverInvoicePreview";
 import moment from "moment";
 
 import {
-  Drawer,
-  DrawerBody,
-  DrawerOverlay,
-  DrawerContent,
+  // Drawer,
+  // DrawerBody,
+  // DrawerOverlay,
+  // DrawerContent,
   useDisclosure,
-  ThemeProvider,
+  //ThemeProvider,
   // Textarea,
 } from "@chakra-ui/core";
 
@@ -69,6 +65,8 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
+  { id: "requester", numeric: true, disablePadding: false, label: "Requester" },
+
   {
     id: "title",
     numeric: false,
@@ -76,7 +74,7 @@ const headCells = [
     label: "Title",
   },
 
-  { id: "item", numeric: true, disablePadding: false, label: "Items" },
+  { id: "item", numeric: true, disablePadding: false, label: "Item(s)" },
   { id: "amoumt", numeric: true, disablePadding: false, label: "Amount (₦)" },
   { id: "due", numeric: true, disablePadding: false, label: "Date" },
   { id: "approver", numeric: true, disablePadding: false, label: "Approvers" },
@@ -167,9 +165,9 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnhancedTableToolbar = ({ retrieveRequests, numSelected }) => {
+const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  //const { numSelected } = props;
+  const { numSelected } = props;
   const sizes = ["xl"];
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
@@ -205,18 +203,6 @@ const EnhancedTableToolbar = ({ retrieveRequests, numSelected }) => {
               <span>
                 <SearchFilter />
               </span>
-              <span className={Styles.tablename}>
-                <div className={Styles.addrequest}>
-                  {sizes.map((size) => (
-                    <Addrequest
-                      name="Make a request"
-                      onClick={() => handleClick(size)}
-                      type="button"
-                      key={size}
-                    />
-                  ))}
-                </div>
-              </span>{" "}
             </div>
           </Typography>
         )}
@@ -233,35 +219,12 @@ const EnhancedTableToolbar = ({ retrieveRequests, numSelected }) => {
           <span></span>
         )}
       </Toolbar>
-
-      <ThemeProvider>
-        <Drawer onClose={onClose} isOpen={isOpen} size={size}>
-          <span className={Styles.requestform}>
-            <DrawerOverlay
-              style={{ backgroundColor: "rgba(255, 255, 255,0.2)" }}
-            />
-
-            <DrawerContent>
-              <DrawerBody>
-                {" "}
-                <MakeRequest
-                  retrieveRequests={retrieveRequests}
-                  closeDrawer={onClose}
-                />
-              </DrawerBody>
-            </DrawerContent>
-          </span>
-        </Drawer>
-      </ThemeProvider>
     </>
   );
 };
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
-};
-const ShowSideInvoice = (props) => {
-  return <></>;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -291,67 +254,53 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EnhancedTable(props, { preview }) {
   const classes = useStyles();
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("calories");
-  const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(0);
-  const [dense, setDense] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("calories");
+  const [selected, setSelected] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const [requests, setRequests] = React.useState([]);
-  // const [loading, setLoading] = useState(false);
-  // const [successful, setSuccessful] = useState(false);
-  // const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [successful, setSuccessful] = useState(false);
+  const [message, setMessage] = useState("");
   // const [allUserRequest, setAllUserRequest] = useState("");
   // const currentUser = AuthService.getCurrentUser();
-  const [drawerInfo, setDrawerInfo] = useState([]);
-  const [sideview, setSideView] = useState({});
-  // const [phaseObj, setPhaseObj] = useState([]);
+  const [drawerInfo, setDrawerInfo] = React.useState({});
+  const [sideview, setSideView] = React.useState({});
+
   const checkBtn = useRef();
   const form = useRef();
 
   const size1 = "xs";
   const size2 = "lg";
 
-  const retrieveRequests = async () => {
-    await RequestDataService.getUserTicketList()
+  const retrieveTickets = async () => {
+    await TicketDataService.allApproverTickets()
       .then((response) => {
-        let resData = response.data.data.ticketList.sort((a, b) =>
+        console.log("response abc", response);
+        let resData = response.data.data.allApproverTickets.sort((a, b) =>
           new Date(a) < new Date(b) ? 1 : -1
         );
         setRequests(resData);
-        let firstTicket = resData[0];
-        //let firstDocument = resData[3].ticketDocuments[0].document;
-        // console.log("first document", firstDocument);
-        handleSideview(firstTicket);
+        let firstData = resData[0];
+        handleSideview(firstData);
+        console.log("the data", resData);
       })
       .catch((e) => {
         console.log(e);
-        console.log(e.response);
+        console.log("errrrrrr", e.response);
       });
   };
 
   const handleSideview = (requests) => {
     setSideView(requests);
+    console.log("na here", sideview);
   };
-  // const getPhasesObj = (phases) => {
-  //   phases.forEach((phase) => {
-  //     PhaseDataService.get(phase)
-  //       .then((response) => {
-  //         console.log("the reponse", response.data);
-  //         let copyOfPhases = [...phaseObj];
-  //         copyOfPhases.push(response.data.data);
-  //         setPhaseObj(copyOfPhases);
-  //       })
-  //       .catch((e) => {
-  //         console.log(e);
-  //         console.log("phase eror", e.response);
-  //       });
-  //   });
-  // };
 
   useEffect(() => {
-    retrieveRequests();
+    retrieveTickets();
   }, []);
 
   const handleRequestSort = (event, property) => {
@@ -413,12 +362,10 @@ export default function EnhancedTable(props, { preview }) {
         <Col sm="9">
           <div className={classes.root}>
             <Paper>
-              <EnhancedTableToolbar
-                retrieveRequests={retrieveRequests}
-                numSelected={selected.length}
-              />
+              <EnhancedTableToolbar numSelected={selected.length} />
               <TableContainer>
                 <Table
+                  style={{ backgroundColor: "#f8fcfd" }}
                   className={Styles.table}
                   aria-labelledby="tableTitle"
                   size={dense ? "small" : "medium"}
@@ -439,26 +386,27 @@ export default function EnhancedTable(props, { preview }) {
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
-                      .map((ticket, index) => {
-                        const isItemSelected = isSelected(ticket._id);
+                      .map((request, index) => {
+                        const isItemSelected = isSelected(requests._id);
                         const labelId = `enhanced-table-checkbox-${index}`;
-                        const workflow = ticket.workflow;
-                        const currentPhase = ticket.phase._id;
-                        const currentPhaseStatus = ticket.phaseStatus;
-
+                        const workflow = request.workflow;
+                        const currentPhase = request.phase._id;
+                        const currentPhaseStatus = request.phaseStatus;
                         return (
                           <TableRow
                             hover
                             role="checkbox"
                             aria-checked={isItemSelected}
                             tabIndex={-1}
-                            key={ticket._id}
+                            key={request._id}
                             selected={isItemSelected}
                           >
+                            {/* {currentUser.userId == request.user && (
+                        <> */}
                             <TableCell padding="checkbox">
                               <Checkbox
                                 onClick={(event) =>
-                                  handleClick(event, ticket._id)
+                                  handleClick(event, request._id)
                                 }
                                 checked={isItemSelected}
                                 inputProps={{ "aria-labelledby": labelId }}
@@ -466,57 +414,59 @@ export default function EnhancedTable(props, { preview }) {
                             </TableCell>
 
                             <TableCell
-                              onClick={(event) => setSideView(ticket)}
+                              onClick={(event) => setSideView(request)}
                               align="left"
                             >
-                              {ticket.description}
+                              {request.user.firstName} {request.user.lastName}
                             </TableCell>
 
                             <TableCell
-                              onClick={(event) => setSideView(ticket)}
+                              onClick={(event) => setSideView(request)}
                               align="left"
                             >
-                              {ticket.items}{" "}
+                              {request.description}
                             </TableCell>
-                            <TableCell onClick={(event) => setSideView(ticket)}>
-                              {ticket.amount}
+
+                            <TableCell
+                              onClick={(event) => setSideView(request)}
+                              align="left"
+                            >
+                              {request.items}{" "}
                             </TableCell>
                             <TableCell
-                              onClick={(event) => setSideView(ticket)}
+                              onClick={(event) => setSideView(request)}
                               align="left"
                             >
-                              {moment(ticket.dueDate).format("DD/MM/YYYY")}
+                              {request.amount}
                             </TableCell>
                             <TableCell
+                              onClick={(event) => setSideView(request)}
                               align="left"
-                              onClick={(event) => setSideView(ticket)}
                             >
+                              {moment(request.dueDate).format("DD/MM/YYYY")}
+                            </TableCell>
+                            <TableCell align="left">
                               <ApproversAvatar
                                 workflow={workflow}
                                 currentPhase={currentPhase}
-                                currentPhaseStatus={currentPhaseStatus}
+                                ticketStatus={request.status}
                               />
                             </TableCell>
-                            <TableCell
-                              onClick={(event) => setSideView(ticket)}
-                              align="left"
-                            >
+                            <TableCell align="left">
                               {" "}
                               <ProgressBar
                                 workflow={workflow}
                                 currentPhase={currentPhase}
-                                ticketStatus={ticket.status}
+                                ticketStatus={request.status}
                               />
                             </TableCell>
-                            <TableCell
-                              onClick={(event) => setSideView(ticket)}
-                              align="left"
-                            >
+                            <TableCell align="left">
                               {" "}
-                              <ConfirmationStatus name={ticket.status} />
+                              <ConfirmationStatus name={request.status} />
                             </TableCell>
                           </TableRow>
                         );
+                        // });
                       })}
                     {emptyRows > 0 && (
                       <TableRow
@@ -545,7 +495,7 @@ export default function EnhancedTable(props, { preview }) {
           </div>
         </Col>
         <Col>
-          <InvoicePreview sideview={sideview} />
+          <InvoicePreview drawerInfo={drawerInfo} sideview={sideview} />
         </Col>
       </Row>
     </>

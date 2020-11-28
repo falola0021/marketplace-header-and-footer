@@ -58,6 +58,10 @@
   display: flex;
   justify-content: space-between;
 }
+.alignLoader {
+  align-items: center;
+  display: inline-flex;
+}
 
 /* 
     ##Device = Most of the Smartphones Mobiles (Portrait)
@@ -77,10 +81,8 @@
     ##Device = Low Resolution Tablets, Mobiles (Landscape)
     ##Screen = B/w 481px to 767px
   */
-
 @media (min-width: 481px) and (max-width: 767px) {
   .form {
     margin: 10% 5% 30% 5%;
-    background: red !important;
   }
 }

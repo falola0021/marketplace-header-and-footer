@@ -5,6 +5,53 @@ import { Row, Col } from "react-bootstrap";
 import Table from "./Table";
 
 function Overview() {
+  // const retrieveAllApproverTicketCount = async () => {
+  //   await TicketDataService.countAllApprovedTickets()
+  //     .then((response) => {
+  //       setAllApproverTickets(response.data.data.allApproverTicketsCount);
+  //     })
+  //     .catch((e) => {
+  //       console.log(e.response);
+  //     });
+  // };
+  // const retrieveApproverApprovedTickets = async () => {
+  //   await TicketDataService.countApprovedTicketsByApprover()
+  //     .then((response) => {
+  //       setAllApproverApprovedTickets(response.data.data.approvedTicketsCount);
+  //     })
+  //     .catch((e) => {
+  //       console.log("the error");
+  //       console.log(e.response);
+  //     });
+  // };
+  // const retrieveApproverPendingTickets = async () => {
+  //   await TicketDataService.countPendingTicketsByApprover()
+  //     .then((response) => {
+  //       setAllApproverPendingTickets(response.data.data.rejectedTicketsCount);
+  //     })
+  //     .catch((e) => {
+  //       console.log(e.response);
+  //     });
+  // };
+
+  // const retrieveApproverRejectedTickets = async () => {
+  //   await TicketDataService.countRejectedTicketsByApprover()
+  //     .then((response) => {
+  //       setAllApproverDeclinedTickets(response.data.data.rejectedTicketsCount);
+  //     })
+  //     .catch((e) => {
+  //       console.log(e.response);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   retrieveAllRequestCount();
+  //   retrieveDeclinedRequestCount();
+  //   retrievePendingRequestCount();
+  //   retrieveApprovedRequestCount();
+
+  // }, []);
+
   return (
     <>
       <div className={Styles.body}>

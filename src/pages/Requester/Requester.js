@@ -4,7 +4,6 @@ import Styles from "./Requester.module.css";
 // import RequesterTable from "./RequesterTable";
 import MakeRequest from "./MakeRequest/MakeRequest";
 // import { Spring, Transition, animated } from "react-spring/renderprops";
-import PreviewRequest from "./PreviewRequest/PreviewRequest";
 import Navbar from "../../components/Navbar/Navbar";
 import Addrequest from "../../components/ActionButton/Addrequest/Addrequest";
 import Card from "../../components/ViewCard/ViewCard";
@@ -175,7 +174,7 @@ function Requester() {
           )}
         </Row>
       </div>
-      <Modal
+      {/* <Modal
         show={modalShow}
         onHide={() => setModalShow(false)}
         size="lg"
@@ -201,7 +200,7 @@ function Requester() {
         <Modal.Body>
           <PreviewRequest />
         </Modal.Body>
-      </Modal>{" "}
+      </Modal>{" "} */}
     </>
   );
 }

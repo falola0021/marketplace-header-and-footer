@@ -67,6 +67,10 @@ style={{
 .mobileform {
   display: none;
 }
+.alignLoader {
+  align-items: center;
+  display: inline-flex;
+}
 
 @media screen and (max-width: 480px) {
   .title {

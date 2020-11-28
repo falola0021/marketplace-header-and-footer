@@ -15,7 +15,11 @@ import { Link } from "react-router-dom";
 const required = (value) => {
   if (!value) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         This field is required!
       </div>
     );
@@ -24,7 +28,11 @@ const required = (value) => {
 const validEmail = (value) => {
   if (!isEmail(value)) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         This is not a valid email.
       </div>
     );
@@ -120,29 +128,39 @@ const Login = (props) => {
         />
       </div>
 
+      {message && (
+        <div className="form-group">
+          <div
+            style={{ fontSize: "12px", padding: "0 3px" }}
+            className="alert alert-danger"
+            role="alert"
+          >
+            {message}
+          </div>
+        </div>
+      )}
       <div className="form-group">
         <button
-          style={{ backgroundColor: "#4f26aa", color: "#ffffff" }}
+          style={{
+            backgroundColor: "#4f26aa",
+            color: "#ffffff",
+          }}
           className="btn  btn-block"
           disabled={loading}
         >
-          {loading && (
-            <span className="spinner-border spinner-border-sm"></span>
-          )}
-          <span>Submit</span>
+          <span className={Styles.alignLoader}>
+            {" "}
+            {loading && (
+              <span className="spinner-border spinner-border-sm"></span>
+            )}
+            <span className="pl-2">Submit</span>
+          </span>
         </button>
         <Link className="link" to="/change-password">
           <div className={Styles.forgotpas}>Forgot Password ?</div>
         </Link>
       </div>
 
-      {message && (
-        <div className="form-group">
-          <div className="alert alert-danger" role="alert">
-            {message}
-          </div>
-        </div>
-      )}
       <CheckButton style={{ display: "none" }} ref={checkBtn} />
     </Form>
   );

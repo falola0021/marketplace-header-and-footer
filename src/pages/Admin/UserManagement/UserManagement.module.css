@@ -166,6 +166,10 @@ body::-webkit-scrollbar {
   outline: #ffffff !important;
   border: 1px solid #ffff !important;
 }
+.alignLoader {
+  align-items: center;
+  display: inline-flex;
+}
 
 @media (min-width: 576px) {
 }

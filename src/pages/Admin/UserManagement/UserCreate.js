@@ -17,7 +17,11 @@ import { Row, Col, Form } from "react-bootstrap";
 const required = (value) => {
   if (!value) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         This field is required!
       </div>
     );
@@ -26,7 +30,11 @@ const required = (value) => {
 const vemail = (value) => {
   if (!isEmail(value)) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         This is not a valid email.
       </div>
     );
@@ -36,7 +44,11 @@ const vemail = (value) => {
 const name = (value) => {
   if (value.length < 3) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         The name of vendor cannot be less than 3 characters.
       </div>
     );
@@ -46,7 +58,11 @@ const name = (value) => {
 const vpassword = (value) => {
   if (value.length < 6 || value.length > 40) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         The password must be atleast 6 characters.
       </div>
     );
@@ -125,6 +141,7 @@ function User({ closeDrawer }) {
             payload: response.data.data,
           });
           console.log(response);
+
           setMessage(response.data.message);
           setTimeout(function () {
             closeDrawer();
@@ -136,6 +153,7 @@ function User({ closeDrawer }) {
 
           setMessage(error.response.data.message);
         });
+    } else {
       setLoading(false);
     }
   };
@@ -348,7 +366,21 @@ function User({ closeDrawer }) {
                 </Form.Group>
               </Col>
             </Row>
-
+            <span>
+              {message && (
+                <div className="form-group">
+                  <div
+                    style={{ fontSize: "12px", padding: "0 3px" }}
+                    className={
+                      successful ? "alert alert-success" : "alert alert-danger"
+                    }
+                    role="alert"
+                  >
+                    {message}
+                  </div>
+                </div>
+              )}
+            </span>
             <span>
               <button
                 style={{
@@ -361,28 +393,16 @@ function User({ closeDrawer }) {
                 }}
                 className={Styles.submitbutton}
               >
-                {loading && (
-                  <span className="spinner-border spinner-border-sm"></span>
-                )}
-                Submit
+                <span className={Styles.alignLoader}>
+                  {" "}
+                  {loading && (
+                    <span className="spinner-border spinner-border-sm"></span>
+                  )}
+                  <span className="pl-2">Submit</span>
+                </span>
               </button>
             </span>
-            {/* {successful && ( */}
-            <span>
-              {message && (
-                <div className="form-group">
-                  <div
-                    className={
-                      successful ? "alert alert-success" : "alert alert-danger"
-                    }
-                    role="alert"
-                  >
-                    {message}
-                  </div>
-                </div>
-              )}
-            </span>
-            {/* )} */}
+
             <CheckButton style={{ display: "none" }} ref={checkBtn} />
           </Form1>
         </Col>
