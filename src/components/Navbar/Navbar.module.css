@@ -41,7 +41,11 @@
   display: none !important;
 }
 
-@media screen and (max-width: 480px) {
+.mobileName {
+  display: none;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
   .desktopmenu {
     display: none !important;
   }
@@ -53,5 +57,23 @@
     padding-left: 0 !important;
     margin-left: 0 !important;
     color: #ffffff;
+  }
+  .avatar {
+    display: none !important;
+  }
+  .logout {
+    display: none !important;
+  }
+  .desktopName {
+    display: none !important;
+  }
+  .mobileName {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .switchuser {
+    display: none;
   }
 }

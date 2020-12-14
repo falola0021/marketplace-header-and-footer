@@ -39,6 +39,7 @@ import {
   DrawerContent,
   useDisclosure,
   ThemeProvider,
+  Spinner,
   // Textarea,
 } from "@chakra-ui/core";
 
@@ -299,7 +300,7 @@ export default function EnhancedTable(props, { preview }) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [requests, setRequests] = React.useState([]);
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   // const [successful, setSuccessful] = useState(false);
   // const [message, setMessage] = useState("");
   // const [allUserRequest, setAllUserRequest] = useState("");
@@ -314,6 +315,7 @@ export default function EnhancedTable(props, { preview }) {
   const size2 = "lg";
 
   const retrieveRequests = async () => {
+    setLoading(true);
     await RequestDataService.getUserTicketList()
       .then((response) => {
         let resData = response.data.data.ticketList.sort((a, b) =>
@@ -324,10 +326,12 @@ export default function EnhancedTable(props, { preview }) {
         //let firstDocument = resData[3].ticketDocuments[0].document;
         // console.log("first document", firstDocument);
         handleSideview(firstTicket);
+        setLoading(false);
       })
       .catch((e) => {
         console.log(e);
         console.log(e.response);
+        setLoading(false);
       });
   };
 
@@ -433,6 +437,19 @@ export default function EnhancedTable(props, { preview }) {
                     onRequestSort={handleRequestSort}
                     rowCount={requests.length}
                   />
+                  <div className={Styles.centered}>
+                    {loading && (
+                      <ThemeProvider>
+                        <Spinner
+                          thickness="4px"
+                          speed="0.65s"
+                          emptyColor="gray.200"
+                          color="blue.500"
+                          size="xl"
+                        />
+                      </ThemeProvider>
+                    )}
+                  </div>
                   <TableBody>
                     {stableSort(requests, getComparator(order, orderBy))
                       .slice(
@@ -506,6 +523,7 @@ export default function EnhancedTable(props, { preview }) {
                                 workflow={workflow}
                                 currentPhase={currentPhase}
                                 ticketStatus={ticket.status}
+                                currentPhaseStatus={currentPhaseStatus}
                               />
                             </TableCell>
                             <TableCell
@@ -513,7 +531,7 @@ export default function EnhancedTable(props, { preview }) {
                               align="left"
                             >
                               {" "}
-                              <ConfirmationStatus name={ticket.status} />
+                              <ConfirmationStatus statos={ticket.status} />
                             </TableCell>
                           </TableRow>
                         );
@@ -545,7 +563,7 @@ export default function EnhancedTable(props, { preview }) {
           </div>
         </Col>
         <Col>
-          <InvoicePreview sideview={sideview} />
+          <InvoicePreview loading1={loading} sideview={sideview} />
         </Col>
       </Row>
     </>

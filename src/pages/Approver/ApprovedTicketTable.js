@@ -28,7 +28,7 @@ import { Row, Col } from "react-bootstrap";
 import InvoicePreview from "../../components/InvoicePreview/ApproverInvoicePreview";
 import moment from "moment";
 
-import { useDisclosure } from "@chakra-ui/core";
+import { useDisclosure, Spinner, ThemeProvider } from "@chakra-ui/core";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -244,7 +244,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EnhancedTable(props, { preview }) {
+export default function EnhancedTable({ preview, changeTable2 }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -269,6 +269,7 @@ export default function EnhancedTable(props, { preview }) {
   const size2 = "lg";
 
   const retrieveTickets = async () => {
+    setLoading(true);
     await TicketDataService.AllApprovedTickets()
       .then((response) => {
         let resData = response.data.data.approvedTickets.sort((a, b) =>
@@ -277,11 +278,11 @@ export default function EnhancedTable(props, { preview }) {
         setRequests(resData);
         let firstData = resData[0];
         handleSideview(firstData);
-        console.log("the data", resData);
+        setLoading(false);
       })
       .catch((e) => {
         console.log(e);
-        console.log("tttt", e.response);
+        setLoading(false);
       });
   };
 
@@ -371,6 +372,19 @@ export default function EnhancedTable(props, { preview }) {
                     onRequestSort={handleRequestSort}
                     rowCount={requests.length}
                   />
+                  <div className={Styles.centered}>
+                    {loading && (
+                      <ThemeProvider>
+                        <Spinner
+                          thickness="4px"
+                          speed="0.65s"
+                          emptyColor="gray.200"
+                          color="blue.500"
+                          size="xl"
+                        />
+                      </ThemeProvider>
+                    )}
+                  </div>
                   <TableBody>
                     {stableSort(requests, getComparator(order, orderBy))
                       .slice(
@@ -438,6 +452,7 @@ export default function EnhancedTable(props, { preview }) {
                             </TableCell>
                             <TableCell align="left">
                               <ApproversAvatar
+                                currentPhaseStatus={currentPhaseStatus}
                                 workflow={workflow}
                                 currentPhase={currentPhase}
                                 ticketStatus={request.status}
@@ -446,6 +461,7 @@ export default function EnhancedTable(props, { preview }) {
                             <TableCell align="left">
                               {" "}
                               <ProgressBar
+                                currentPhaseStatus={currentPhaseStatus}
                                 workflow={workflow}
                                 currentPhase={currentPhase}
                                 ticketStatus={request.status}
@@ -453,7 +469,7 @@ export default function EnhancedTable(props, { preview }) {
                             </TableCell>
                             <TableCell align="left">
                               {" "}
-                              <ConfirmationStatus name={request.status} />
+                              <ConfirmationStatus statos={request.status} />
                             </TableCell>
                           </TableRow>
                         );
@@ -486,7 +502,12 @@ export default function EnhancedTable(props, { preview }) {
           </div>
         </Col>
         <Col>
-          <InvoicePreview drawerInfo={drawerInfo} sideview={sideview} />
+          <InvoicePreview
+            changeTable2={changeTable2}
+            drawerInfo={drawerInfo}
+            sideview={sideview}
+            loading1={loading}
+          />
         </Col>
       </Row>
     </>

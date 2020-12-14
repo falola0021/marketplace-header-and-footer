@@ -14,15 +14,14 @@ const AllRejectedTickets = () => {
   return http.get("/api/ticket/approver/ticket-rejected");
 };
 
-const rejectTicket = (id) => {
-  return http.patch(`/api/ticket/reject/${id}`);
+const rejectTicket = (id, comment) => {
+  const trimmed_id = id.trim();
+  return http.patch(`/api/ticket/reject/${trimmed_id}`, { comment: comment });
 };
 
-const approveTicket = (id) => {
-  return http.patch(
-    `/api/ticket/approve/${id}`
-    //approveComment
-  );
+const approveTicket = (id, comment) => {
+  const trimmed_id = id.trim();
+  return http.patch(`/api/ticket/approve/${trimmed_id}`, { comment: comment });
 };
 
 //aprovers stats

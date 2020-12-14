@@ -35,6 +35,7 @@ import {
   DrawerOverlay,
   DrawerContent,
   useDisclosure,
+  Spinner,
   ThemeProvider,
   // Textarea,
 } from "@chakra-ui/core";
@@ -278,6 +279,7 @@ export default function EnhancedTable(props, { preview }) {
   const size2 = "lg";
 
   const retrieveTickets = async () => {
+    setLoading(true);
     await TicketDataService.AllRejectedTickets()
       .then((response) => {
         console.log("respons", response);
@@ -287,11 +289,13 @@ export default function EnhancedTable(props, { preview }) {
         setRequests(resData);
         let firstData = resData[0];
         handleSideview(firstData);
+        setLoading(false);
         console.log("the data", resData);
       })
       .catch((e) => {
         console.log(e);
         console.log("errrrrrr", e.response);
+        setLoading(false);
       });
   };
 
@@ -381,94 +385,108 @@ export default function EnhancedTable(props, { preview }) {
                     onRequestSort={handleRequestSort}
                     rowCount={requests.length}
                   />
+                  <div className={Styles.centered}>
+                    {loading && (
+                      <ThemeProvider>
+                        <Spinner
+                          thickness="4px"
+                          speed="0.65s"
+                          emptyColor="gray.200"
+                          color="blue.500"
+                          size="xl"
+                        />
+                      </ThemeProvider>
+                    )}
+                  </div>
                   <TableBody>
-                    {stableSort(requests, getComparator(order, orderBy))
-                      .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                      .map((request, index) => {
-                        const isItemSelected = isSelected(requests._id);
-                        const labelId = `enhanced-table-checkbox-${index}`;
-                        const workflow = request.workflow;
-                        const currentPhase = request.phase._id;
-                        const currentPhaseStatus = request.phaseStatus;
-                        return (
-                          <TableRow
-                            hover
-                            role="checkbox"
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={request._id}
-                            selected={isItemSelected}
-                          >
-                            {/* {currentUser.userId == request.user && (
-                        <> */}
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                onClick={(event) =>
-                                  handleClick(event, request._id)
-                                }
-                                checked={isItemSelected}
-                                inputProps={{ "aria-labelledby": labelId }}
-                              />
-                            </TableCell>
+                    <>
+                      {stableSort(requests, getComparator(order, orderBy))
+                        .slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                        .map((request, index) => {
+                          const isItemSelected = isSelected(requests._id);
+                          const labelId = `enhanced-table-checkbox-${index}`;
+                          const workflow = request.workflow;
+                          const currentPhase = request.phase._id;
+                          const currentPhaseStatus = request.phaseStatus;
 
-                            <TableCell
-                              onClick={(event) => setSideView(request)}
-                              align="left"
+                          return (
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              aria-checked={isItemSelected}
+                              tabIndex={-1}
+                              key={request._id}
+                              selected={isItemSelected}
                             >
-                              {request.user.firstName} {request.user.lastName}
-                            </TableCell>
+                              <TableCell padding="checkbox">
+                                <Checkbox
+                                  onClick={(event) =>
+                                    handleClick(event, request._id)
+                                  }
+                                  checked={isItemSelected}
+                                  inputProps={{ "aria-labelledby": labelId }}
+                                />
+                              </TableCell>
 
-                            <TableCell
-                              onClick={(event) => setSideView(request)}
-                              align="left"
-                            >
-                              {request.description}
-                            </TableCell>
+                              <TableCell
+                                onClick={(event) => setSideView(request)}
+                                align="left"
+                              >
+                                {request.user.firstName} {request.user.lastName}
+                              </TableCell>
 
-                            <TableCell
-                              onClick={(event) => setSideView(request)}
-                              align="left"
-                            >
-                              {request.items}{" "}
-                            </TableCell>
-                            <TableCell
-                              onClick={(event) => setSideView(request)}
-                              align="left"
-                            >
-                              {request.amount}
-                            </TableCell>
-                            <TableCell
-                              onClick={(event) => setSideView(request)}
-                              align="left"
-                            >
-                              {moment(request.dueDate).format("DD/MM/YYYY")}
-                            </TableCell>
-                            <TableCell align="left">
-                              <ApproversAvatar
-                                workflow={workflow}
-                                currentPhase={currentPhase}
-                                ticketStatus={request.status}
-                              />
-                            </TableCell>
-                            <TableCell align="left">
-                              {" "}
-                              <ProgressBar
-                                workflow={workflow}
-                                currentPhase={currentPhase}
-                                ticketStatus={request.status}
-                              />
-                            </TableCell>
-                            <TableCell align="left">
-                              {" "}
-                              <ConfirmationStatus name={request.status} />
-                            </TableCell>
-                          </TableRow>
-                        );
-                        // });
-                      })}
+                              <TableCell
+                                onClick={(event) => setSideView(request)}
+                                align="left"
+                              >
+                                {request.description}
+                              </TableCell>
+
+                              <TableCell
+                                onClick={(event) => setSideView(request)}
+                                align="left"
+                              >
+                                {request.items}{" "}
+                              </TableCell>
+                              <TableCell
+                                onClick={(event) => setSideView(request)}
+                                align="left"
+                              >
+                                {request.amount}
+                              </TableCell>
+                              <TableCell
+                                onClick={(event) => setSideView(request)}
+                                align="left"
+                              >
+                                {moment(request.dueDate).format("DD/MM/YYYY")}
+                              </TableCell>
+                              <TableCell align="left">
+                                <ApproversAvatar
+                                  workflow={workflow}
+                                  currentPhase={currentPhase}
+                                  currentPhaseStatus={currentPhaseStatus}
+                                />
+                              </TableCell>
+                              <TableCell align="left">
+                                {" "}
+                                <ProgressBar
+                                  workflow={workflow}
+                                  currentPhase={currentPhase}
+                                  ticketStatus={request.status}
+                                />
+                              </TableCell>
+                              <TableCell align="left">
+                                {" "}
+                                <ConfirmationStatus statos={request.status} />
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                    </>
+
                     {emptyRows > 0 && (
                       <TableRow
                         style={{ height: (dense ? 33 : 53) * emptyRows }}
@@ -496,7 +514,12 @@ export default function EnhancedTable(props, { preview }) {
           </div>
         </Col>
         <Col>
-          <InvoicePreview drawerInfo={drawerInfo} sideview={sideview} />
+          <InvoicePreview
+            setLoading1={setLoading}
+            loading1={loading}
+            drawerInfo={drawerInfo}
+            sideview={sideview}
+          />
         </Col>
       </Row>
     </>

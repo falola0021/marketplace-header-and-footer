@@ -3,7 +3,7 @@
   color: #5c5b5b;
   text-align: center;
   /* margin-top: 10px; */
-  margin-bottom: 5px;
+  margin-bottom: 20px;
   font-weight: bold;
 }
 .title2 {
@@ -11,7 +11,7 @@
   color: #5c5b5b;
   text-align: center;
   margin-top: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
   font-weight: bold;
 }
 
@@ -39,11 +39,11 @@ style={{
 }} */
 
 .submitdiv1 {
-  margin-top: 5px;
+  margin-top: 15px;
   text-align: center !important;
 }
 .submitdiv2 {
-  margin-top: 5px;
+  margin-top: 15px;
   text-align: center !important;
 }
 .submit {
@@ -64,6 +64,7 @@ style={{
 .desktopform {
   display: flex;
 }
+
 .mobileform {
   display: none;
 }
@@ -71,8 +72,11 @@ style={{
   align-items: center;
   display: inline-flex;
 }
+.spacing {
+  display: none;
+}
 
-@media screen and (max-width: 480px) {
+@media (min-width: 320px) and (max-width: 480px) {
   .title {
     font-size: 24px;
   }
@@ -80,29 +84,35 @@ style={{
   .title {
     margin-top: 0 !important;
   }
-  .desktopform {
+  .input {
+    padding: 7px 5px !important;
+  }
+
+  /* .desktopform {
     display: none;
   }
   .mobileform {
     display: block;
-  }
-  .dropzonebox {
+  } */
+  /* .dropzonebox {
     display: none;
-  }
-  .title1 {
+  } */
+  /* .title1 {
     display: none;
-  }
-  .submitdiv1 {
+  } */
+  /* .submitdiv1 {
     display: none;
-  }
-  .input {
-    padding: 20px 10px !important;
-  }
+  } */
+
   .file {
     outline: none;
     border: 1px solid rgb(196, 194, 194) !important;
     margin-bottom: 10px;
     font-size: 16px !important;
     padding: 5px 1px 35px 1px;
+  }
+  .spacing {
+    display: flex;
+    margin-top: 50px;
   }
 }

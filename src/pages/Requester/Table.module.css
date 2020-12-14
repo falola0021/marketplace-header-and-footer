@@ -8,9 +8,9 @@
 .tablehead {
   background-color: #f8f9fa;
 }
-/* .tablebody {
-  min-height: 550px;
-} */
+.addrequest {
+  max-width: 250px;
+}
 
 .tabletop {
   padding-top: 20px;
@@ -23,6 +23,23 @@
   font-size: 16px;
   /* font-weight: bold; */
 }
+.centered {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.requestform {
+  overflow-y: scroll !important;
+}
+.desktopTable {
+  display: block !important;
+}
+.mobileTable {
+  display: none !important;
+}
 
 /* 
   ##Device = Most of the Smartphones Mobiles (Portrait)
@@ -30,9 +47,21 @@
 */
 
 @media (min-width: 320px) and (max-width: 480px) {
+  .desktopTable {
+    display: none !important;
+  }
+  .mobileTable {
+    display: flex !important;
+  }
   .tabletop {
-    padding-top: 20px;
+    padding-top: 0px;
     padding-bottom: 20px;
     display: block;
+  }
+  .addrequest {
+    display: none;
+  }
+  .invoiceContainer {
+    display: none !important;
   }
 }

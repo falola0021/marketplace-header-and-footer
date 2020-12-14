@@ -17,7 +17,8 @@ function ApproversAvatar({ workflow, currentPhase, currentPhaseStatus }) {
     phaseIdArray.push(fhase._id);
   }
 
-  const position = phaseIdArray.indexOf(currentPhase);
+  const positionOfCurrentPhase = phaseIdArray.indexOf(currentPhase);
+  // console.log("the position", positionOfCurrentPhase);
 
   return (
     <>
@@ -25,7 +26,7 @@ function ApproversAvatar({ workflow, currentPhase, currentPhaseStatus }) {
         <AvatarGroup style={{ fontSize: "20px" }} size="sm" max={4}>
           {phases.map((phase, index) => (
             <Avatar
-              //key={phase.approver._id}
+              key={phase._id}
               className={Styles.backgroundcolor}
               style={{
                 fontWeight: "900",
@@ -39,9 +40,11 @@ function ApproversAvatar({ workflow, currentPhase, currentPhaseStatus }) {
                   : ""
               }
             >
-              {currentPhaseStatus == "rejected" && position === index ? (
+              {currentPhaseStatus == "rejected" &&
+              positionOfCurrentPhase === index ? (
                 <AvatarBadge size="0.9em" bg="red.500" />
-              ) : position > index ? (
+              ) : positionOfCurrentPhase > index ||
+                currentPhaseStatus === "approved" ? (
                 <AvatarBadge size="0.9em" bg="green.500" />
               ) : phase._id === currentPhase ? (
                 <AvatarBadge size="0.9em" bg="yellow.500" />

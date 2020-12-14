@@ -16,20 +16,33 @@ import {
   DrawerContent,
   useDisclosure,
   ThemeProvider,
+  Spinner,
   Avatar,
+  DrawerCloseButton,
 } from "@chakra-ui/core";
 
 const required = (value) => {
   if (!value) {
     return (
-      <div className="alert alert-danger" role="alert">
+      <div
+        style={{ fontSize: "12px", padding: "0" }}
+        className="alert alert-danger"
+        role="alert"
+      >
         State your reason for deline
       </div>
     );
   }
 };
 
-function InvoicePreview({ preview, drawerInfo, sideview }) {
+function InvoicePreview({
+  preview,
+  drawerInfo,
+  sideview,
+  changeTable,
+  changeTable2,
+  loading1,
+}) {
   const {
     description,
     amount,
@@ -43,7 +56,11 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
     numberOfItems,
     ref,
     workflow = [""],
+    user,
   } = sideview || {};
+
+  const { _id = [""] } = user || {};
+  let ticketId = _id;
 
   const { phases = [""] } = workflow || {};
   let phaseIdArray = [];
@@ -51,18 +68,30 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
     phaseIdArray.push(fhase._id);
   }
   const currentPhaseId = phase._id;
-
-  const positionOfCurrentPhaseId = phaseIdArray.indexOf(currentPhaseId);
-
-  const positivePosition = Math.abs(positionOfCurrentPhaseId);
-  const addOneToAll = positivePosition + 1;
-  const onePhasePercentage = Number(100 / addOneToAll);
+  // const positionOfCurrentPhaseId = phaseIdArray.indexOf(currentPhaseId);
+  let posOfCurrentPhase = phaseIdArray.indexOf(currentPhaseId);
+  let progress = 0;
+  let approverPhase;
+  let onePhasePercentage = Number(100 / phaseIdArray.length);
+  for (const faze of phaseIdArray) {
+    let posOffaze = phaseIdArray.indexOf(faze);
+    approverPhase = faze;
+    if (posOfCurrentPhase > posOffaze) {
+      progress = progress + onePhasePercentage;
+    }
+    if (phaseStatus == "approved") {
+      progress = 100;
+    }
+    if (phaseStatus == "rejected") {
+      progress = 100;
+    }
+  }
 
   const form = useRef();
   const checkBtn = useRef();
   const [size, setSize] = React.useState("lg");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [approveComment, setApproveComment] = useState("");
+  const [approverComment, setApproverComment] = useState("");
   const [rejectComment, setRejectComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [successful, setSuccessful] = useState(false);
@@ -84,36 +113,34 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
 
   const onChangeApproveComment = (e) => {
     const approveComment = e.target.value;
-    setApproveComment(approveComment);
+    setApproverComment(approveComment);
   };
   const handleApproveComment = (e) => {
     e.preventDefault();
-    console.log("the sideview", sideview);
+
     setSuccessful(false);
     setLoading(true);
 
-    TicketDataService.approveTicket(sideview._id).then(
-      (response) => {
-        setMessage(response.data.message);
-        setSuccessful(true);
+    TicketDataService.approveTicket(sideview._id, approverComment)
+      .then((response) => {
+        if (response.data.status) {
+          setMessage("sucessfully approved");
+          setSuccessful(true);
+          setLoading(false);
+          setTimeout(function () {
+            window.location.reload();
+          }, 500);
+        } else {
+          setMessage("sucessfull");
+        }
+      })
+      .catch((error) => {
+        console.log(error.response);
         setLoading(false);
-        // retrievePhases();
-        setLoading(false);
-        setSuccessful(true);
-
         setTimeout(function () {
           window.location.reload();
         }, 500);
-      },
-      (error) => {
-        const resMessage = error.response.data.message;
-
-        error.toString();
-        setSuccessful(false);
-        setLoading(false);
-        setMessage(error.response.data.message);
-      }
-    );
+      });
   };
 
   const onChangeRejectComment = (e) => {
@@ -122,58 +149,59 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
   };
   const handleRejectComment = (e) => {
     e.preventDefault();
-    TicketDataService.rejectTicket(sideview._id).then(
+    setSuccessful(false);
+    setLoading(true);
+    form.current.validateAll();
+    TicketDataService.rejectTicket(sideview._id, rejectComment).then(
       (response) => {
-        setMessage(response.data.message);
-        // retrievePhases();
-        setLoading(false);
-        setSuccessful(true);
-        setTimeout(function () {
-          window.location.reload();
-        }, 500);
+        if (response.data.status) {
+          setMessage("sucessfully declined");
+          setSuccessful(true);
+          setLoading(false);
+          setTimeout(function () {
+            window.location.reload();
+          }, 500);
+        } else {
+          setMessage("sucessfull");
+        }
       },
       (error) => {
-        const resMessage = error.response.data.message;
-
-        error.toString();
-        setSuccessful(false);
-        setLoading(false);
         setMessage(error.response.data.message);
-        console.log(error.response.data.message);
+        setLoading(false);
+        // setTimeout(function () {
+        //   window.location.reload();
+        // }, 500);
       }
     );
   };
+
   return (
     <>
       <div style={{ backgroundColor: "#f8fcfd" }} className={Styles.reviewbox}>
         <div className={Styles.review}>Review</div>
+
         {description && amount ? (
           <div className={Styles.reviewitems}>
             <p>
-              <span className={Styles.invoicelabel}>Request By :</span>
-              <span className={Styles.invoicedesc}> Requester Name</span>
+              <span
+                style={{ fontSize: "10px" }}
+                className={Styles.invoicelabel}
+              >
+                Request By :{" "}
+              </span>
+              <span style={{ fontSize: "10px" }} className={Styles.invoicedesc}>
+                {user.firstName} <span className="ml-1">{user.lastName}</span>
+              </span>
             </p>
 
             <div className={Styles.invoiceimg}>
               <span onClick={() => handlePreview(size)}>
-                {/* {ticketDocuments.document ? (
-                <img
-                  style={{ width: "100%", height: "50%" }}
-                  src={
-                    ticketDocuments[0].document
-                      ? ticketDocuments[0].document
-                      : Placeholder
-                  }
-                  alt="CHECK FOR FILE"
-                />
-              ) : (
-                ""
-              )} */}
                 <div
                   style={{
                     width: "100%",
-                    maxHeight: "300px",
+                    height: "180px",
                     overflowY: "scroll",
+                    cursor: "pointer",
                   }}
                 >
                   <Carousel>
@@ -231,7 +259,12 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                   </Row>
                 </span>
 
-                {phaseStatus === "pending" ? (
+                {phaseStatus == "approved" ||
+                phaseStatus == "rejected" ||
+                (phaseStatus == "pending" && changeTable == true) ||
+                (phaseStatus == "pending" && changeTable2 == true) ? (
+                  ""
+                ) : phaseStatus == "pending" ? (
                   <Row className="mt-3">
                     {declineCommentBox.button && (
                       <Col>
@@ -294,7 +327,6 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                     <textarea
                       type="text"
                       name="approveComment"
-                      // value={approveComment}
                       onChange={onChangeApproveComment}
                       placeholder="Make a comment(optional)"
                       className={Styles.commentBox}
@@ -302,27 +334,39 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
 
                     <button className={Styles.approve}>
                       {loading && (
-                        <span className="spinner-border spinner-border-sm"></span>
+                        <span
+                          style={{
+                            width: "13px",
+                            height: "13px",
+                            marginRight: "10px",
+                          }}
+                          className="spinner-border spinner-border"
+                        ></span>
                       )}
                       Approve
                     </button>
 
-                    {message && (
-                      <div className="form-group mt-2">
-                        <div
-                          className={
-                            successful
-                              ? "alert alert-success"
-                              : "alert alert-danger"
-                          }
-                          role="alert"
-                        >
-                          {message}
+                    <span>
+                      {message && (
+                        <div className="form-group mt-2">
+                          <div
+                            style={{
+                              fontSize: "12px",
+                              paddingTop: "0",
+                              paddingBottom: "0",
+                            }}
+                            className={
+                              successful
+                                ? "alert alert-success"
+                                : "alert alert-danger"
+                            }
+                            role="alert"
+                          >
+                            {message}
+                          </div>
                         </div>
-                      </div>
-                    )}
-
-                    <CheckButton style={{ display: "none" }} ref={checkBtn} />
+                      )}
+                    </span>
                   </Form1>
                 )}
 
@@ -348,26 +392,79 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                     <Textarea
                       type="text"
                       name="rejectComment"
-                      // value={rejectComment}
                       onChange={onChangeRejectComment}
                       validations={[required]}
                       placeholder="Make a  Comment (compulsory)"
                       className={Styles.commentBox}
+                      required
                     ></Textarea>
-                    <button className={Styles.decline}>Decline</button>
-                    <CheckButton style={{ display: "none" }} ref={checkBtn} />
+                    <div
+                      style={{
+                        textAlign: "center",
+                      }}
+                    >
+                      <button className={Styles.decline}>
+                        {loading && (
+                          <span
+                            style={{
+                              width: "13px",
+                              height: "13px",
+                              marginRight: "10px",
+                            }}
+                            className="spinner-border spinner-border"
+                          ></span>
+                        )}
+                        decline
+                      </button>
+                    </div>
+                    <span>
+                      {message && (
+                        <div className="form-group mt-2">
+                          <div
+                            style={{
+                              fontSize: "12px",
+                              paddingTop: "0",
+                              paddingBottom: "0",
+                            }}
+                            className={
+                              successful
+                                ? "alert alert-success"
+                                : "alert alert-danger"
+                            }
+                            role="alert"
+                          >
+                            {message}
+                          </div>
+                        </div>
+                      )}
+                    </span>
                   </Form1>
                 )}
               </div>
             </div>
           </div>
         ) : (
-          ""
+          <div className={Styles.centered}>
+            {loading1 ? (
+              <ThemeProvider>
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor="gray.200"
+                  color="blue.500"
+                  size="lg"
+                />
+              </ThemeProvider>
+            ) : (
+              ""
+            )}
+          </div>
         )}
       </div>
       <ThemeProvider>
         <Drawer onClose={onClose} isOpen={isOpen} size={size}>
           <DrawerContent>
+            <DrawerCloseButton />
             <DrawerBody className={Styles.drawerbody}>
               <img
                 src={kassandahmobile}
@@ -432,12 +529,23 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                   </Row>
                   <Row className="mt-3">
                     <Col className={Styles.tableInfo}>
-                      <label>Comment(s): </label>
-                      {comments.map((comment) => (
-                        <span className="pl-1" key={comment._id}>
-                          {comment.comment}
-                        </span>
-                      ))}
+                      <label>Requester's Remark: </label>
+
+                      {comments
+                        .filter((comment) => {
+                          if (comment.user) {
+                            return comment.user._id === ticketId;
+                          } else {
+                            return;
+                          }
+                        })
+                        .map((comment) => {
+                          return (
+                            <span style={{ fontSize: "10px" }} className="pl-1">
+                              {comment.comment}
+                            </span>
+                          );
+                        })}
                     </Col>
                   </Row>
                   <Row className="mt-4">
@@ -445,18 +553,6 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                       <div className={Styles.title}>
                         <span className={Styles.document}>Document(s)</span>
                       </div>{" "}
-                      {/* <Carousel>
-                        {ticketDocuments.map((docs) => (
-                          <Carousel.Item key={docs._id}>
-                            <img
-                              className="d-block w-100"
-                              src={docs.document}
-                              alt="First slide"
-                            />
-                          </Carousel.Item>
-                        ))}
-                        
-                      </Carousel> */}
                       <Carousel className="mt-3">
                         {ticketDocuments.map((docs) => (
                           <Carousel.Item key={docs._id}>
@@ -464,6 +560,7 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                               style={{
                                 maxHeight: "250px",
                                 overflowY: "scroll",
+                                cursor: "pointer",
                               }}
                             >
                               <img
@@ -507,12 +604,13 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                             </Col>
                             <Col sm="2">
                               {phaseStatus == "rejected" &&
-                              positionOfCurrentPhaseId === index ? (
+                              posOfCurrentPhase === index ? (
                                 <div
                                   style={{ color: "red" }}
                                   className="fa fa-circle"
                                 ></div>
-                              ) : positionOfCurrentPhaseId > index ? (
+                              ) : posOfCurrentPhase > index ||
+                                phaseStatus == "approved" ? (
                                 <div
                                   style={{ color: "green" }}
                                   className="fa fa-circle"
@@ -537,45 +635,54 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                           Progress:
                         </span>
                         <span style={{ fontSize: "14px", paddingLeft: "5px" }}>
-                          {addOneToAll == 1 || 0 ? 0 : onePhasePercentage}%
+                          {Math.round(progress)}%
                         </span>
                       </div>
-                      <Row className="mt-3">
-                        {declineCommentBox.button && (
-                          <Col>
-                            {approveCommentBox.button && (
-                              <button
-                                onClick={() => {
-                                  setApproveCommentBox({
-                                    button: false,
-                                    textBox: true,
-                                  });
-                                }}
-                                className={Styles.approve}
-                              >
-                                Approve
-                              </button>
-                            )}
-                          </Col>
-                        )}
-                        {approveCommentBox.button && (
-                          <Col>
-                            {declineCommentBox.button && (
-                              <button
-                                onClick={() => {
-                                  setDeclineCommentBox({
-                                    button: false,
-                                    textBox: true,
-                                  });
-                                }}
-                                className={Styles.decline}
-                              >
-                                Decline
-                              </button>
-                            )}
-                          </Col>
-                        )}
-                      </Row>
+                      {phaseStatus == "approved" ||
+                      phaseStatus == "rejected" ||
+                      (phaseStatus == "pending" && changeTable == true) ||
+                      (phaseStatus == "pending" && changeTable2 == true) ? (
+                        ""
+                      ) : phaseStatus == "pending" ? (
+                        <Row className="mt-3">
+                          {declineCommentBox.button && (
+                            <Col>
+                              {approveCommentBox.button && (
+                                <button
+                                  onClick={() => {
+                                    setApproveCommentBox({
+                                      button: false,
+                                      textBox: true,
+                                    });
+                                  }}
+                                  className={Styles.approve}
+                                >
+                                  Approve
+                                </button>
+                              )}
+                            </Col>
+                          )}
+                          {approveCommentBox.button && (
+                            <Col>
+                              {declineCommentBox.button && (
+                                <button
+                                  onClick={() => {
+                                    setDeclineCommentBox({
+                                      button: false,
+                                      textBox: true,
+                                    });
+                                  }}
+                                  className={Styles.decline}
+                                >
+                                  Decline
+                                </button>
+                              )}
+                            </Col>
+                          )}
+                        </Row>
+                      ) : (
+                        ""
+                      )}
                       {approveCommentBox.textBox && (
                         <Form1 onSubmit={handleApproveComment} ref={form}>
                           <span
@@ -605,7 +712,14 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                           <div style={{ textAlign: "center" }}>
                             <button className={Styles.approve}>
                               {loading && (
-                                <span className="spinner-border spinner-border-sm"></span>
+                                <span
+                                  style={{
+                                    width: "13px",
+                                    height: "13px",
+                                    marginRight: "10px",
+                                  }}
+                                  className="spinner-border spinner-border"
+                                ></span>
                               )}
                               Approve
                             </button>
@@ -613,6 +727,12 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                           {message && (
                             <div className="form-group mt-2">
                               <div
+                                style={{
+                                  fontSize: "12px",
+                                  paddingTop: "0",
+                                  paddingBottom: "0",
+                                  textAlign: "center",
+                                }}
                                 className={
                                   successful
                                     ? "alert alert-success"
@@ -624,11 +744,6 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                               </div>
                             </div>
                           )}
-
-                          <CheckButton
-                            style={{ display: "none" }}
-                            ref={checkBtn}
-                          />
                         </Form1>
                       )}
                       {declineCommentBox.textBox && (
@@ -652,19 +767,51 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
                           <Textarea
                             type="text"
                             name="rejectComment"
-                            // value={rejectComment}
                             onChange={onChangeRejectComment}
                             validations={[required]}
                             placeholder="Make a  Comment (compulsory)"
                             className={Styles.commentBox}
+                            required
                           ></Textarea>
-                          <div style={{ textAlign: "center" }}>
-                            <button className={Styles.decline}>Decline</button>
+                          <div
+                            style={{
+                              textAlign: "center",
+                            }}
+                          >
+                            <button className={Styles.decline}>
+                              {loading && (
+                                <span
+                                  style={{
+                                    width: "13px",
+                                    height: "13px",
+                                    marginRight: "10px",
+                                  }}
+                                  className="spinner-border spinner-border"
+                                ></span>
+                              )}
+                              decline
+                            </button>
                           </div>
-                          <CheckButton
-                            style={{ display: "none" }}
-                            ref={checkBtn}
-                          />
+                          {message && (
+                            <div className="form-group mt-2">
+                              <div
+                                style={{
+                                  fontSize: "12px",
+                                  paddingTop: "0",
+                                  paddingBottom: "0",
+                                  textAlign: "center",
+                                }}
+                                className={
+                                  successful
+                                    ? "alert alert-success"
+                                    : "alert alert-danger"
+                                }
+                                role="alert"
+                              >
+                                {message}
+                              </div>
+                            </div>
+                          )}
                         </Form1>
                       )}
                     </Col>
@@ -678,22 +825,42 @@ function InvoicePreview({ preview, drawerInfo, sideview }) {
 
               <div className={Styles.duplicate}>Comment(s) </div>
               <div>
-                <Row className="mt-2">
-                  <Col style={{ fontSize: "14px" }} className="pr-0" sm="3">
-                    Michael Boniface :
-                  </Col>
-                  <Col style={{ fontSize: "14px" }} className="pl-0">
-                    Please upload a clearer receipt next time
-                  </Col>
-                </Row>
-                <Row className="mt-2">
-                  <Col style={{ fontSize: "14px" }} className="pr-0" sm="3">
-                    Falola Dayo :
-                  </Col>
-                  <Col style={{ fontSize: "14px" }} className="pl-0">
-                    I think you always send more than one receipt
-                  </Col>
-                </Row>
+                {comments
+                  .filter((comment) => {
+                    if (comment.user) {
+                      return comment.user._id !== ticketId;
+                    } else {
+                      return;
+                    }
+                  })
+                  .map((comment) => {
+                    return (
+                      <span>
+                        {
+                          <Row className="mt-2">
+                            <Col
+                              style={{
+                                fontSize: "15px",
+                                transform: "initial",
+                              }}
+                              // className=""
+                              sm="4"
+                            >
+                              <span className="">{comment.user.firstName}</span>
+                              <span className="pl-2 pr-1" key={comment._id}>
+                                {comment.user.lastName}
+                              </span>
+                              :
+                            </Col>
+                            <Col style={{ fontSize: "14px" }} className="pl-0">
+                              <span className="pl-1">{comment.comment}</span>
+                            </Col>
+                          </Row>
+                        }
+                      </span>
+                    );
+                  })}
+
                 <div style={{ marginBottom: "100px" }}></div>
               </div>
             </DrawerBody>

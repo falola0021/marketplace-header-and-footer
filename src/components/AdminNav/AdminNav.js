@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import Styles from "./AdminNav.module.css";
 import { Avatar, Stack, ThemeProvider } from "@chakra-ui/core";
@@ -7,6 +7,7 @@ import kassandah from "../../pages/assets/kassandahwhite.png";
 import AuthService from "../../services/auth.service";
 import { useDispatch } from "react-redux";
 import { logout } from "../../redux/actions/authActions/auth";
+import DepartmentDataService from "../../services/department.service";
 
 import { useSelector } from "react-redux";
 
@@ -19,6 +20,22 @@ function Navigation({ showProfile }) {
   };
 
   const initialName = `${currentUser.firstName} ${currentUser.lastName}`;
+
+  const [department, setDepartment] = React.useState("");
+
+  const getDepartment = (e) => {
+    DepartmentDataService.get(currentUser.department)
+      .then((response) => {
+        setDepartment(response.data.data);
+      })
+      .catch((e) => {
+        console.log("the ee", e.response);
+      });
+  };
+
+  useEffect(() => {
+    getDepartment();
+  }, []);
 
   return (
     <>
@@ -39,7 +56,7 @@ function Navigation({ showProfile }) {
               onClick={showProfile}
               style={{ color: "#ffffff", padding: "0 10px" }}
             >
-              Hi {currentUser.roles[0]}{" "}
+              Hi {currentUser.roles[0]} ({department ? department.name : ""})
             </span>
           </Nav.Link>
 

@@ -23,6 +23,13 @@
   font-size: 16px;
   /* font-weight: bold; */
 }
+.centered {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 /* 
   ##Device = Most of the Smartphones Mobiles (Portrait)

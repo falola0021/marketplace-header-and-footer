@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import TicketDataService from "../../services/ticket.service";
+import RequestDataService from "../../services/requester.service";
 import ApproversAvatar from "../../components/ApproversAvatar/ApproversAvatar";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import ConfirmationStatus from "../../components/ConfirmationStatus/ConfirmationStatus";
 import InvoicePreview from "../../components/InvoicePreview/InvoicePreview";
+import Addrequest from "../../components/ActionButton/Addrequest/Addrequest";
+import MakeRequest from "./MakeRequest/MakeRequest";
+import kassandahmobile from "../../pages/assets/kassandahmobilepurple.png";
 import MUIDataTable from "mui-datatables";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
@@ -302,22 +305,20 @@ function TestTable() {
 
   const retrieveRequests = async () => {
     setLoading(true);
-    await TicketDataService.getTicketAwaitingApproval()
+    await RequestDataService.getUserTicketList()
       .then((response) => {
-        console.log("response gggggg", response);
-        let resData = response.data.data.tickets.sort((a, b) =>
+        let resData = response.data.data.ticketList.sort((a, b) =>
           new Date(a) < new Date(b) ? 1 : -1
         );
-
         setRequests(resData);
-        let firstData = resData[0];
-        handleSideview(firstData);
-        console.log("the data", resData);
+        let firstTicket = resData[0];
+
+        handleSideview(firstTicket);
         setLoading(false);
       })
       .catch((e) => {
         console.log(e);
-        console.log("errrrrrr", e.response);
+        console.log("wrong", e.response);
         setLoading(false);
       });
   };
@@ -371,7 +372,18 @@ function TestTable() {
         <Col sm="9">
           <MuiThemeProvider theme={myTheme}>
             <MUIDataTable
-              title="Pending Ticket"
+              title={
+                <div className={Styles.addrequest}>
+                  {sizes.map((size) => (
+                    <Addrequest
+                      name="Make a request"
+                      onClick={() => handleClick(size)}
+                      type="button"
+                      key={size}
+                    />
+                  ))}
+                </div>
+              }
               data={requests}
               columns={columns}
               options={{
@@ -410,7 +422,7 @@ function TestTable() {
                   // </Tooltip>
                 ),
 
-                rowsPerPage: 15,
+                // rowsPerPage: 15,
                 textLabels: {
                   body: {
                     noMatch: loading ? (
@@ -424,7 +436,7 @@ function TestTable() {
                         />
                       </ThemeProvider>
                     ) : (
-                      "Sorry, there is no matching data to display"
+                      "Sorry,  no matching data "
                     ),
                   },
                 },
@@ -438,7 +450,6 @@ function TestTable() {
                   }
                 },
               }}
-
               // options={{
               //   rowsPerPage: 15,
               //   rowsPerPageOptions: [10, 20, 30],
@@ -458,8 +469,48 @@ function TestTable() {
           </span>
         </Col>
       </Row>
+
+      <ThemeProvider>
+        <Drawer onClose={onClose} isOpen={isOpen} size={size}>
+          <span className={Styles.requestform}>
+            <DrawerOverlay
+              style={{ backgroundColor: "rgba(255, 255, 255,0.2)" }}
+            />
+
+            <DrawerContent>
+              <DrawerCloseButton />
+              <DrawerBody>
+                <img
+                  src={kassandahmobile}
+                  alt="logo"
+                  style={{
+                    width: "30px",
+                    height: "45px",
+                    marginTop: "10px",
+                    cursor: "pointer",
+                  }}
+                />{" "}
+                <MakeRequest
+                  retrieveRequests={retrieveRequests}
+                  closeDrawer={onClose}
+                />
+              </DrawerBody>
+            </DrawerContent>
+          </span>
+        </Drawer>
+      </ThemeProvider>
     </React.Fragment>
   );
 }
 
 export default TestTable;
+// const myTheme = createMuiTheme({
+//   overrides: {
+//     MUIDataTable: {
+//       responsiveScroll: {
+//         maxHeight: "50px",
+//         // overflowY: 'scroll',
+//       },
+//     },
+//   },
+// });

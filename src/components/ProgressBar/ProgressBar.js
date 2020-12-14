@@ -2,17 +2,39 @@ import React from "react";
 // import Styles from "./ProgressBar.module.css";
 import { Progress, ThemeProvider } from "@chakra-ui/core";
 
-function ProgressBar({ ticketStatus, workflow, currentPhase }) {
+function ProgressBar({
+  ticketStatus,
+  workflow,
+  currentPhase,
+  currentPhaseStatus,
+}) {
+  console.log("ticket status", ticketStatus);
+  console.log("workflow", workflow);
+  console.log("current phase ", currentPhase);
+  console.log("current phase status", currentPhaseStatus);
+
   const { phases = [""] } = workflow || {};
   let phaseIdArray = [];
   for (const fhase of phases) {
     phaseIdArray.push(fhase._id);
   }
 
-  const position = phaseIdArray.indexOf(currentPhase);
-  const positivePosition = Math.abs(position);
-  const addOneToAll = positivePosition + 1;
-  const onePhasePercentage = Number(100 / addOneToAll);
+  let progress = 0;
+  let onePhasePercentage = Number(100 / phaseIdArray.length);
+
+  for (const faze of phaseIdArray) {
+    let posOfCurrentPhase = phaseIdArray.indexOf(currentPhase);
+    let posOffaze = phaseIdArray.indexOf(faze);
+    if (posOfCurrentPhase > posOffaze) {
+      progress = progress + onePhasePercentage;
+    }
+    if (currentPhaseStatus == "approved") {
+      progress = 100;
+    }
+    if (currentPhaseStatus == "rejected" || ticketStatus == "rejected") {
+      progress = 100;
+    }
+  }
 
   return (
     <>
@@ -23,24 +45,26 @@ function ProgressBar({ ticketStatus, workflow, currentPhase }) {
             color="yellow"
             hasStripe
             isAnimated
-            value={addOneToAll == 1 || 0 ? 0 : onePhasePercentage}
+            value={progress}
           />
         ) : ticketStatus === "approved" ? (
           <Progress
             style={{ height: "4px", width: "130px" }}
             color="green"
-            hasStripe
-            isAnimated
-            value={onePhasePercentage}
+            // hasStripe
+            // isAnimated
+            value={progress}
           />
-        ) : (
+        ) : ticketStatus === "rejected" ? (
           <Progress
             style={{ height: "4px", width: "130px" }}
             color="red"
-            hasStripe
-            isAnimated
-            value={onePhasePercentage}
+            // hasStripe
+            // isAnimated
+            value={progress}
           />
+        ) : (
+          ""
         )}
       </ThemeProvider>
     </>

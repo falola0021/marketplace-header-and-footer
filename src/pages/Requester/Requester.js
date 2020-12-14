@@ -8,34 +8,38 @@ import Navbar from "../../components/Navbar/Navbar";
 import Addrequest from "../../components/ActionButton/Addrequest/Addrequest";
 import Card from "../../components/ViewCard/ViewCard";
 import Table from "./Table";
-import ApproverTable from "../Approver/ApproverTable";
 import Profile from "../../components/UserProfile/UserProfile";
 import RequestDataService from "../../services/requester.service";
-// import {
-//   ThemeProvider,
-//   Drawer,
-//   DrawerBody,
-//   DrawerOverlay,
-//   DrawerContent,
-//   useDisclosure,
-// } from "@chakra-ui/core";
+import TestTable from "./TestTable";
+import kassandahmobile from "../../pages/assets/kassandahmobilepurple.png";
 
-// import AuthService from "../../services/auth.service";
+import {
+  Drawer,
+  DrawerBody,
+  DrawerOverlay,
+  DrawerContent,
+  useDisclosure,
+  ThemeProvider,
+  DrawerCloseButton,
+} from "@chakra-ui/core";
 
 function Requester() {
   const [allUserRequest, setAllUserRequest] = useState("");
   const [allUserDeclinedRequest, setAllUserDeclinedRequest] = useState("");
   const [allUserPendingRequest, setAllUserPendingRequest] = useState("");
   const [allUserApprovedRequest, setAllUserApprovedRequest] = useState("");
-
-  const sizes = ["xl"];
-  const [modalShow, setModalShow] = useState(false);
-  const handleRequest = () => setModalShow(true);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [size, setSize] = React.useState("md");
+  const [requests, setRequests] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const sizes = ["md"];
+  // const [modalShow, setModalShow] = useState(false);
+  // const handleRequest = () => setModalShow(true);
   // const [showTicketInfo, setShowTicketInfo] = useState(false);
-  const [previewShow, setPreviewShow] = React.useState(false);
-  const handlePreviewShow = () => {
-    setPreviewShow(!previewShow);
-  };
+  // const [previewShow, setPreviewShow] = React.useState(false);
+  // const handlePreviewShow = () => {
+  //   setPreviewShow(!previewShow);
+  // };
 
   const [switchView, setSwitchView] = useState({
     overview: true,
@@ -96,6 +100,26 @@ function Requester() {
       });
   };
 
+  const retrieveRequests = async () => {
+    setLoading(true);
+    await RequestDataService.getUserTicketList()
+      .then((response) => {
+        let resData = response.data.data.ticketList.sort((a, b) =>
+          new Date(a) < new Date(b) ? 1 : -1
+        );
+        setRequests(resData);
+        let firstTicket = resData[0];
+
+        // handleSideview(firstTicket);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log("wrong", e.response);
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
     retrieveAllRequestCount();
     retrieveDeclinedRequestCount();
@@ -105,6 +129,11 @@ function Requester() {
 
   const [switchUser, setSwitchUser] = useState(false);
   const handleSwitchUser = React.useCallback(() => setSwitchUser(!switchUser));
+
+  const handleClick = (newSize) => {
+    setSize(newSize);
+    onOpen();
+  };
 
   return (
     <>
@@ -117,10 +146,11 @@ function Requester() {
         <Row className="mr-0 pr-0 ml-0 pl-0">
           {switchView.overview && (
             <Col>
-              <div className={Styles.addrequestmobile}>
-                <Addrequest name="Make a request" request={handleRequest} />
-
-                <Addrequest request={handleRequest} />
+              <div
+                style={{ marginBottom: "20px" }}
+                className={Styles.addrequestmobile}
+              >
+                <Addrequest onClick={() => handleClick(size)} />
               </div>
 
               <div className={Styles.cardcontainer}>
@@ -163,7 +193,8 @@ function Requester() {
               </div>
 
               <div className={Styles.tablecontainer}>
-                <Table preview={handlePreviewShow} />
+                {/* <Table preview={handlePreviewShow} /> */}
+                <TestTable />
               </div>
             </Col>
           )}
@@ -174,33 +205,36 @@ function Requester() {
           )}
         </Row>
       </div>
-      {/* <Modal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        size="lg"
-        centered
-      >
-        <Modal.Header
-          closeButton
-          style={{ border: "0", marginBottom: "0", paddingBottom: "0" }}
-        ></Modal.Header>
-        <Modal.Body>
-          <div className={Styles.modalbox}>
-            <MakeRequest />
-          </div>
-        </Modal.Body>
-      </Modal>
-      <Modal
-        show={previewShow}
-        onHide={() => setPreviewShow(false)}
-        size="lg"
-        centered
-      >
-        <Modal.Header closeButton style={{ border: "0" }}></Modal.Header>
-        <Modal.Body>
-          <PreviewRequest />
-        </Modal.Body>
-      </Modal>{" "} */}
+
+      <ThemeProvider>
+        <Drawer onClose={onClose} isOpen={isOpen} size={size}>
+          <DrawerOverlay
+            style={{ backgroundColor: "rgba(255, 255, 255,0.2)" }}
+          />
+
+          <DrawerContent>
+            <DrawerCloseButton />
+            <div className={Styles.requestform}>
+              <DrawerBody>
+                <img
+                  src={kassandahmobile}
+                  alt="logo"
+                  style={{
+                    width: "30px",
+                    height: "45px",
+                    marginTop: "10px",
+                    cursor: "pointer",
+                  }}
+                />{" "}
+                <MakeRequest
+                  retrieveRequests={retrieveRequests}
+                  closeDrawer={onClose}
+                />
+              </DrawerBody>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      </ThemeProvider>
     </>
   );
 }

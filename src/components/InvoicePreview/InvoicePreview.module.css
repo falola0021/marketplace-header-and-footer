@@ -113,11 +113,14 @@
   margin-top: 30px;
 }
 .tableInfo label {
-  font-size: 14px;
-  font-weight: bold;
+  font-size: 12px;
+}
+.tableInfo {
+  margin-bottom: 10px;
 }
 .tableInfo div {
-  font-size: 10px;
+  font-size: 13px;
+  font-weight: bold;
 }
 .drawerbody {
   overflow-y: scroll;
@@ -156,4 +159,11 @@
   margin-top: 40px;
   display: flex;
   justify-content: space-around;
+}
+.centered {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

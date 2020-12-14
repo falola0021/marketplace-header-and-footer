@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import Styles from "./Navbar.module.css";
 
@@ -16,6 +16,7 @@ import {
 import kassandah from "../../pages/assets/kassandahwhite.png";
 // import kassandahmobile from "../../pages/assets/kassandah.svg";
 import AuthService from "../../services/auth.service";
+import DepartmentDataService from "../../services/department.service";
 
 function Navigation({
   handleprofileclick,
@@ -26,12 +27,25 @@ function Navigation({
 }) {
   const currentUser = AuthService.getCurrentUser();
   const initialName = `${currentUser.firstName} ${currentUser.lastName}`;
-  console.log(currentUser);
   const logOut = () => {
     AuthService.logout();
   };
   const userRole = currentUser.roles;
-  console.log("the user user ", currentUser);
+  const [department, setDepartment] = React.useState("");
+
+  const getDepartment = (e) => {
+    DepartmentDataService.get(currentUser.department)
+      .then((response) => {
+        setDepartment(response.data.data);
+      })
+      .catch((e) => {
+        console.log("the ee", e.response);
+      });
+  };
+
+  useEffect(() => {
+    getDepartment();
+  }, []);
 
   //for hiding swutch
 
@@ -50,7 +64,7 @@ function Navigation({
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto"> </Nav>
           {userRole.includes("approver") ? (
-            <div>
+            <div className={Styles.switchuser}>
               <ThemeProvider>
                 <div className={Styles.switch}>
                   <div>
@@ -68,12 +82,20 @@ function Navigation({
             ""
           )}
 
-          <Nav.Link onClick={handleprofileclick}>
+          <Nav.Link className={Styles.desktopName} onClick={handleprofileclick}>
             <i className="fa fa-bell "> </i>
             <span style={{ color: "#ffffff", padding: "0 10px" }}>
-              Hi {currentUser.firstName} (Technology)
+              Hi {currentUser.firstName} ({department ? department.name : ""})
             </span>
           </Nav.Link>
+          <div className={Styles.mobileName}>
+            <span style={{ color: "#ffffff" }}>
+              Hi {currentUser.firstName} ({department ? department.name : ""})
+            </span>{" "}
+            <i style={{ color: "#ffffff" }} className="fa fa-bell mr-4 ">
+              {" "}
+            </i>
+          </div>
 
           <ThemeProvider>
             <Stack>
@@ -86,7 +108,7 @@ function Navigation({
                 src="https://bit.ly/tioluwani-kolawole"
               />
             </Stack>
-            <Nav.Link href="/" onClick={logOut}>
+            <Nav.Link className={Styles.logout} href="/" onClick={logOut}>
               <span style={{ color: "#ffffff", padding: "0 10px" }}>
                 <i className="fa fa-sign-out-alt "></i>
               </span>
@@ -114,7 +136,13 @@ function Navigation({
             </div> */}
           </ThemeProvider>
           <div className={Styles.mobilemenu}>
-            <Nav.Link className={Styles.link} href="#home">
+            <Nav.Link className={Styles.link} onClick={handleprofileclick}>
+              Profile
+            </Nav.Link>
+            <Nav.Link className={Styles.link} href="/" onClick={logOut}>
+              Logout
+            </Nav.Link>
+            {/* <Nav.Link className={Styles.link} href="#home">
               Home
             </Nav.Link>
             <Nav.Link className={Styles.link} href="#link">
@@ -122,13 +150,7 @@ function Navigation({
             </Nav.Link>
             <Nav.Link className={Styles.link} href="#home">
               Home
-            </Nav.Link>
-            <Nav.Link className={Styles.link} href="#link">
-              Link
-            </Nav.Link>
-            <Nav.Link className={Styles.link} href="#home">
-              Home
-            </Nav.Link>
+            </Nav.Link> */}
           </div>
         </Navbar.Collapse>
       </Navbar>

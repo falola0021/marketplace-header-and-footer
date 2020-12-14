@@ -16,6 +16,9 @@ import VendorDataService from "../../../services/vendor.service";
 import DepartmentDataService from "../../../services/department.service";
 import CategoryDataService from "../../../services/category.service";
 import RequesterDataService from "../../../services/requester.service";
+import AuthService from "../../../services/auth.service";
+// import TextField from "@material-ui/core/TextField";
+// import { Autocomplete } from "@material-ui/lab";
 
 import DropZone from "../../../components/DropZone/DropZone";
 import select from "react-validation/build/select";
@@ -44,7 +47,7 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
   const form = useRef();
   const checkBtn = useRef();
   const [vendors, setVendors] = useState([]);
-  const [departments, setDepartments] = useState([]);
+  // const [departments, setDepartments] = useState([]);
   const [categories, setCategories] = useState([]);
 
   const [loading, setLoading] = useState(false);
@@ -277,8 +280,8 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
         amount,
         selectedFiles,
         comment
-      ).then(
-        (response) => {
+      )
+        .then((response) => {
           setMessage(response.data.message);
           retrieveRequests();
           setLoading(false);
@@ -286,31 +289,31 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
           setTimeout(function () {
             closeDrawer();
           }, 1000);
-        },
-        (error) => {
-          // const resMessage = error.response.data.message;
+        })
+        .catch((e) => {
+          console.log("jj", e.response);
 
-          error.toString();
-          setSuccessful(false);
-          setLoading(false);
-          console.log("the here is the error", error.response);
-          setMessage("There is a problem creating this request");
-        }
-      );
+          if (e) {
+            setMessage(
+              "something went wrong kindly check your network or uploaded file "
+            );
+            setSuccessful(false);
+            setLoading(false);
+          } else if (e.response.data.message) {
+            setMessage(e.response.data.message);
+            setSuccessful(false);
+            setLoading(false);
+          } else if (e.response.data.error) {
+            setMessage(e.response.data.error);
+            setSuccessful(false);
+          } else {
+            setMessage("something went wrong");
+            setSuccessful(false);
+          }
+        });
     } else {
       setLoading(false);
     }
-  };
-
-  const retrieveDepartments = async () => {
-    await DepartmentDataService.getAll()
-      .then((response) => {
-        setDepartments(response.data.data);
-        console.log(response.data.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
   };
 
   const retrieveVendors = async () => {
@@ -333,19 +336,46 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
         console.log(e);
       });
   };
+  const currentUser = AuthService.getCurrentUser();
+  const getDepartment = (e) => {
+    DepartmentDataService.get(currentUser.department)
+      .then((response) => {
+        setDepartment(response.data.data._id);
+        console.log("abc", response.data.data);
+      })
+      .catch((e) => {
+        console.log("the ee", e.response);
+      });
+  };
 
   useEffect(() => {
     retrieveVendors();
-    retrieveDepartments();
+    getDepartment();
     retrieveCategories();
   }, []);
+  // const top100Films = [
+  //   { title: "The Shawshank Redemption", year: 1994 },
+  //   { title: "The Godfather", year: 1972 },
+  //   { title: "The Godfather: Part II", year: 1974 },
+  //   { title: "The Dark Knight", year: 2008 },
+  //   { title: "12 Angry Men", year: 1957 },
+  // ];
 
   return (
     <>
+      {/* <Autocomplete
+        id="combo-box-demo"
+        options={top100Films}
+        getOptionLabel={(option) => option.title}
+        style={{ width: 200 }}
+        renderInput={(params) => (
+          <TextField {...params} label="Combo box" variant="outlined" />
+        )}
+      /> */}
       <Form1 onSubmit={handleCreateRequest} ref={form}>
         <div className={Styles.title1}>Raise Requisition</div>
         <Row className={Styles.desktopform}>
-          <Col>
+          <Col xs={12} md={4}>
             <FormControl>
               <FormLabel className={Styles.label}>Request Title</FormLabel>
               <Input1
@@ -397,32 +427,9 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
                 ))}
               </Select>
             </FormControl>
-
-            <FormControl className="mt-3">
-              <FormLabel className={Styles.label}>
-                Leave a note (optional)
-              </FormLabel>
-              <Textarea
-                style={{
-                  border: " 1px solid #f3f3f3",
-                  backgroundColor: "rgba(59, 122, 254, 0.02)",
-                  width: "100%",
-                  padding: "6px 10px",
-                  borderRadius: "3px",
-                  outline: "none",
-                  minHeight: "25px",
-                }}
-                validations={[required]}
-                name="comment"
-                value={comment}
-                onChange={onChangeComment}
-                placeholder="Write a short note"
-                className={Styles.input}
-              ></Textarea>
-            </FormControl>
           </Col>
 
-          <Col>
+          <Col xs={12} md={4}>
             <FormControl>
               <FormLabel className={Styles.label}>Amount</FormLabel>
               <Input1
@@ -443,59 +450,9 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
                 onChange={onChangeDueDate}
                 type="date"
                 className={Styles.input}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel className={Styles.label}>Department</FormLabel>
-              <Select
-                style={{
-                  border: " 1px solid #f3f3f3",
-                  backgroundColor: "rgba(59, 122, 254, 0.02)",
-                  width: "100%",
-                  padding: "6px 10px",
-                  borderRadius: "3px",
-                  outline: "none",
-                }}
                 validations={[required]}
-                type="text"
-                name="department"
-                value={department}
-                onChange={onChangeDepartment}
-                className={Styles.formcontrol}
-                as="select"
-              >
-                <option value="">- Select Department -</option>
-                {departments.map((department) => (
-                  <option key={department._id} value={department._id}>
-                    {department.name}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-          </Col>
-          <Col>
-            <FormControl>
-              <FormLabel className={Styles.label}>Quantity</FormLabel>
-              <Input1
-                validations={[required]}
-                placeholder="Enter Quantity"
-                className={Styles.input}
-                name="numberOfItems"
-                value={numberOfItems}
-                onChange={onChangeNumberOfItems}
               />
             </FormControl>
-            <FormControl>
-              <FormLabel className={Styles.label}>Ref No.</FormLabel>
-              <Input1
-                placeholder="Enter Reference Number"
-                className={Styles.input}
-                name="ref"
-                value={ref}
-                onChange={onChangeRef}
-              />
-            </FormControl>
-
             <FormControl>
               <FormLabel className={Styles.label}>Category</FormLabel>
               <Select
@@ -524,13 +481,61 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
               </Select>
             </FormControl>
           </Col>
+          <Col xs={12} md={4}>
+            <FormControl>
+              <FormLabel className={Styles.label}>Quantity</FormLabel>
+              <Input1
+                type="number"
+                validations={[required]}
+                placeholder="Enter Quantity"
+                className={Styles.input}
+                name="numberOfItems"
+                value={numberOfItems}
+                onChange={onChangeNumberOfItems}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel className={Styles.label}>Ref No.</FormLabel>
+              <Input1
+                placeholder="Enter Reference Number"
+                className={Styles.input}
+                name="ref"
+                value={ref}
+                onChange={onChangeRef}
+                validations={[required]}
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel className={Styles.label}>
+                Leave a note (optional)
+              </FormLabel>
+              <Textarea
+                style={{
+                  border: " 1px solid #f3f3f3",
+                  backgroundColor: "rgba(59, 122, 254, 0.02)",
+                  width: "100%",
+                  padding: "6px 10px",
+                  borderRadius: "3px",
+                  outline: "none",
+                  minHeight: "25px",
+                }}
+                validations={[required]}
+                name="comment"
+                value={comment}
+                onChange={onChangeComment}
+                placeholder="Write a short note"
+                className={Styles.input}
+              ></Textarea>
+            </FormControl>
+          </Col>
         </Row>
 
         <div className={Styles.dropzonebox}>
           <Form.Label className={Styles.label}>Upload Invoice</Form.Label>
           {/* <DropZone /> */}
           <Row>
-            <Col>
+            <Col xs={12} md={6}>
               <div className="dropcontainer">
                 {/* {unsupportedFiles.length === 0 && validFiles.length ? (
           <button className="file-upload-btn" onClick={() => uploadFiles()}>
@@ -569,7 +574,7 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
                 </div>
               </div>
             </Col>
-            <Col>
+            <Col xs={12} md={6}>
               {" "}
               <div className="drop-container-view">
                 <p className="preview-document">Preview Document</p>
@@ -646,7 +651,7 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
         </div>
         <span>
           {message && (
-            <div className="form-group">
+            <div className="form-group mt-2">
               <div
                 className={
                   successful ? "alert alert-success" : "alert alert-danger"
@@ -661,67 +666,7 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
 
         <CheckButton style={{ display: "none" }} ref={checkBtn} />
       </Form1>
-
-      <div className={Styles.mobileform}>
-        <Form>
-          <div className={Styles.title2}>Make a Request</div>
-          <Row>
-            <Col>
-              <FormControl>
-                <FormLabel className={Styles.label}>Request Title</FormLabel>
-                <Input placeholder="Enter Title" className={Styles.input} />
-              </FormControl>
-              <FormControl>
-                <FormLabel className={Styles.label}>Vendor</FormLabel>
-                <Input
-                  placeholder="Enter vendor name"
-                  className={Styles.input}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel className={Styles.label}>Item(s)</FormLabel>
-                <Input
-                  placeholder="Enter item name(s)"
-                  className={Styles.input}
-                />
-              </FormControl>
-
-              <FormControl>
-                <FormLabel className={Styles.label}>Amount</FormLabel>
-                <Input placeholder="Enter Amount" className={Styles.input} />
-              </FormControl>
-              <FormControl>
-                <FormLabel className={Styles.label}>Due Date</FormLabel>
-                <Input type="date" className={Styles.input} />
-              </FormControl>
-
-              <FormControl>
-                <FormLabel className={Styles.label}>Quantity</FormLabel>
-                <Input placeholder="Enter Quantity" className={Styles.input} />
-              </FormControl>
-              <FormControl>
-                <FormLabel className={Styles.label}>Ref No.</FormLabel>
-                <Input
-                  placeholder="Enter Reference Number"
-                  className={Styles.input}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel className={Styles.label}>Upload file</FormLabel>
-                <Input
-                  type="file"
-                  placeholder="Enter Reference Number"
-                  className={Styles.file}
-                />
-              </FormControl>
-            </Col>
-          </Row>
-
-          <div className={Styles.submitdiv2}>
-            <input type="submit" className={Styles.submit} />
-          </div>
-        </Form>
-      </div>
+      <div className={Styles.spacing}></div>
     </>
   );
 }
