@@ -444,12 +444,12 @@ function TestTable() {
                   },
                 },
 
-                onCellClick: (cellData) => {
-                  console.log(cellData);
-                },
-                // onRowClick: (rowData, size,column) => {
-                //   handleShowMore(rowData, size);
+                // onCellClick: (cellData) => {
+                //   console.log(cellData);
                 // },
+                onRowClick: (rowData, size, column) => {
+                  handleShowMore(rowData, size);
+                },
               }}
 
               // options={{
