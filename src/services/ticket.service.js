@@ -40,6 +40,25 @@ const countPendingTicketsByApprover = () => {
   return http.get("/api/dashboard/approver/ticket-pending");
 };
 
+const countAllUsers = () => {
+  return http.get("/api/dashboard/admin/user-count");
+};
+const countDepartments = () => {
+  return http.get("/api/dashboard/admin/department-count");
+};
+const countConfirmedRequests = () => {
+  return http.get("/api/dashboard/admin/ticket-count-approved");
+};
+const countPendingRequests = () => {
+  return http.get("/api/dashboard/admin/ticket-count-pending");
+};
+const countRejectedRequests = () => {
+  return http.get("/api/dashboard/admin/ticket-count-rejected");
+};
+const countActiveUsers = () => {
+  return http.get("/api/dashboard/admin/active-user-count");
+};
+
 export default {
   allApproverTickets,
   getTicketAwaitingApproval,
@@ -52,4 +71,11 @@ export default {
 
   countRejectedTicketsByApprover,
   countPendingTicketsByApprover,
+
+  countAllUsers,
+  countDepartments,
+  countConfirmedRequests,
+  countPendingRequests,
+  countRejectedRequests,
+  countActiveUsers,
 };

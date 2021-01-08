@@ -358,7 +358,7 @@ export default function EnhancedTable({
                         const isItemSelected = isSelected(workflow._id);
                         const labelId = `enhanced-table-checkbox-${index}`;
                         //const phases = request.workflow.phases;
-                        // const phases = workflow.phases;
+                        const phases = workflow.phases;
                         // const { firstName = "", lastName = "" } = phases || {};
 
                         return (
@@ -386,7 +386,9 @@ export default function EnhancedTable({
                               {workflow.description}
                             </TableCell>
                             <TableCell align="left">
-                              <div>approvers names</div>
+                              {phases.map((phase) => (
+                                <div>{phase.name}</div>
+                              ))}
                               {/* 
                               <div>{workflow.phases[1]}</div>
                               <div>{workflow.phases[2]}</div>

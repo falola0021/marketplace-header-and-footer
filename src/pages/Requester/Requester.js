@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, Modal } from "react-bootstrap";
+import React, { useState } from "react";
+import { Row, Col } from "react-bootstrap";
 import Styles from "./Requester.module.css";
-// import RequesterTable from "./RequesterTable";
 import MakeRequest from "./MakeRequest/MakeRequest";
-// import { Spring, Transition, animated } from "react-spring/renderprops";
 import Navbar from "../../components/Navbar/Navbar";
 import Addrequest from "../../components/ActionButton/Addrequest/Addrequest";
 import Card from "../../components/ViewCard/ViewCard";
-import Table from "./Table";
 import Profile from "../../components/UserProfile/UserProfile";
 import RequestDataService from "../../services/requester.service";
 import TestTable from "./TestTable";
 import kassandahmobile from "../../pages/assets/kassandahmobilepurple.png";
+import swDev from "../../swDev";
 
 import {
   Drawer,
@@ -24,22 +22,16 @@ import {
 } from "@chakra-ui/core";
 
 function Requester() {
+  swDev();
   const [allUserRequest, setAllUserRequest] = useState("");
   const [allUserDeclinedRequest, setAllUserDeclinedRequest] = useState("");
   const [allUserPendingRequest, setAllUserPendingRequest] = useState("");
   const [allUserApprovedRequest, setAllUserApprovedRequest] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
-  const [requests, setRequests] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+  // const [requests, setRequests] = React.useState([]);
+  // const [loading, setLoading] = React.useState(false);
   const sizes = ["md"];
-  // const [modalShow, setModalShow] = useState(false);
-  // const handleRequest = () => setModalShow(true);
-  // const [showTicketInfo, setShowTicketInfo] = useState(false);
-  // const [previewShow, setPreviewShow] = React.useState(false);
-  // const handlePreviewShow = () => {
-  //   setPreviewShow(!previewShow);
-  // };
 
   const [switchView, setSwitchView] = useState({
     overview: true,
@@ -99,33 +91,37 @@ function Requester() {
         console.log(e.response);
       });
   };
+  retrieveAllRequestCount();
+  retrieveDeclinedRequestCount();
+  retrievePendingRequestCount();
+  retrieveApprovedRequestCount();
 
-  const retrieveRequests = async () => {
-    setLoading(true);
-    await RequestDataService.getUserTicketList()
-      .then((response) => {
-        let resData = response.data.data.ticketList.sort((a, b) =>
-          new Date(a) < new Date(b) ? 1 : -1
-        );
-        setRequests(resData);
-        let firstTicket = resData[0];
+  // const retrieveRequests = async () => {
+  //   setLoading(true);
+  //   await RequestDataService.getUserTicketList()
+  //     .then((response) => {
+  //       let resData = response.data.data.ticketList.sort((a, b) =>
+  //         new Date(a) < new Date(b) ? 1 : -1
+  //       );
+  //       setRequests(resData);
+  //       let firstTicket = resData[0];
 
-        // handleSideview(firstTicket);
-        setLoading(false);
-      })
-      .catch((e) => {
-        console.log(e);
-        console.log("wrong", e.response);
-        setLoading(false);
-      });
-  };
+  //       // handleSideview(firstTicket);
+  //       setLoading(false);
+  //     })
+  //     .catch((e) => {
+  //       console.log(e);
+  //       console.log("wrong", e.response);
+  //       setLoading(false);
+  //     });
+  // };
 
-  useEffect(() => {
-    retrieveAllRequestCount();
-    retrieveDeclinedRequestCount();
-    retrievePendingRequestCount();
-    retrieveApprovedRequestCount();
-  }, []);
+  // useEffect(() => {
+  //   retrieveAllRequestCount();
+  //   retrieveDeclinedRequestCount();
+  //   retrievePendingRequestCount();
+  //   retrieveApprovedRequestCount();
+  // }, []);
 
   const [switchUser, setSwitchUser] = useState(false);
   const handleSwitchUser = React.useCallback(() => setSwitchUser(!switchUser));
@@ -193,8 +189,7 @@ function Requester() {
               </div>
 
               <div className={Styles.tablecontainer}>
-                {/* <Table preview={handlePreviewShow} /> */}
-                <TestTable />
+                <TestTable retrieveAllRequestCount={retrieveAllRequestCount} />
               </div>
             </Col>
           )}
@@ -227,7 +222,7 @@ function Requester() {
                   }}
                 />{" "}
                 <MakeRequest
-                  retrieveRequests={retrieveRequests}
+                  retrieveAllRequestCount={retrieveAllRequestCount}
                   closeDrawer={onClose}
                 />
               </DrawerBody>

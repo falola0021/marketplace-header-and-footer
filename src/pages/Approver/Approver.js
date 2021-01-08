@@ -3,10 +3,10 @@ import { Row, Col, Modal } from "react-bootstrap";
 import Styles from "./Approver.module.css";
 import Navbar from "../../components/Navbar/Navbar";
 import Card from "../../components/ViewCard/ViewCard";
-import ApproverTable from "./ApproverTable";
+import AllPendingTicketsTable from "./AllPendindTicketsTable";
 import AllApproverTicketTable from "./AllApproverTicketTable";
 import ApprovedTicketTable from "./ApprovedTicketTable";
-import RejectedTicketTable from "./RejectedTable";
+import RejectedTicketTable from "./RejectedTicketTable";
 import RequesterTable from "../Requester/TestTable";
 import Profile from "../../components/UserProfile/UserProfile";
 import RequestDataService from "../../services/requester.service";
@@ -50,8 +50,7 @@ function Approver() {
   );
 
   const sizes = ["xl"];
-  const [modalShow, setModalShow] = useState(false);
-  const handleRequest = () => setModalShow(true);
+
   const [previewShow, setPreviewShow] = React.useState(false);
   const handlePreviewShow = () => {
     setPreviewShow(!previewShow);
@@ -422,30 +421,32 @@ function Approver() {
                 {/* FOR  APPROVER */}
                 {/* {!switchUser && <ApproverTable preview={handlePreviewShow} />} */}
                 {!switchUser && (
-                  <AllApproverTicketTable
-                    changeTable={changeTable.allApproverTicketTable}
-                    preview={handlePreviewShow}
-                  />
-                  // <div>
-                  //   {changeTable.pendingTable && (
-                  //     <ApproverTable preview={handlePreviewShow} />
-                  //   )}
-                  //   {changeTable.allApproverTicketTable && (
-                  //     <AllApproverTicketTable
-                  //       changeTable={changeTable.allApproverTicketTable}
-                  //       preview={handlePreviewShow}
-                  //     />
-                  //   )}
-                  //   {changeTable.approvedTable && (
-                  //     <ApprovedTicketTable
-                  //       changeTable2={changeTable.approvedTable}
-                  //       preview={handlePreviewShow}
-                  //     />
-                  //   )}
-                  //   {changeTable.rejectedTable && (
-                  //     <RejectedTicketTable preview={handlePreviewShow} />
-                  //   )}
-                  // </div>
+                  <>
+                    {changeTable.allApproverTicketTable && (
+                      <AllApproverTicketTable
+                        // changeTable={changeTable.allApproverTicketTable}
+                        preview={handlePreviewShow}
+                      />
+                    )}
+                    {changeTable.pendingTable && (
+                      <AllPendingTicketsTable
+                        // changeTable={changeTable.allApproverTicketTable}
+                        preview={handlePreviewShow}
+                      />
+                    )}
+                    {changeTable.approvedTable && (
+                      <ApprovedTicketTable
+                        // changeTable={changeTable.allApproverTicketTable}
+                        preview={handlePreviewShow}
+                      />
+                    )}
+                    {changeTable.rejectedTable && (
+                      <RejectedTicketTable
+                        // changeTable={changeTable.allApproverTicketTable}
+                        preview={handlePreviewShow}
+                      />
+                    )}
+                  </>
                 )}
               </div>
             </Col>

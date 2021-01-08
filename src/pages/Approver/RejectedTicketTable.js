@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import RequestDataService from "../../services/requester.service";
+import TicketDataService from "../../services/ticket.service";
 import ApproversAvatar from "../../components/ApproversAvatar/ApproversAvatar";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import ConfirmationStatus from "../../components/ConfirmationStatus/ConfirmationStatus";
 import InvoicePreview from "../../components/InvoicePreview/InvoicePreview";
-import Addrequest from "../../components/ActionButton/Addrequest/Addrequest";
-import MakeRequest from "./MakeRequest/MakeRequest";
-import kassandahmobile from "../../pages/assets/kassandahmobilepurple.png";
 import MUIDataTable from "mui-datatables";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
@@ -31,7 +28,7 @@ import Styles from "./Table.module.css";
 import { RefreshSharp } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
 
-function TestTable({ retrieveAllRequestCount }) {
+function TestTable() {
   const [responsive, setResponsive] = useState("vertical");
   const [tableBodyHeight, setTableBodyHeight] = useState("400px");
   const [tableBodyMaxHeight, setTableBodyMaxHeight] = useState("");
@@ -80,9 +77,7 @@ function TestTable({ retrieveAllRequestCount }) {
         // onRowClick: (rowData, rowState) => {
         //   console.log(rowData, rowState);
         // },
-        onRowClick: (rowData, rowState) => {
-          alert("hello");
-        },
+        onRowClick: (rowData, rowState) => {},
       },
     },
     {
@@ -96,7 +91,7 @@ function TestTable({ retrieveAllRequestCount }) {
 
     {
       name: "amount",
-      label: "Amount (₦)",
+      label: "Amount(₦)",
       options: {
         filter: true,
         sort: true,
@@ -293,6 +288,17 @@ function TestTable({ retrieveAllRequestCount }) {
         download: false,
       },
     },
+    {
+      name: "_id",
+      options: {
+        filter: false,
+        sort: false,
+        display: false,
+        viewColumns: false,
+        filter: false,
+        download: false,
+      },
+    },
   ];
 
   const options = {
@@ -303,22 +309,24 @@ function TestTable({ retrieveAllRequestCount }) {
     tableBodyMaxHeight,
   };
 
-  const retrieveRequests = () => {
+  const retrieveRequests = async () => {
     setLoading(true);
-    RequestDataService.getUserTicketList()
+    await TicketDataService.AllRejectedTickets()
       .then((response) => {
-        let resData = response.data.data.ticketList.sort((a, b) =>
+        console.log("response gggggg", response);
+        let resData = response.data.data.rejectedTickets.sort((a, b) =>
           new Date(a) < new Date(b) ? 1 : -1
         );
-        setRequests(resData);
-        let firstTicket = resData[0];
 
-        handleSideview(firstTicket);
+        setRequests(resData);
+        let firstData = resData[0];
+        handleSideview(firstData);
+        console.log("the data", resData);
         setLoading(false);
       })
       .catch((e) => {
         console.log(e);
-        console.log("wrong", e.response);
+        console.log("errrrrrr", e.response);
         setLoading(false);
       });
   };
@@ -372,18 +380,7 @@ function TestTable({ retrieveAllRequestCount }) {
         <Col sm="9">
           <MuiThemeProvider theme={myTheme}>
             <MUIDataTable
-              title={
-                <div className={Styles.addrequest}>
-                  {sizes.map((size) => (
-                    <Addrequest
-                      name="Make a request"
-                      onClick={() => handleClick(size)}
-                      type="button"
-                      key={size}
-                    />
-                  ))}
-                </div>
-              }
+              title="Tickets"
               data={requests}
               columns={columns}
               options={{
@@ -436,7 +433,7 @@ function TestTable({ retrieveAllRequestCount }) {
                         />
                       </ThemeProvider>
                     ) : (
-                      "Sorry,  no matching data "
+                      "Sorry, there is no matching data to display"
                     ),
                   },
                 },
@@ -447,11 +444,12 @@ function TestTable({ retrieveAllRequestCount }) {
                     childRef.current.childFunction();
                   } else {
                     handleSideview(rowData);
+                    console.log("row data", rowData);
                   }
                 },
               }}
               // options={{
-              //   rowsPerPage: 15,
+              //   rowsPerPage: 10,
               //   rowsPerPageOptions: [10, 20, 30],
               //   count: 10,
               // }}
@@ -469,49 +467,8 @@ function TestTable({ retrieveAllRequestCount }) {
           </span>
         </Col>
       </Row>
-
-      <ThemeProvider>
-        <Drawer onClose={onClose} isOpen={isOpen} size={size}>
-          <span className={Styles.requestform}>
-            <DrawerOverlay
-              style={{ backgroundColor: "rgba(255, 255, 255,0.2)" }}
-            />
-
-            <DrawerContent>
-              <DrawerCloseButton />
-              <DrawerBody>
-                <img
-                  src={kassandahmobile}
-                  alt="logo"
-                  style={{
-                    width: "30px",
-                    height: "45px",
-                    marginTop: "10px",
-                    cursor: "pointer",
-                  }}
-                />{" "}
-                <MakeRequest
-                  retrieveAllRequestCount={retrieveAllRequestCount}
-                  retrieveRequests={retrieveRequests}
-                  closeDrawer={onClose}
-                />
-              </DrawerBody>
-            </DrawerContent>
-          </span>
-        </Drawer>
-      </ThemeProvider>
     </React.Fragment>
   );
 }
 
 export default TestTable;
-// const myTheme = createMuiTheme({
-//   overrides: {
-//     MUIDataTable: {
-//       responsiveScroll: {
-//         maxHeight: "50px",
-//         // overflowY: 'scroll',
-//       },
-//     },
-//   },
-// });

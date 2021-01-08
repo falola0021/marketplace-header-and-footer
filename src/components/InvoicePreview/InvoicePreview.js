@@ -12,6 +12,7 @@ import Form1 from "react-validation/build/form";
 import TicketDataService from "../../services/ticket.service";
 import Textarea from "react-validation/build/textarea";
 import AuthService from "../../services/auth.service";
+import swDev from "../../swDev";
 
 import moment from "moment";
 
@@ -284,6 +285,7 @@ const InvoicePreview = forwardRef(({ sideview, loading1 }, ref) => {
   let userId = _id;
 
   const { phases = [""] } = workflow || {};
+
   let phaseIdArray = [];
   for (const fhase of phases) {
     phaseIdArray.push(fhase._id);
@@ -292,6 +294,15 @@ const InvoicePreview = forwardRef(({ sideview, loading1 }, ref) => {
   const currentApprover = phase.approver;
 
   const positionOfCurrentPhaseId = phaseIdArray.indexOf(currentPhaseId);
+
+  //web push
+
+  // function myFunction() {
+  //   if (currentUser.userId == currentApprover) {
+  //     return swDev();
+  //   }
+  // }
+  swDev();
 
   let progress = 0;
   let onePhasePercentage = Number(100 / phaseIdArray.length);
@@ -449,11 +460,13 @@ const InvoicePreview = forwardRef(({ sideview, loading1 }, ref) => {
           setMessage("sucessfully approved");
           setSuccessful(true);
           setLoading(false);
+
           setTimeout(function () {
             window.location.reload();
           }, 500);
         } else {
           setMessage("sucessfull");
+          // swDev();
         }
       })
       .catch((error) => {
@@ -784,7 +797,7 @@ const InvoicePreview = forwardRef(({ sideview, loading1 }, ref) => {
                 Request By :{" "}
               </span>
               <span style={{ fontSize: "10px" }} className={Styles.invoicedesc}>
-                {user.firstName} <span className="ml-1">{user.lastName}</span>
+                {/* {user.firstName} <span className="ml-1">{user.lastName}</span> */}
               </span>
             </p>
             <div className={Styles.invoiceimg}>

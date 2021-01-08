@@ -1,8 +1,11 @@
 export default function authHeader() {
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  if (user && user.token) {
-    return { "x-access-token": user.token };
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+  if (currentUser && currentUser.token) {
+    return {
+      "Content-Type": "multipart/form-data",
+      "Content-type": "application/json",
+      Authorization: `Bearer ${currentUser.token}`,
+    };
   } else {
     return {};
   }

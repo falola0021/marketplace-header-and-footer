@@ -1,9 +1,7 @@
-import axios from "axios";
-
-const API_URL = "https://api.kassandah.gigmobility.com";
+import http from "./http-common";
 
 const register = (firstName, lastName, email, password, department) => {
-  return axios.post(API_URL + "/api/user", {
+  return http.post("/api/user", {
     firstName,
     lastName,
     email,
@@ -13,49 +11,48 @@ const register = (firstName, lastName, email, password, department) => {
 };
 
 const login = (email, password) => {
-  return axios
-    .post(API_URL + "/api/user/login", {
+  return http
+    .post("/api/user/login", {
       email,
       password,
     })
     .then((response) => {
       if (response.data) {
-        //localStorage.setItem("user", JSON.stringify(response.data.data));
-        const res = response.data.data;
-        setToken(res);
-        setUser(res);
+        const data = response.data.data;
+        setUser(data);
+        window.location.reload();
       }
 
       return response.data.data;
     });
 };
 
+// const refreshToken = () => {
+//   return http.get("/api/user/refresh-token");
+// };
+
 const logout = () => {
   localStorage.removeItem("user");
-  localStorage.removeItem("token");
-  localStorage.removeItem("refreshToken");
 };
 
 const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
 };
 
-export default {
-  register,
-  login,
-  logout,
-  getCurrentUser,
-};
-
-const setToken = (data) => {
-  localStorage.setItem("token", data.token);
-  localStorage.setItem("refreshToken", data.refreshToken);
-};
-
 const setUser = (data) => {
   const userObject = {
     ...data.details,
     roles: data.roles,
+    token: data.token,
+    refreshToken: data.refreshToken,
   };
+
   localStorage.setItem("user", JSON.stringify(userObject));
+};
+export default {
+  register,
+  getCurrentUser,
+  login,
+  logout,
+  // refreshToken,
 };

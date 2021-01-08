@@ -43,7 +43,11 @@ const required = (value) => {
 //   }
 // };
 
-function MakeRequest({ closeDrawer, retrieveRequests }) {
+function MakeRequest({
+  closeDrawer,
+  retrieveRequests,
+  retrieveAllRequestCount,
+}) {
   const form = useRef();
   const checkBtn = useRef();
   const [vendors, setVendors] = useState([]);
@@ -284,6 +288,7 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
         .then((response) => {
           setMessage(response.data.message);
           retrieveRequests();
+          retrieveAllRequestCount();
           setLoading(false);
           setSuccessful(true);
           setTimeout(function () {
@@ -291,11 +296,11 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
           }, 1000);
         })
         .catch((e) => {
-          console.log("jj", e.response);
+          console.log("jj", e);
 
           if (e) {
             setMessage(
-              "something went wrong kindly check your network or uploaded file "
+              "something went wrong kindly check your network or uploaded file size "
             );
             setSuccessful(false);
             setLoading(false);
@@ -532,7 +537,9 @@ function MakeRequest({ closeDrawer, retrieveRequests }) {
         </Row>
 
         <div className={Styles.dropzonebox}>
-          <Form.Label className={Styles.label}>Upload Invoice</Form.Label>
+          <Form.Label className={Styles.label}>
+            Upload Invoice (not more than 1mb)
+          </Form.Label>
           {/* <DropZone /> */}
           <Row>
             <Col xs={12} md={6}>

@@ -28,11 +28,9 @@ const create = (
   }
   formData.append("comment", comment);
 
-  console.log(formData);
-  console.log(selectedFiles);
-
   return http.post("/api/ticket", formData);
 };
+
 const get = (id) => {
   return http.get(`api/ticket/${id}`);
 };

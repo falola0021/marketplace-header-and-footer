@@ -183,7 +183,7 @@ function Vendor({ closeDrawer }) {
           bank,
           accountName,
           accountNumber,
-          isVerified.toString
+          isVerified
         )
       )
         .then((response) => {

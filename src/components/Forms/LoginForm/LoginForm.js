@@ -72,7 +72,6 @@ const Login = (props) => {
         .then((response) => {
           setLoading(false);
           setSuccessful(true);
-          window.location.reload();
         })
         .catch((error) => {
           setLoading(false);

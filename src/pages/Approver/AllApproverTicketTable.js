@@ -314,16 +314,10 @@ function TestTable() {
     await TicketDataService.allApproverTickets()
       .then((response) => {
         console.log("response gggggg", response);
-        let sortByDate = response.data.data.allApproverTickets.sort((a, b) =>
+        let resData = response.data.data.allApproverTickets.sort((a, b) =>
           new Date(a) < new Date(b) ? 1 : -1
         );
-        let resData = sortByDate.sort((a, b) => {
-          if (a.status == "pending") {
-            return -1;
-          } else {
-            return;
-          }
-        });
+
         setRequests(resData);
         let firstData = resData[0];
         handleSideview(firstData);

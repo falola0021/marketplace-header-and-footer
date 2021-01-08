@@ -280,6 +280,7 @@ const Register = (props) => {
           </div>
         </div>
       )}
+
       {message && (
         <div className="form-group">
           <div

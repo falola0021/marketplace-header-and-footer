@@ -1,48 +1,31 @@
-import React, { useState, useRef, useEffect } from "react";
-import Form1 from "react-validation/build/form";
+import React, { useState, useEffect, useRef } from "react";
+import Styles from "./Table.module.css";
+import MUIDataTable from "mui-datatables";
 import Input from "react-validation/build/input";
 import Select from "react-validation/build/select";
-import CheckButton from "react-validation/build/button";
-import { isEmail } from "validator";
-import Styles from "./Table.module.css";
-import SearchFilter from "../../../../components/SearchFilter/SearchFilter";
-import PropTypes from "prop-types";
-import clsx from "clsx";
-import { lighten, makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import { useSelector, useDispatch } from "react-redux";
-import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import RoleDataService from "../../../../services/role.service";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import UserCreate from "../UserCreate";
-import { Row, Col, Form } from "react-bootstrap";
-
 import kassandahmobile from "../../../assets/kassandahmobilepurple.png";
 import UserDataService from "../../../../services/user.service";
+import RoleDataService from "../../../../services/role.service";
+import { isEmail } from "validator";
+import CheckButton from "react-validation/build/button";
+import Form1 from "react-validation/build/form";
+import { Form } from "react-bootstrap";
+import IconButton from "@material-ui/core/IconButton";
+
 import {
   Drawer,
   DrawerBody,
-  // DrawerOverlay,
+  DrawerOverlay,
   DrawerContent,
   useDisclosure,
   ThemeProvider,
-  // Textarea,
+  Spinner,
 } from "@chakra-ui/core";
 
-//for Validation start
+import moment from "moment";
+import { Row, Col } from "react-bootstrap";
 
 const required = (value) => {
   if (!value) {
@@ -73,282 +56,29 @@ const name = (value) => {
   }
 };
 
-//form validation end
+function TestTable() {
+  const [responsive, setResponsive] = useState("vertical");
+  const [tableBodyHeight, setTableBodyHeight] = useState("400px");
+  const [tableBodyMaxHeight, setTableBodyMaxHeight] = useState("");
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-const headCells = [
-  {
-    id: "name",
-    numeric: false,
-    disablePadding: true,
-    label: "Name",
-  },
-  { id: "email", numeric: true, disablePadding: false, label: "Email" },
-
-  {
-    id: "department",
-    numeric: true,
-    disablePadding: false,
-    label: "Department",
-  },
-  {
-    id: "role",
-    numeric: true,
-    disablePadding: false,
-    label: "Role",
-  },
-
-  { id: "action", numeric: true, disablePadding: false, label: "" },
-];
-
-function EnhancedTableHead(props) {
-  const {
-    classes,
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead className={Styles.tablehead}>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ "aria-label": "select all desserts" }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            className={Styles.tableheader}
-            color="red"
-            key={headCell.id}
-            align={headCell.numeric ? "left" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
-const useToolbarStyles = makeStyles((theme) => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-  },
-  highlight:
-    theme.palette.type === "light"
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
-  title: {
-    flex: "1 1 100%",
-  },
-}));
-
-const EnhancedTableToolbar = (props) => {
-  const [size, setSize] = React.useState("lg");
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const classes = useToolbarStyles();
-  const { numSelected } = props;
-  const handleCreateRole = (newSize) => {
-    setSize(newSize);
-    onOpen();
-  };
-  return (
-    <>
-      <Toolbar
-        className={clsx(classes.root, {
-          [classes.highlight]: numSelected > 0,
-        })}
-      >
-        {numSelected > 0 ? (
-          <Typography
-            className={classes.title}
-            color="inherit"
-            variant="subtitle1"
-            component="div"
-          >
-            {numSelected} selected
-          </Typography>
-        ) : (
-          <Typography
-            className={classes.title}
-            variant="h6"
-            id="tableTitle"
-            component="div"
-          >
-            <div className={Styles.tabletop}>
-              <span>
-                <SearchFilter />
-              </span>
-              <span className={Styles.tablename}>
-                <button onClick={() => handleCreateRole(size)}>
-                  <i className="fa fa-plus pr-2"></i> Create User
-                </button>
-              </span>{" "}
-            </div>
-          </Typography>
-        )}
-
-        {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton aria-label="delete">
-              <i className="fa fa-trash"></i>
-
-              {/* <DeleteIcon /> */}
-            </IconButton>
-          </Tooltip>
-        ) : (
-          <span></span>
-        )}
-      </Toolbar>
-
-      <ThemeProvider>
-        <Drawer onClose={onClose} isOpen={isOpen} size={size}>
-          <DrawerContent>
-            <DrawerBody style={{ paddingTop: "6%" }}>
-              <img
-                src={kassandahmobile}
-                alt="logo"
-                style={{ width: "30px", height: "45px" }}
-              />
-              <UserCreate closeDrawer={onClose} />
-            </DrawerBody>
-          </DrawerContent>
-        </Drawer>
-      </ThemeProvider>
-    </>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-  },
-  paper: {
-    width: "100%",
-    marginBottom: theme.spacing(2),
-  },
-  table: {
-    minWidth: 750,
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: "rect(0 0 0 0)",
-    height: 1,
-    margin: -1,
-    overflow: "hidden",
-    padding: 0,
-    position: "absolute",
-    top: 20,
-    width: 1,
-    alignItems: "center",
-  },
-}));
-
-export default function EnhancedTable(props, { preview }) {
-  const classes = useStyles();
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [size, setSize] = React.useState();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [drawerInfo, setDrawerInfo] = React.useState({});
-  const roleStore = useSelector((state) => state.roleReducer);
+  const [loading, setLoading] = React.useState(false);
   const [users, setUsers] = React.useState([]);
   const [roles, setRoles] = React.useState([]);
-
-  const [roleId, setRoleId] = useState("");
-  const [userId, setUserId] = useState("");
-
-  const [roleId2, setRoleId2] = useState("");
-  const [userId2, setUserId2] = useState("");
-
-  const [loading, setLoading] = useState(false);
-  const [loading2, setLoading2] = useState(false);
+  const checkBtn = useRef();
+  const form = useRef();
+  const [drawerInfo, setDrawerInfo] = React.useState({});
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
 
-  const checkBtn = useRef();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [size, setSize] = React.useState("");
 
-  const dispatch = useDispatch();
-  const form = useRef();
+  const [roleId, setRoleId] = useState("");
 
-  const size1 = "xs";
-  const size2 = "lg";
-  //working with API
-
+  const handleCreateUser = () => {
+    setSize("lg");
+    onOpen();
+  };
   const retrieveUsers = async () => {
     await UserDataService.getAll()
       .then((response) => {
@@ -359,10 +89,6 @@ export default function EnhancedTable(props, { preview }) {
         console.log(e.response);
       });
   };
-
-  useEffect(() => {
-    retrieveUsers();
-  }, []);
   const retrieveRoles = async () => {
     await RoleDataService.getAll()
       .then((response) => {
@@ -374,56 +100,52 @@ export default function EnhancedTable(props, { preview }) {
       });
   };
   useEffect(() => {
+    retrieveUsers();
     retrieveRoles();
   }, []);
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+  const activateUser = (userId) => {
+    setLoading(true);
+    UserDataService.activateUser(userId)
+      .then((response) => {
+        setSuccessful(true);
+        setMessage(response.data.message);
+        retrieveUsers();
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log("hiiiii");
+        setMessage(e.response.data.message);
+        setSuccessful(false);
+        setLoading(false);
+      });
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.userId);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
+  const deactivateUser = (userId) => {
+    setLoading(true);
+    UserDataService.deactivateUser(userId)
+      .then((response) => {
+        setSuccessful(true);
+        setMessage(response.data.message);
+        retrieveUsers();
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log("hiiiii");
+        setMessage(e.response.data.message);
+        setSuccessful(false);
+        setLoading(false);
+      });
   };
 
-  const handleClick = (event, userId) => {
-    const selectedIndex = selected.indexOf(userId);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, userId);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
-  const handleShowMore = (event, gotuser, newSize) => {
-    setDrawerInfo(gotuser);
-    setSize(newSize);
+  const handleShowMore = (rowData) => {
+    setDrawerInfo(rowData);
+    setSize("xs");
     onOpen();
   };
-
-  const attachChangeRole = (e) => {
-    const roleId = e.target.value;
-    setRoleId(roleId);
-  };
-  const attachChangeUser = (e) => {
-    const userId = e.target.value;
-    setUserId(userId);
+  const changeRole = (e) => {
+    const gotId = e.target.value;
+    setRoleId(gotId);
   };
 
   const attachRoleToUser = (e) => {
@@ -431,13 +153,14 @@ export default function EnhancedTable(props, { preview }) {
     setSuccessful(false);
     setLoading(true);
     setMessage("");
+
     form.current.validateAll();
     if (checkBtn.current.context._errors.length === 0) {
-      UserDataService.attachRoleToUser(roleId, drawerInfo.userId)
+      UserDataService.attachRoleToUser(roleId, drawerInfo[8])
         .then((response) => {
           setSuccessful(true);
           setMessage(response.data.message);
-
+          retrieveUsers();
           setLoading(false);
 
           setTimeout(function () {
@@ -453,28 +176,19 @@ export default function EnhancedTable(props, { preview }) {
     }
   };
 
-  const detachChangeRole = (e) => {
-    const roleId2 = e.target.value;
-    setRoleId2(roleId2);
-  };
-  const detachChangeUser = (e) => {
-    const userId2 = e.target.value;
-    setUserId2(userId2);
-  };
-
-  const detachRoleToUser = (e) => {
+  const detachRoleFromUser = (e) => {
     e.preventDefault();
     setSuccessful(false);
-    setLoading2(true);
+    setLoading(true);
     setMessage("");
     form.current.validateAll();
     if (checkBtn.current.context._errors.length === 0) {
-      UserDataService.detachRoleToUser(roleId2, drawerInfo.userId)
+      UserDataService.detachRoleToUser(roleId, drawerInfo[8])
         .then((response) => {
           setSuccessful(true);
           setMessage(response.data.message);
-
-          setLoading2(false);
+          retrieveUsers();
+          setLoading(false);
 
           setTimeout(function () {
             onClose();
@@ -488,426 +202,502 @@ export default function EnhancedTable(props, { preview }) {
     }
   };
 
-  const activateUser = (gotuser) => {
-    setLoading(true);
-    UserDataService.activateUser(gotuser.userId)
-      .then((response) => {
-        setSuccessful(true);
-        setMessage(response.data.message);
-        retrieveUsers();
-        setLoading(false);
-      })
-      .catch((e) => {
-        console.log("hiiiii");
-        setMessage(e.response.data.message);
-        setSuccessful(false);
-        setLoading(false);
-      });
+  const columns = [
+    {
+      name: "firstName",
+      label: "firstName",
+      options: {
+        filter: false,
+        sort: false,
+        display: false,
+      },
+    },
+    {
+      name: "lastName",
+      label: "lastName",
+      options: {
+        filter: false,
+        sort: false,
+        display: false,
+      },
+    },
+    {
+      name: "firstName",
+      label: "Name",
+
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          console.log(tableMeta.rowData, "......");
+          return (
+            <div>
+              {tableMeta.rowData[0]} {tableMeta.rowData[1]}
+            </div>
+          );
+        },
+      },
+    },
+    {
+      name: "email",
+      label: "Email",
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+
+    {
+      name: "department",
+      label: "Department",
+      options: {
+        filter: true,
+        sort: true,
+        customBodyRender: (department) => <>{department.name}</>,
+      },
+    },
+    {
+      name: "status",
+      label: "status",
+      options: {
+        filter: false,
+        sort: false,
+        display: false,
+      },
+    },
+    {
+      name: "roles",
+      label: "Role",
+      options: {
+        filter: true,
+        sort: true,
+        customBodyRender: (roles) => (
+          <>
+            {roles.map(function (role) {
+              return <span className="mr-2">{role.role}</span>;
+            })}
+          </>
+        ),
+      },
+    },
+    {
+      name: "userId",
+      label: "Action",
+
+      options: {
+        filter: true,
+        sort: true,
+        // onCellClick: () => {
+        //   alert("hello");
+        // },
+
+        customBodyRender: (userId, tableMeta) => (
+          <>
+            <button
+              onClick={
+                tableMeta.rowData[5] === "inactive"
+                  ? () => activateUser(userId)
+                  : () => deactivateUser(userId)
+              }
+              className={
+                tableMeta.rowData[5] === "inactive"
+                  ? Styles.editbutton
+                  : Styles.deletebutton
+              }
+            >
+              {loading && (
+                <span className="spinner-border spinner-border-sm"></span>
+              )}
+              {tableMeta.rowData[5] === "inactive" ? (
+                <span>Activate User</span>
+              ) : (
+                <span>Deactivate User</span>
+              )}
+            </button>
+          </>
+        ),
+      },
+    },
+    {
+      name: "userId",
+      label: "userId",
+      options: {
+        filter: false,
+        sort: false,
+        display: false,
+      },
+    },
+  ];
+
+  const options = {
+    filter: true,
+    filterType: "dropdown",
+    responsive,
+    tableBodyHeight,
+    tableBodyMaxHeight,
   };
 
-  const deactivateUser = (gotuser) => {
-    setLoading(true);
-    UserDataService.deactivateUser(gotuser.userId)
-      .then((response) => {
-        setSuccessful(true);
-        setMessage(response.data.message);
-        retrieveUsers();
-        setLoading(false);
-      })
-      .catch((e) => {
-        console.log("hiiiii");
-        setMessage(e.response.data.message);
-        setSuccessful(false);
-        setLoading(false);
-      });
+  const handleClick = (newSize) => {
+    setSize(newSize);
+    onOpen();
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  const parentRef = useRef();
+  const childRef = useRef();
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  const myTheme = createMuiTheme({
+    overrides: {
+      // MUIDataTable: {
+      //          responsiveScroll: {
+      //     backgroundColor: "red !important",
+      //     maxHeight: "none !important",
+      //      overflowY: "scroll",
+      //   },
+      // },
+      MuiIconButton: {
+        root: {
+          "&:hover": {
+            backgroundColor: "transparent !important",
+            border: "none !important",
+            outline: "none !important",
+          },
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
-
-  const isSelected = (userId) => selected.indexOf(userId) !== -1;
-
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, users.length - page * rowsPerPage);
+          "&:focus": {
+            backgroundColor: "transparent !important",
+            border: "none !important",
+            outline: "none !important",
+          },
+        },
+      },
+    },
+  });
 
   return (
-    <div className={classes.root}>
-      <Paper>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            className={Styles.table}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={users.length}
-            />
-            <TableBody>
-              {stableSort(users, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((gotuser, index) => {
-                  const isItemSelected = isSelected(gotuser.userId);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-                  const roles = gotuser.roles;
-                  console.log("roles", roles);
-
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={gotuser.userId}
-                      selected={isItemSelected}
+    <React.Fragment>
+      <Row className="mt-5 mb-5">
+        <Col>
+          <MuiThemeProvider theme={myTheme}>
+            <MUIDataTable
+              title={
+                <div className={Styles.tabletop}>
+                  <span className={Styles.tablename}>
+                    <button onClick={() => handleCreateUser(size)}>
+                      <i className="fa fa-plus pr-2"></i> Create User
+                    </button>
+                  </span>{" "}
+                </div>
+              }
+              data={users}
+              columns={columns}
+              options={{
+                filterType: "select",
+                selectableRows: "multiple",
+                onRowsSelect: (data) => {
+                  console.log(data);
+                },
+                textLabels: {},
+                customToolbarSelect: (selectedRows) => (
+                  // <Tooltip title="edit">
+                  <IconButton
+                    onClick={() => {
+                      alert("This feature is comming soon");
+                      // setTest(!test);
+                      // console.log(test);
+                      // console.log(rows[selectedRows.data[0].dataIndex]);
+                    }}
+                    // style={{
+                    //   display: "block",
+                    // }}
+                  >
+                    <button
+                      style={{
+                        fontSize: "14px",
+                        backgroundColor: " #4f26aa",
+                        color: "#ffffff",
+                        borderRadius: "4px",
+                        padding: "5px 10px",
+                      }}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          // key={gotuser.userId}
-                          onClick={(event) =>
-                            handleClick(event, gotuser.userId)
-                          }
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
+                      Close Ticket
+                    </button>
+                    {/* <EditIcon /> */}
+                  </IconButton>
+                  // </Tooltip>
+                ),
+
+                rowsPerPage: 15,
+                textLabels: {
+                  body: {
+                    noMatch: loading ? (
+                      <ThemeProvider>
+                        <Spinner
+                          thickness="4px"
+                          speed="0.65s"
+                          emptyColor="gray.200"
+                          color="blue.500"
+                          size="lg"
                         />
-                      </TableCell>
+                      </ThemeProvider>
+                    ) : (
+                      "Sorry, there is no matching data to display"
+                    ),
+                  },
+                },
 
-                      <TableCell
-                        // key={gotuser.userId}
-                        align="left"
-                        onClick={(event) =>
-                          handleShowMore(event, gotuser, size1)
-                        }
-                      >
-                        {gotuser.firstName} {gotuser.lastName}
-                      </TableCell>
-                      <TableCell
-                        align="left"
-                        onClick={(event) =>
-                          handleShowMore(event, gotuser, size1)
-                        }
-                      >
-                        {gotuser.email}
-                        {/* {gotuser.id} */}
-                      </TableCell>
+                onCellClick: (cellData) => {
+                  console.log(cellData);
+                },
+                // onRowClick: (rowData, size,column) => {
+                //   handleShowMore(rowData, size);
+                // },
+              }}
 
-                      <TableCell
-                        // key={gotuser.userId}
-                        align="left"
-                        onClick={(event) =>
-                          handleShowMore(event, gotuser, size1)
-                        }
-                      >
-                        {gotuser.department.name}
-                      </TableCell>
-                      <TableCell
-                        align="left"
-                        onClick={(event) =>
-                          handleShowMore(event, gotuser, size1)
-                        }
-                      >
-                        {roles.map((role) => (
-                          <span className="mr-2">{role.role}</span>
-                        ))}
-                      </TableCell>
-
-                      <TableCell key={gotuser._id} align="left">
-                        {gotuser.status === "inactive" && (
-                          <button
-                            onClick={() => activateUser(gotuser)}
-                            className={Styles.editbutton}
-                          >
-                            {loading && (
-                              <span className="spinner-border spinner-border-sm"></span>
-                            )}
-                            Activate User
-                          </button>
-                        )}
-                        {gotuser.status === "active" && (
-                          <button
-                            onClick={() => deactivateUser(gotuser)}
-                            className={Styles.deletebutton}
-                          >
-                            {loading && (
-                              <span className="spinner-border spinner-border-sm"></span>
-                            )}
-                            Deactivate User
-                          </button>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={10} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 20, 30]}
-          component="div"
-          count={roleStore.role.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
+              // options={{
+              //   rowsPerPage: 15,
+              //   rowsPerPageOptions: [10, 20, 30],
+              //   count: 10,
+              // }}
+            />
+          </MuiThemeProvider>
+        </Col>
+      </Row>
       <ThemeProvider>
-        {size === "xs" ? (
-          <Drawer onClose={onClose} isOpen={isOpen} size={size}>
-            <DrawerContent>
-              <DrawerBody>
-                <img
-                  src={kassandahmobile}
-                  alt="logo"
-                  style={{
-                    width: "25px",
-                    height: "35px",
-                    marginTop: "20px",
-                  }}
-                />
-                <div className={Styles.vendortitle}>User Details</div>
-                <div className={Styles.vendor}>
-                  <span className={Styles.vendornamelabel}>Nmae: </span>
-                  <span className={Styles.vendorname}>
-                    {drawerInfo.firstName} {drawerInfo.lastName}
-                  </span>
-                </div>
-
-                <div className={Styles.vendor}>
-                  <span className={Styles.vendornamelabel}>Department: </span>
-                  <span className={Styles.vendorname}>
-                    {drawerInfo.department.name}
-                  </span>
-                </div>
-                <div className={Styles.vendor}>
-                  <span className={Styles.vendornamelabel}>Role: </span>
-                  <span className={Styles.vendorname}>
-                    {" "}
-                    {drawerInfo.roles.map((role) => (
-                      <span className="mr-2">{role.role}</span>
-                    ))}
-                  </span>
-                </div>
-                <div className={Styles.vendor}>
-                  <span className={Styles.vendornamelabel}>Email: </span>
-                  <span className={Styles.vendorname}>{drawerInfo.email}</span>
-                </div>
-                <div className={Styles.vendor}>
-                  <span className={Styles.vendornamelabel}>Status: </span>
-                  <span className={Styles.vendorname}>{drawerInfo.status}</span>
-                </div>
-
-                <div className={Styles.vendortitle}>Attach Role</div>
-                <Form1
-                  onSubmit={attachRoleToUser}
-                  ref={form}
-                  className={Styles.form}
-                >
-                  <Form.Group>
-                    <Select
-                      style={{
-                        border: " 1px solid #f3f3f3",
-                        backgroundColor: "rgba(59, 122, 254, 0.02)",
-                        width: "100%",
-                        padding: "6px 10px",
-                        borderRadius: "3px",
-                        outline: "none",
-                        marginBottom: "0",
-                      }}
-                      type="text"
-                      name="roleId"
-                      value={roleId}
-                      onChange={attachChangeRole}
-                      validations={[required]}
-                      className={Styles.formcontrol}
-                      as="select"
-                    >
-                      <option value="">- Select role -</option>
-                      {roles.map((role) => (
-                        <option key={role._id} value={role._id}>
-                          {role.role}
-                        </option>
-                      ))}
-                    </Select>
-                  </Form.Group>
-                  <Input
+        <Drawer onClose={onClose} isOpen={isOpen} size={size}>
+          <DrawerContent>
+            <DrawerBody style={{ paddingTop: "6%" }}>
+              {size == "lg" ? (
+                <>
+                  <img
+                    src={kassandahmobile}
+                    alt="logo"
+                    style={{ width: "30px", height: "45px" }}
+                  />
+                  <UserCreate closeDrawer={onClose} />
+                </>
+              ) : (
+                <>
+                  <img
+                    src={kassandahmobile}
+                    alt="logo"
                     style={{
-                      visibility: "hidden",
-                      margin: "0",
-                      position: "absolute",
+                      width: "25px",
+                      height: "35px",
+                      marginTop: "20px",
                     }}
-                    type="text"
-                    name="userId"
-                    value={drawerInfo.userId}
-                    onChange={attachChangeUser}
-                    validations={[required, name]}
                   />
 
-                  <span>
-                    <button
-                      style={{
-                        paddingTop: "6px",
-                        paddingBottom: "6px",
-                        borderRadius: "3px",
-                        color: "#ffffff",
-                        border: " 1px solid #cdd0d3",
-                        outline: "none",
-                        width: "100%",
-                        backgroundColor: " #4f26aa",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {loading && (
-                        <span className="spinner-border spinner-border-sm"></span>
-                      )}
-                      Add
-                    </button>
-                  </span>
-                  {successful && (
-                    <span>
-                      {message && (
-                        <div className="form-group">
-                          <div
-                            className={
-                              successful
-                                ? "alert alert-success"
-                                : "alert alert-danger"
-                            }
-                            role="alert"
-                          >
-                            {message}
-                          </div>
-                        </div>
-                      )}
+                  <div className={Styles.vendortitle}>User Details</div>
+                  <div className={Styles.vendor}>
+                    <span className={Styles.vendornamelabel}>Name: </span>
+                    <span className={Styles.vendorname}>
+                      {drawerInfo[0]} {drawerInfo[1]}
                     </span>
-                  )}
-                  <CheckButton style={{ display: "none" }} ref={checkBtn} />
-                </Form1>
+                  </div>
 
-                <div
-                  style={{ marginTop: "30px" }}
-                  className={Styles.vendortitle}
-                >
-                  Detach Role
-                </div>
-                <Form1
-                  onSubmit={detachRoleToUser}
-                  ref={form}
-                  className={Styles.form}
-                >
-                  <Form.Group>
-                    <Select
+                  <div className={Styles.vendor}>
+                    <span className={Styles.vendornamelabel}>Department: </span>
+                    <span className={Styles.vendorname}>{drawerInfo[4]}</span>
+                  </div>
+                  <div className={Styles.vendor}>
+                    <span className={Styles.vendornamelabel}>Role: </span>
+                    <span className={Styles.vendorname}>{drawerInfo[6]}</span>
+                  </div>
+                  <div className={Styles.vendor}>
+                    <span className={Styles.vendornamelabel}>Email: </span>
+                    <span className={Styles.vendorname}>{drawerInfo[3]}</span>
+                  </div>
+                  <div className={Styles.vendor}>
+                    <span className={Styles.vendornamelabel}>Status: </span>
+                    <span className={Styles.vendorname}>{drawerInfo[5]}</span>
+                  </div>
+
+                  <div className={Styles.vendortitle}>Attach Role</div>
+
+                  <Form1
+                    onSubmit={attachRoleToUser}
+                    ref={form}
+                    className={Styles.form}
+                  >
+                    <Form.Group>
+                      <Select
+                        style={{
+                          border: " 1px solid #f3f3f3",
+                          backgroundColor: "rgba(59, 122, 254, 0.02)",
+                          width: "100%",
+                          padding: "6px 10px",
+                          borderRadius: "3px",
+                          outline: "none",
+                          marginBottom: "0",
+                        }}
+                        type="text"
+                        name="roleId"
+                        value={roleId}
+                        onChange={changeRole}
+                        validations={[required]}
+                        className={Styles.formcontrol}
+                        as="select"
+                      >
+                        <option value="">- Select role -</option>
+                        {roles.map((role) => (
+                          <option key={role._id} value={role._id}>
+                            {role.role}
+                          </option>
+                        ))}
+                      </Select>
+                    </Form.Group>
+                    <Input
                       style={{
-                        border: " 1px solid #f3f3f3",
-                        backgroundColor: "rgba(59, 122, 254, 0.02)",
-                        width: "100%",
-                        padding: "6px 10px",
-                        borderRadius: "3px",
-                        outline: "none",
-                        marginBottom: "0",
+                        visibility: "hidden",
+                        margin: "0",
+                        position: "absolute",
                       }}
                       type="text"
-                      name="roleId2"
-                      value={roleId2}
-                      onChange={detachChangeRole}
-                      // validations={[required]}
-                      className={Styles.formcontrol}
-                      as="select"
-                    >
-                      <option value="">- Select role -</option>
-                      {roles.map((role) => (
-                        <option key={role._id} value={role._id}>
-                          {role.role}
-                        </option>
-                      ))}
-                    </Select>
-                  </Form.Group>
-                  <Input
-                    style={{
-                      visibility: "hidden",
-                      margin: "0",
-                      position: "absolute",
-                    }}
-                    type="text"
-                    name="userId2"
-                    value={drawerInfo.userId}
-                    onChange={detachChangeUser}
-                    validations={[required, name]}
-                  />
+                      name="drawerInfo[8]"
+                      value={drawerInfo[8]}
+                      onChange={drawerInfo[8]}
+                      validations={[required, name]}
+                    />
 
-                  <span>
-                    <button
-                      style={{
-                        paddingTop: "6px",
-                        paddingBottom: "6px",
-                        borderRadius: "3px",
-                        color: "#ffffff",
-                        border: " 1px solid #cdd0d3",
-                        outline: "none",
-                        width: "100%",
-                        backgroundColor: " #4f26aa",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {loading && (
-                        <span className="spinner-border spinner-border-sm"></span>
-                      )}
-                      Remove
-                    </button>
-                  </span>
-                  {successful && (
                     <span>
-                      {message && (
-                        <div className="form-group">
-                          <div
-                            className={
-                              successful
-                                ? "alert alert-success"
-                                : "alert alert-danger"
-                            }
-                            role="alert"
-                          >
-                            {message}
-                          </div>
-                        </div>
-                      )}
+                      <button
+                        style={{
+                          paddingTop: "6px",
+                          paddingBottom: "6px",
+                          borderRadius: "3px",
+                          color: "#ffffff",
+                          border: " 1px solid #cdd0d3",
+                          outline: "none",
+                          width: "100%",
+                          backgroundColor: " #4f26aa",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {loading && (
+                          <span className="spinner-border spinner-border-sm"></span>
+                        )}
+                        Add
+                      </button>
                     </span>
-                  )}
-                  <CheckButton style={{ display: "none" }} ref={checkBtn} />
-                </Form1>
-              </DrawerBody>
-            </DrawerContent>
-          </Drawer>
-        ) : (
-          <></>
-        )}
+                    {successful && (
+                      <span>
+                        {message && (
+                          <div className="form-group">
+                            <div
+                              className={
+                                successful
+                                  ? "alert alert-success"
+                                  : "alert alert-danger"
+                              }
+                              role="alert"
+                            >
+                              {message}
+                            </div>
+                          </div>
+                        )}
+                      </span>
+                    )}
+                    <CheckButton style={{ display: "none" }} ref={checkBtn} />
+                  </Form1>
+
+                  <div
+                    style={{ marginTop: "30px" }}
+                    className={Styles.vendortitle}
+                  >
+                    Detach Role
+                  </div>
+                  <Form1
+                    onSubmit={detachRoleFromUser}
+                    ref={form}
+                    className={Styles.form}
+                  >
+                    <Form.Group>
+                      <Select
+                        style={{
+                          border: " 1px solid #f3f3f3",
+                          backgroundColor: "rgba(59, 122, 254, 0.02)",
+                          width: "100%",
+                          padding: "6px 10px",
+                          borderRadius: "3px",
+                          outline: "none",
+                          marginBottom: "0",
+                        }}
+                        type="text"
+                        name="roleId"
+                        value={roleId}
+                        onChange={changeRole}
+                        validations={[required]}
+                        className={Styles.formcontrol}
+                        as="select"
+                      >
+                        <option value="">- Select role -</option>
+                        {roles.map((role) => (
+                          <option key={role._id} value={role._id}>
+                            {role.role}
+                          </option>
+                        ))}
+                      </Select>
+                    </Form.Group>
+                    <Input
+                      style={{
+                        visibility: "hidden",
+                        margin: "0",
+                        position: "absolute",
+                      }}
+                      type="text"
+                      name="drawerInfo[8]"
+                      value={drawerInfo[8]}
+                      onChange={drawerInfo[8]}
+                      validations={[required, name]}
+                    />
+
+                    <span>
+                      <button
+                        style={{
+                          paddingTop: "6px",
+                          paddingBottom: "6px",
+                          borderRadius: "3px",
+                          color: "#ffffff",
+                          border: " 1px solid #cdd0d3",
+                          outline: "none",
+                          width: "100%",
+                          backgroundColor: " #4f26aa",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {loading && (
+                          <span className="spinner-border spinner-border-sm"></span>
+                        )}
+                        Remove
+                      </button>
+                    </span>
+                    {successful && (
+                      <span>
+                        {message && (
+                          <div className="form-group">
+                            <div
+                              className={
+                                successful
+                                  ? "alert alert-success"
+                                  : "alert alert-danger"
+                              }
+                              role="alert"
+                            >
+                              {message}
+                            </div>
+                          </div>
+                        )}
+                      </span>
+                    )}
+                    <CheckButton style={{ display: "none" }} ref={checkBtn} />
+                  </Form1>
+                </>
+              )}
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
       </ThemeProvider>
-    </div>
+    </React.Fragment>
   );
 }
+
+export default TestTable;
