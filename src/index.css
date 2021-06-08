@@ -1,103 +1,20 @@
-body {
-  margin: 0 !important;
-  padding: 0px !important;
-  font-family: "Poppins", sans-serif !important;
-  height: 100% !important;
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
+
+.body{
+     position: relative;
+  min-height: 100vh;
+     font-family: 'Poppins' !important;
+     
 }
 
-.link {
-  outline: none !important;
-  text-decoration: none !important;
+
+
+
+@media (min-width:320px)  { /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */ 
+ 
+.fa-copyright{
+   font-size: 15px;
+   vertical-align: middle;
+   align-items: center;
+}
 }
 
-.headingicon {
-  color: #ffffff !important;
-  font-size: 24px;
-  background: transparent !important;
-}
-.filtericon {
-  color: #3b7afe;
-  font-size: 20px;
-}
-.filtericon span {
-  color: #000000;
-  font-size: 18px;
-}
-.caret {
-  color: #ffffff !important;
-  background: red !important;
-}
-/* width */
-::-webkit-scrollbar {
-  width: 5px;
-}
-/* width */
-::-webkit-scrollbar {
-  height: 10px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px #8473cf;
-  border-radius: 10px;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #a8a9b2;
-  border-radius: 10px;
-}
-
-/* drag and drop */
-.flexbox {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 268px;
-  height: 100vh;
-  overflow: hidden;
-  margin: 0 auto;
-  padding: 15px;
-}
-
-.flexbox .board {
-  display: flex;
-  flex-direction: column;
-  max-width: 300px;
-  background-color: #313131;
-  padding: 15px;
-}
-.flexbox .board .card {
-  cursor: pointer;
-  background-color: #f3f3f3;
-  padding: 15px 25px;
-  margin-bottom: 15px;
-}
-.carousel-control-prev-icon {
-  display: none;
-}
-.carousel-control-next-icon {
-  display: none;
-}
-
-/* 
-  ##Device = Most of the Smartphones Mobiles (Portrait)
-  ##Screen = B/w 320px to 479px
-*/
-
-@media (min-width: 320px) and (max-width: 480px) {
-  /* Track */
-  ::-webkit-scrollbar-track {
-    display: none;
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    display: none;
-  }
-}
-.modal-backdrop {
-  background-color: rgba(255, 250, 250, 0.6);
-}

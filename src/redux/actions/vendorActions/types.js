@@ -1,5 +1,0 @@
-export const VENDOR_SUCCESS = "VENDOR_SUCCESS";
-export const VENDOR_FAIL = "VENDOR_FAIL";
-
-export const SET_MESSAGE = "SET_MESSAGE";
-export const CLEAR_MESSAGE = "CLEAR_MESSAGE";

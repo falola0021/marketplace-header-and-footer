@@ -1,35 +1,375 @@
-.footer {
-  padding: 30px 60px;
-  width: 100% !important;
-  min-height: 10rem;
-  background-color: #000000;
-  margin-bottom: 0 !important;
-  color: white;
-  position: absolute;
+.footerbody{
+
+     position: absolute;
+  bottom: 0;
+  width: 100%;
 }
-.footer div {
-  font-size: 14px;
-  padding-top: 5px;
+.firstlayer{
+     background: hsl(0, 0%, 96%);
+     height: 15rem;  
+     border-bottom: 1px solid #58B4AC;
+
 }
-.footerimage {
-  width: 200px;
-}
-.footerheader {
-  font-size: 23px;
-  font-weight: bold;
+.secondlayer{
+height: 3rem;  
+  display: flex;
+  align-items: center;
+
 }
 
-@media screen and (max-width: 480px) {
-  .desktopmenu {
-    display: none !important;
+.secondcontainer i{
+    color:#58B4AC;
+    vertical-align: middle ;
+    align-items: center ;
+    margin-right: 8px;
+
+
+    }
+    .secondcontainer i span{
+    font-family: Poppins;
+font-style: normal;
+font-weight: 300;
+font-size: 12px;
+color: #686868;
+
   }
-  .mobilemenu {
-    display: inherit !important;
+  .righttext1{
+      font-family: Poppins;
+font-style: normal;
+font-weight: 300;
+font-size: 9px;
+color: #686868;
   }
-  .mobilemenu .link {
-    display: inherit !important;
-    padding-left: 0 !important;
-    margin-left: 0 !important;
-    color: #ffffff;
-  }
+    .righttext2{
+      font-family: Poppins;
+font-style: normal;
+font-weight: 300;
+font-size: 9px;
+color: #686868;
 }
+    .righttext2 span{
+      margin-right: 20px;
+    }
+    .footerlogo{
+       width:128px;
+    height: auto;
+    }
+    .firstlayercontainer{
+      padding-top: 30px;
+      padding-bottom: 10;
+    }
+    .contact{
+
+font-style: normal;
+font-weight: normal;
+font-size: 12px;
+line-height: 18px;
+margin-top: 10px;
+color: #58B4AC;
+    }
+
+    .servicetitle{
+      font-family: Poppins;
+font-style: normal;
+font-weight: 600;
+font-size: 12px;
+line-height: 18px;
+ cursor: pointer;
+color: #58B4AC;
+
+    }
+    .servicesubtitle{
+      font-family: Poppins;
+font-style: normal;
+font-weight: normal;
+font-size: 12px;
+color: #58B4AC;
+
+}
+
+    .servicesubtitle div{
+      margin-top: 8px;
+      cursor: pointer;
+    }
+    .brand{
+      display: flex;
+      justify-content: space-between;
+        height: 70%;
+   
+    }
+.facebook{
+  width: 25px;
+  height: auto;
+     align-self: flex-end;
+}
+.instagram{
+  width: 25px;
+  height: auto;
+  border-radius: 50%;
+     align-self: flex-end;
+}
+.twitter{
+  width: 25px;
+  height: auto;
+    border-radius: 50%;
+       align-self: flex-end;
+}
+   
+.linkedin{
+  width: 25px;
+  height: auto;
+  border-radius: 50%;
+   align-self: flex-end;
+}
+.desktopsocials{
+  display: block;
+}
+
+.mobilesocials{
+  display: none;
+  /* margin-right: 50px;
+   margin-left: 50px; */
+}
+.hide{
+  display: block !important;
+}
+   
+  
+
+
+@media (min-width:320px)  { /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */ 
+
+ .servicetitle{
+   
+font-weight: 600;
+font-size: 8px;
+ }
+    .servicesubtitle{
+      font-size: 8px;
+}
+ .footerlogo{
+       width:70px;
+    height: auto;
+    }
+     .contact{
+font-size: 8px;
+    }
+    .desktopsocials{
+  display: none !important;
+}
+.mobilesocials{
+  display: block !important;
+
+}
+.hide{
+  display: none !important;
+}
+.righttext1{
+  font-size: 4px;
+
+  }
+  .righttext2{
+  font-size: 5px;
+
+  }
+  
+}
+@media (min-width:480px)  { /* smartphones, Android phones, landscape iPhone */
+servicetitle{
+   font-weight: 600;
+font-size: 8px;
+ }
+    .servicesubtitle{
+      font-size: 8px;
+}
+ .footerlogo{
+       width:70px;
+    height: auto;
+    }
+     .contact{
+font-size: 8px;
+    } 
+    .righttext1{
+  font-size: 7px;
+
+  }
+  .righttext2{
+  font-size: 7px;
+
+  }
+  .hide{
+  display: none !important;
+}
+  }
+@media (min-width:600px)  { /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */ 
+servicetitle{
+   font-weight: 600;
+font-size: 10px;
+ }
+    .servicesubtitle{
+      font-size: 10px;
+}
+ .footerlogo{
+       width:70px;
+    height: auto;
+    }
+     .contact{
+font-size: 10px;
+    }
+  .desktopsocials{
+  display: block !important;
+}
+.righttext1{
+  font-size: 7px;
+
+  }
+  .righttext2{
+  font-size: 7px;
+
+  }
+.hide{
+  display: none !important;
+}
+
+/* .righttext1{
+      font-family: Poppins;
+font-style: normal;
+font-weight: 300;
+font-size: 6px;
+
+  } */
+}
+@media (min-width:801px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */ 
+
+servicetitle{
+   font-weight: 600;
+font-size: 10px;
+ }
+    .servicesubtitle{
+      font-size: 10px;
+}
+ .footerlogo{
+       width:70px;
+    height: auto;
+    }
+     .contact{
+font-size: 10px;
+    }
+    .desktopsocials{
+  display: block !important;
+}
+.righttext1{
+  font-size: 7px;
+
+  }
+  .righttext2{
+  font-size: 7px;
+
+  }
+.hide{
+  display: block !important;
+}
+  }
+
+@media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */
+
+  servicetitle{
+   font-weight: 600;
+font-size: 10px;
+ }
+    .servicesubtitle{
+      font-size: 10px;
+}
+ .footerlogo{
+       width:70px;
+    height: auto;
+    }
+     .contact{
+font-size: 10px;
+    }
+.desktopsocials{
+  display: block !important;
+}
+.righttext1{
+  font-size: 9px;
+
+  }
+  .righttext2{
+  font-size: 9px;
+
+  }
+.hide{
+  display: block !important;
+}
+
+}
+
+@media (min-width:1281px) { /* hi-res laptops and desktops */
+.servicetitle{
+   font-weight: 600;
+font-size: 12px;
+ }
+    .servicesubtitle{
+      font-size: 12px;
+}
+ .footerlogo{
+       width:70px;
+    height: auto;
+    }
+     .contact{
+font-size: 12px;
+    }
+    .desktopsocials{
+  display: block;
+}
+.desktopsocials{
+  display: block !important;
+}
+.righttext1{
+  font-size: 9px;
+
+  }
+  .righttext2{
+  font-size: 9px;
+
+  }
+.hide{
+  display: block !important;
+}
+    
+}
+
+
+
+@media (min-width:1921px) { /* 4k screen */
+  servicetitle{
+   font-weight: 600;
+font-size: 17px;
+ }
+    .servicesubtitle{
+      font-size: 17px;
+}
+ .footerlogo{
+       width:70px;
+    height: auto;
+    }
+     .contact{
+font-size: 17px;
+    }
+    .desktopsocials{
+  display: block !important;
+}
+.righttext1{
+  font-size: 9px;
+
+  }
+  .righttext2{
+  font-size: 9px;
+
+  }
+.hide{
+  display: block !important;
+}
+
+}
+   
